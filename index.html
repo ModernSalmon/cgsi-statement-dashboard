@@ -90,6 +90,24 @@
     .detail-row td:first-child { padding-left: 44px; background: #fbfcfe; }
     .client-pill { color: #111827; font-weight: 600; }
     .table-wrap { overflow: auto; max-height: 50vh; }
+    .tooltip {
+      position: fixed;
+      z-index: 10;
+      max-width: 260px;
+      padding: 9px 10px;
+      border-radius: 7px;
+      background: rgba(17, 24, 39, 0.94);
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.45;
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.22);
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, -100%);
+      transition: opacity 120ms ease;
+      white-space: pre-line;
+    }
+    .tooltip.visible { opacity: 1; }
     @media (max-width: 760px) {
       header { position: static; }
       .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -129,7 +147,7 @@
           <thead>
             <tr>
               <th>品种 / 客户</th><th>最新多头本金</th><th>前日多头本金</th><th>多头本金变化</th>
-              <th>最新空头本金</th><th>前日空头本金</th><th>空头本金变化</th><th>净手数变化</th><th>最新总名义本金</th>
+              <th>最新空头本金</th><th>前日空头本金</th><th>空头本金变化</th><th>最新总手数</th><th>最新净手数</th><th>净手数变化</th><th>最新总名义本金</th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
@@ -137,12 +155,14 @@
       </div>
     </section>
   </main>
+  <div class="tooltip" id="tooltip"></div>
   <script>
     let raw = null;
     const expandedProducts = new Set();
     const fmt = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 0 });
     const money = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 0 });
     const $ = (id) => document.getElementById(id);
+    const tooltip = $("tooltip");
 
     async function load() {
       const res = await fetch("statement_dashboard_data.json?ts=" + Date.now());
@@ -162,12 +182,13 @@
       $("meta").innerHTML = `
         <span>日期：${raw.dates.earlier} → ${raw.dates.later}</span>
         <span>更新时间：${raw.generated_at}</span>
+        <span>名义本金口径：USD，汇率日 ${raw.fx?.rate_date || raw.dates.later}</span>
         <span>账号：${raw.target_accounts.join(", ")}</span>
       `;
       $("metrics").innerHTML = `
         <div class="metric"><span>品种数</span><b>${raw.summary.product_count}</b></div>
         <div class="metric"><span>最新持仓行数</span><b>${fmt.format(raw.summary.later_position_rows)}</b></div>
-        <div class="metric"><span>最新总名义本金</span><b>${money.format(raw.summary.later_gross_notional)}</b></div>
+        <div class="metric"><span>最新总名义本金(USD)</span><b>${money.format(raw.summary.later_gross_notional)}</b></div>
         <div class="metric"><span>最新净手数</span><b>${fmt.format(raw.summary.later_net_lots)}</b></div>
       `;
       drawChart(filteredProducts());
@@ -209,6 +230,35 @@
         t.textContent = value;
         el.appendChild(t);
       }
+      function moveTooltip(event) {
+        const x = Math.min(window.innerWidth - 16, Math.max(16, event.clientX));
+        const y = Math.min(window.innerHeight - 16, Math.max(40, event.clientY - 14));
+        tooltip.style.left = x + "px";
+        tooltip.style.top = y + "px";
+      }
+      function bindTooltip(el, value) {
+        title(el, value);
+        let holdTimer = null;
+        const show = (event) => {
+          tooltip.textContent = value;
+          moveTooltip(event);
+          tooltip.classList.add("visible");
+        };
+        const hide = () => {
+          if (holdTimer) clearTimeout(holdTimer);
+          holdTimer = null;
+          tooltip.classList.remove("visible");
+        };
+        el.addEventListener("pointerenter", show);
+        el.addEventListener("pointermove", moveTooltip);
+        el.addEventListener("pointerleave", hide);
+        el.addEventListener("pointerdown", (event) => {
+          if (holdTimer) clearTimeout(holdTimer);
+          holdTimer = setTimeout(() => show(event), 280);
+        });
+        el.addEventListener("pointerup", hide);
+        el.addEventListener("pointercancel", hide);
+      }
 
       [0.25, 0.5, 0.75, 1].forEach(r => {
         const y1 = mid - maxNotional * r * scale;
@@ -226,10 +276,10 @@
         const currLongH = Math.abs(p.curr_long_notional) * scale;
         const prevShortH = Math.abs(p.prev_short_notional) * scale;
         const currShortH = Math.abs(p.curr_short_notional) * scale;
-        title(rect(x, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} 上一日多头\n名义本金: ${money.format(p.prev_long_notional)}\n手数: ${fmt.format(p.prev_long_lots)}`);
-        title(rect(x + 15, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} 最新多头\n名义本金: ${money.format(p.curr_long_notional)}\n手数: ${fmt.format(p.curr_long_lots)}`);
-        title(rect(x, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} 上一日空头\n名义本金: ${money.format(p.prev_short_notional)}\n手数: ${fmt.format(p.prev_short_lots)}`);
-        title(rect(x + 15, mid, 13, currShortH, "#b42318", 0.95), `${p.product} 最新空头\n名义本金: ${money.format(p.curr_short_notional)}\n手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} 上一日多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n手数: ${fmt.format(p.prev_long_lots)}\n总手数: ${fmt.format(p.prev_total_lots)}\n净手数: ${fmt.format(p.prev_net_lots)}`);
+        bindTooltip(rect(x + 15, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} 最新多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n手数: ${fmt.format(p.curr_long_lots)}\n总手数: ${fmt.format(p.curr_total_lots)}\n净手数: ${fmt.format(p.curr_net_lots)}`);
+        bindTooltip(rect(x, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} 上一日空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n手数: ${fmt.format(p.prev_short_lots)}\n总手数: ${fmt.format(p.prev_total_lots)}\n净手数: ${fmt.format(p.prev_net_lots)}`);
+        bindTooltip(rect(x + 15, mid, 13, currShortH, "#b42318", 0.95), `${p.product} 最新空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n手数: ${fmt.format(p.curr_short_lots)}\n总手数: ${fmt.format(p.curr_total_lots)}\n净手数: ${fmt.format(p.curr_net_lots)}`);
         text(x + 14, height - 34, p.product, "label", true);
         if (p.delta_net_lots !== 0) text(x + 14, mid - 8, "手数 " + (p.delta_net_lots > 0 ? "+" : "") + fmt.format(p.delta_net_lots), "lot-tag");
       });
@@ -262,6 +312,8 @@
             <td title="手数: ${fmt.format(p.curr_short_lots)}">${money.format(p.curr_short_notional)}</td>
             <td title="手数: ${fmt.format(p.prev_short_lots)}">${money.format(p.prev_short_notional)}</td>
             <td>${signedMoney(p.delta_short_notional)}</td>
+            <td>${fmt.format(p.curr_total_lots)}</td>
+            <td>${fmt.format(p.curr_net_lots)}</td>
             <td>${signed(p.delta_net_lots)}</td>
             <td>${money.format(p.curr_gross_notional)}</td>
           </tr>
@@ -277,6 +329,8 @@
                 <td title="手数: ${fmt.format(d.curr_short_lots)}">${money.format(d.curr_short_notional)}</td>
                 <td title="手数: ${fmt.format(d.prev_short_lots)}">${money.format(d.prev_short_notional)}</td>
                 <td>${signedMoney(d.delta_short_notional)}</td>
+                <td>${fmt.format(d.curr_total_lots)}</td>
+                <td>${fmt.format(d.curr_net_lots)}</td>
                 <td>${signed(d.delta_net_lots)}</td>
                 <td>${money.format(d.curr_gross_notional)}</td>
               </tr>
