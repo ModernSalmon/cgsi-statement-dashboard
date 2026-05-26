@@ -67,12 +67,28 @@
     .grid { stroke: #edf0f5; stroke-width: 1; }
     .label { fill: #344054; font-size: 12px; }
     .small { fill: #697586; font-size: 11px; }
+    .lot-tag { fill: #697586; font-size: 11px; font-weight: 600; }
     .legend { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
     .swatch { width: 14px; height: 9px; display: inline-block; border-radius: 2px; margin-right: 5px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th, td { padding: 9px 10px; border-top: 1px solid var(--line); text-align: right; white-space: nowrap; }
     th:first-child, td:first-child { text-align: left; position: sticky; left: 0; background: var(--panel); }
     th { color: var(--muted); font-weight: 600; background: #fbfcfe; }
+    .expand-btn {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      margin-right: 6px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      line-height: 1;
+    }
+    .summary-row { cursor: pointer; }
+    .summary-row:hover td { background: #f8fafc; }
+    .detail-row td { background: #fbfcfe; color: #475467; }
+    .detail-row td:first-child { padding-left: 44px; background: #fbfcfe; }
+    .client-pill { color: #111827; font-weight: 600; }
     .table-wrap { overflow: auto; max-height: 50vh; }
     @media (max-width: 760px) {
       header { position: static; }
@@ -101,10 +117,10 @@
     <section class="chart-panel">
       <div class="chart-wrap"><svg id="chart" height="520" role="img"></svg></div>
       <div class="legend">
-        <span><i class="swatch" style="background:var(--long)"></i>最新多头手数</span>
-        <span><i class="swatch" style="background:var(--long-soft)"></i>上一日多头手数</span>
-        <span><i class="swatch" style="background:var(--short)"></i>最新空头手数</span>
-        <span><i class="swatch" style="background:var(--short-soft)"></i>上一日空头手数</span>
+        <span><i class="swatch" style="background:var(--long)"></i>最新多头名义本金</span>
+        <span><i class="swatch" style="background:var(--long-soft)"></i>上一日多头名义本金</span>
+        <span><i class="swatch" style="background:var(--short)"></i>最新空头名义本金</span>
+        <span><i class="swatch" style="background:var(--short-soft)"></i>上一日空头名义本金</span>
       </div>
     </section>
     <section class="table-panel" style="margin-top:14px">
@@ -112,8 +128,8 @@
         <table>
           <thead>
             <tr>
-              <th>品种</th><th>最新多头</th><th>前日多头</th><th>多头变化</th>
-              <th>最新空头</th><th>前日空头</th><th>空头变化</th><th>净手数变化</th><th>最新总名义本金</th>
+              <th>品种 / 客户</th><th>最新多头本金</th><th>前日多头本金</th><th>多头本金变化</th>
+              <th>最新空头本金</th><th>前日空头本金</th><th>空头本金变化</th><th>净手数变化</th><th>最新总名义本金</th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
@@ -123,6 +139,7 @@
   </main>
   <script>
     let raw = null;
+    const expandedProducts = new Set();
     const fmt = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 0 });
     const money = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 0 });
     const $ = (id) => document.getElementById(id);
@@ -164,8 +181,8 @@
       const height = 520, mid = 250;
       svg.setAttribute("width", width);
       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-      const maxLots = Math.max(1, ...data.map(p => Math.max(Math.abs(p.curr_long_lots), Math.abs(p.curr_short_lots), Math.abs(p.prev_long_lots), Math.abs(p.prev_short_lots))));
-      const scale = (mid - top - 20) / maxLots;
+      const maxNotional = Math.max(1, ...data.map(p => Math.max(Math.abs(p.curr_long_notional), Math.abs(p.curr_short_notional), Math.abs(p.prev_long_notional), Math.abs(p.prev_short_notional))));
+      const scale = (mid - top - 20) / maxNotional;
       const ns = "http://www.w3.org/2000/svg";
       svg.innerHTML = "";
 
@@ -185,30 +202,36 @@
         const el = document.createElementNS(ns, "rect");
         el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("width", w); el.setAttribute("height", Math.max(0, h));
         el.setAttribute("rx", 2); el.setAttribute("fill", fill); el.setAttribute("opacity", opacity); svg.appendChild(el);
+        return el;
+      }
+      function title(el, value) {
+        const t = document.createElementNS(ns, "title");
+        t.textContent = value;
+        el.appendChild(t);
       }
 
       [0.25, 0.5, 0.75, 1].forEach(r => {
-        const y1 = mid - maxLots * r * scale;
-        const y2 = mid + maxLots * r * scale;
+        const y1 = mid - maxNotional * r * scale;
+        const y2 = mid + maxNotional * r * scale;
         line(left, y1, width - right, y1, "grid");
         line(left, y2, width - right, y2, "grid");
-        text(34, y1 + 4, fmt.format(maxLots * r), "small");
-        text(34, y2 + 4, "-" + fmt.format(maxLots * r), "small");
+        text(34, y1 + 4, money.format(maxNotional * r), "small");
+        text(34, y2 + 4, "-" + money.format(maxNotional * r), "small");
       });
       line(left, mid, width - right, mid, "axis");
 
       data.forEach((p, i) => {
         const x = left + i * (groupW + barGap);
-        const prevLongH = Math.abs(p.prev_long_lots) * scale;
-        const currLongH = Math.abs(p.curr_long_lots) * scale;
-        const prevShortH = Math.abs(p.prev_short_lots) * scale;
-        const currShortH = Math.abs(p.curr_short_lots) * scale;
-        rect(x, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95);
-        rect(x + 15, mid - currLongH, 13, currLongH, "#166534", 0.95);
-        rect(x, mid, 13, prevShortH, "#efaaa4", 0.95);
-        rect(x + 15, mid, 13, currShortH, "#b42318", 0.95);
+        const prevLongH = Math.abs(p.prev_long_notional) * scale;
+        const currLongH = Math.abs(p.curr_long_notional) * scale;
+        const prevShortH = Math.abs(p.prev_short_notional) * scale;
+        const currShortH = Math.abs(p.curr_short_notional) * scale;
+        title(rect(x, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} 上一日多头\n名义本金: ${money.format(p.prev_long_notional)}\n手数: ${fmt.format(p.prev_long_lots)}`);
+        title(rect(x + 15, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} 最新多头\n名义本金: ${money.format(p.curr_long_notional)}\n手数: ${fmt.format(p.curr_long_lots)}`);
+        title(rect(x, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} 上一日空头\n名义本金: ${money.format(p.prev_short_notional)}\n手数: ${fmt.format(p.prev_short_lots)}`);
+        title(rect(x + 15, mid, 13, currShortH, "#b42318", 0.95), `${p.product} 最新空头\n名义本金: ${money.format(p.curr_short_notional)}\n手数: ${fmt.format(p.curr_short_lots)}`);
         text(x + 14, height - 34, p.product, "label", true);
-        if (p.delta_net_lots !== 0) text(x + 14, mid - 8, (p.delta_net_lots > 0 ? "+" : "") + fmt.format(p.delta_net_lots), "small");
+        if (p.delta_net_lots !== 0) text(x + 14, mid - 8, "手数 " + (p.delta_net_lots > 0 ? "+" : "") + fmt.format(p.delta_net_lots), "lot-tag");
       });
     }
 
@@ -216,20 +239,60 @@
       return (n > 0 ? "+" : "") + fmt.format(n);
     }
 
+    function signedMoney(n) {
+      return (n > 0 ? "+" : "") + money.format(n);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[ch]));
+    }
+
     function drawTable(data) {
-      $("tbody").innerHTML = data.map(p => `
-        <tr>
-          <td>${p.product}</td>
-          <td>${fmt.format(p.curr_long_lots)}</td>
-          <td>${fmt.format(p.prev_long_lots)}</td>
-          <td>${signed(p.delta_long_lots)}</td>
-          <td>${fmt.format(p.curr_short_lots)}</td>
-          <td>${fmt.format(p.prev_short_lots)}</td>
-          <td>${signed(p.delta_short_lots)}</td>
-          <td>${signed(p.delta_net_lots)}</td>
-          <td>${money.format(p.curr_gross_notional)}</td>
-        </tr>
-      `).join("");
+      const rows = [];
+      data.forEach(p => {
+        const open = expandedProducts.has(p.product);
+        rows.push(`
+          <tr class="summary-row" data-product="${escapeHtml(p.product)}">
+            <td><button class="expand-btn" type="button" aria-label="展开${escapeHtml(p.product)}">${open ? "−" : "+"}</button>${escapeHtml(p.product)}</td>
+            <td title="手数: ${fmt.format(p.curr_long_lots)}">${money.format(p.curr_long_notional)}</td>
+            <td title="手数: ${fmt.format(p.prev_long_lots)}">${money.format(p.prev_long_notional)}</td>
+            <td>${signedMoney(p.delta_long_notional)}</td>
+            <td title="手数: ${fmt.format(p.curr_short_lots)}">${money.format(p.curr_short_notional)}</td>
+            <td title="手数: ${fmt.format(p.prev_short_lots)}">${money.format(p.prev_short_notional)}</td>
+            <td>${signedMoney(p.delta_short_notional)}</td>
+            <td>${signed(p.delta_net_lots)}</td>
+            <td>${money.format(p.curr_gross_notional)}</td>
+          </tr>
+        `);
+        if (open) {
+          p.details.forEach(d => {
+            rows.push(`
+              <tr class="detail-row">
+                <td><span class="client-pill">${escapeHtml(d.client)}</span> <span title="来源账号">${escapeHtml((d.accounts || []).join(", "))}</span></td>
+                <td title="手数: ${fmt.format(d.curr_long_lots)}">${money.format(d.curr_long_notional)}</td>
+                <td title="手数: ${fmt.format(d.prev_long_lots)}">${money.format(d.prev_long_notional)}</td>
+                <td>${signedMoney(d.delta_long_notional)}</td>
+                <td title="手数: ${fmt.format(d.curr_short_lots)}">${money.format(d.curr_short_notional)}</td>
+                <td title="手数: ${fmt.format(d.prev_short_lots)}">${money.format(d.prev_short_notional)}</td>
+                <td>${signedMoney(d.delta_short_notional)}</td>
+                <td>${signed(d.delta_net_lots)}</td>
+                <td>${money.format(d.curr_gross_notional)}</td>
+              </tr>
+            `);
+          });
+        }
+      });
+      $("tbody").innerHTML = rows.join("");
+      document.querySelectorAll(".summary-row").forEach(row => {
+        row.addEventListener("click", () => {
+          const product = row.dataset.product;
+          if (expandedProducts.has(product)) expandedProducts.delete(product);
+          else expandedProducts.add(product);
+          drawTable(filteredProducts());
+        });
+      });
     }
 
     $("filter").addEventListener("input", render);
