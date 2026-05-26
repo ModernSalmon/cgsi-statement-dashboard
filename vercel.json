@@ -1,0 +1,13 @@
+{
+  "headers": [
+    {
+      "source": "/statement_dashboard_data.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ]
+}

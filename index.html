@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>北向结算单持仓看板</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #1f2933;
+      --muted: #697586;
+      --line: #d9dee7;
+      --long: #166534;
+      --long-soft: #9bd7ad;
+      --short: #b42318;
+      --short-soft: #efaaa4;
+      --accent: #1d4ed8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+    header {
+      padding: 18px clamp(16px, 4vw, 36px) 12px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(20px, 3vw, 30px); letter-spacing: 0; }
+    .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 10px 18px; }
+    main { padding: 18px clamp(12px, 3vw, 32px) 30px; }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .metric { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+    .metric b { display: block; font-size: 20px; margin-top: 4px; }
+    .metric span { color: var(--muted); font-size: 12px; }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 10px 0 14px;
+    }
+    input, select, button {
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      padding: 0 10px;
+      font: inherit;
+    }
+    button { cursor: pointer; color: var(--accent); }
+    .chart-panel, .table-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .chart-wrap { overflow-x: auto; padding: 12px; }
+    svg { display: block; min-width: 780px; }
+    .axis { stroke: #4b5563; stroke-width: 1; }
+    .grid { stroke: #edf0f5; stroke-width: 1; }
+    .label { fill: #344054; font-size: 12px; }
+    .small { fill: #697586; font-size: 11px; }
+    .legend { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .swatch { width: 14px; height: 9px; display: inline-block; border-radius: 2px; margin-right: 5px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 9px 10px; border-top: 1px solid var(--line); text-align: right; white-space: nowrap; }
+    th:first-child, td:first-child { text-align: left; position: sticky; left: 0; background: var(--panel); }
+    th { color: var(--muted); font-weight: 600; background: #fbfcfe; }
+    .table-wrap { overflow: auto; max-height: 50vh; }
+    @media (max-width: 760px) {
+      header { position: static; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toolbar input { flex: 1 1 160px; }
+      svg { min-width: 960px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>北向结算单持仓看板</h1>
+    <div class="meta" id="meta"></div>
+  </header>
+  <main>
+    <section class="metrics" id="metrics"></section>
+    <div class="toolbar">
+      <input id="filter" placeholder="筛选品种">
+      <select id="limit">
+        <option value="20">Top 20</option>
+        <option value="40">Top 40</option>
+        <option value="9999">全部</option>
+      </select>
+      <button id="reload">刷新</button>
+    </div>
+    <section class="chart-panel">
+      <div class="chart-wrap"><svg id="chart" height="520" role="img"></svg></div>
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--long)"></i>最新多头手数</span>
+        <span><i class="swatch" style="background:var(--long-soft)"></i>上一日多头手数</span>
+        <span><i class="swatch" style="background:var(--short)"></i>最新空头手数</span>
+        <span><i class="swatch" style="background:var(--short-soft)"></i>上一日空头手数</span>
+      </div>
+    </section>
+    <section class="table-panel" style="margin-top:14px">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>品种</th><th>最新多头</th><th>前日多头</th><th>多头变化</th>
+              <th>最新空头</th><th>前日空头</th><th>空头变化</th><th>净手数变化</th><th>最新总名义本金</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script>
+    let raw = null;
+    const fmt = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 0 });
+    const money = new Intl.NumberFormat("zh-CN", { maximumFractionDigits: 0 });
+    const $ = (id) => document.getElementById(id);
+
+    async function load() {
+      const res = await fetch("statement_dashboard_data.json?ts=" + Date.now());
+      raw = await res.json();
+      render();
+    }
+
+    function filteredProducts() {
+      const q = $("filter").value.trim().toUpperCase();
+      const limit = Number($("limit").value);
+      return raw.products
+        .filter(p => !q || p.product.includes(q))
+        .slice(0, limit);
+    }
+
+    function render() {
+      $("meta").innerHTML = `
+        <span>日期：${raw.dates.earlier} → ${raw.dates.later}</span>
+        <span>更新时间：${raw.generated_at}</span>
+        <span>账号：${raw.target_accounts.join(", ")}</span>
+      `;
+      $("metrics").innerHTML = `
+        <div class="metric"><span>品种数</span><b>${raw.summary.product_count}</b></div>
+        <div class="metric"><span>最新持仓行数</span><b>${fmt.format(raw.summary.later_position_rows)}</b></div>
+        <div class="metric"><span>最新总名义本金</span><b>${money.format(raw.summary.later_gross_notional)}</b></div>
+        <div class="metric"><span>最新净手数</span><b>${fmt.format(raw.summary.later_net_lots)}</b></div>
+      `;
+      drawChart(filteredProducts());
+      drawTable(filteredProducts());
+    }
+
+    function drawChart(data) {
+      const svg = $("chart");
+      const barGap = 18, groupW = 34, left = 62, right = 20, top = 24, bottom = 96;
+      const width = Math.max(780, left + right + data.length * (groupW + barGap));
+      const height = 520, mid = 250;
+      svg.setAttribute("width", width);
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      const maxLots = Math.max(1, ...data.map(p => Math.max(Math.abs(p.curr_long_lots), Math.abs(p.curr_short_lots), Math.abs(p.prev_long_lots), Math.abs(p.prev_short_lots))));
+      const scale = (mid - top - 20) / maxLots;
+      const ns = "http://www.w3.org/2000/svg";
+      svg.innerHTML = "";
+
+      function line(x1, y1, x2, y2, cls) {
+        const el = document.createElementNS(ns, "line");
+        el.setAttribute("x1", x1); el.setAttribute("y1", y1); el.setAttribute("x2", x2); el.setAttribute("y2", y2);
+        el.setAttribute("class", cls); svg.appendChild(el);
+      }
+      function text(x, y, value, cls, rotate=false) {
+        const el = document.createElementNS(ns, "text");
+        el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("class", cls);
+        el.setAttribute("text-anchor", rotate ? "end" : "middle");
+        if (rotate) el.setAttribute("transform", `rotate(-50 ${x} ${y})`);
+        el.textContent = value; svg.appendChild(el);
+      }
+      function rect(x, y, w, h, fill, opacity=1) {
+        const el = document.createElementNS(ns, "rect");
+        el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("width", w); el.setAttribute("height", Math.max(0, h));
+        el.setAttribute("rx", 2); el.setAttribute("fill", fill); el.setAttribute("opacity", opacity); svg.appendChild(el);
+      }
+
+      [0.25, 0.5, 0.75, 1].forEach(r => {
+        const y1 = mid - maxLots * r * scale;
+        const y2 = mid + maxLots * r * scale;
+        line(left, y1, width - right, y1, "grid");
+        line(left, y2, width - right, y2, "grid");
+        text(34, y1 + 4, fmt.format(maxLots * r), "small");
+        text(34, y2 + 4, "-" + fmt.format(maxLots * r), "small");
+      });
+      line(left, mid, width - right, mid, "axis");
+
+      data.forEach((p, i) => {
+        const x = left + i * (groupW + barGap);
+        const prevLongH = Math.abs(p.prev_long_lots) * scale;
+        const currLongH = Math.abs(p.curr_long_lots) * scale;
+        const prevShortH = Math.abs(p.prev_short_lots) * scale;
+        const currShortH = Math.abs(p.curr_short_lots) * scale;
+        rect(x, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95);
+        rect(x + 15, mid - currLongH, 13, currLongH, "#166534", 0.95);
+        rect(x, mid, 13, prevShortH, "#efaaa4", 0.95);
+        rect(x + 15, mid, 13, currShortH, "#b42318", 0.95);
+        text(x + 14, height - 34, p.product, "label", true);
+        if (p.delta_net_lots !== 0) text(x + 14, mid - 8, (p.delta_net_lots > 0 ? "+" : "") + fmt.format(p.delta_net_lots), "small");
+      });
+    }
+
+    function signed(n) {
+      return (n > 0 ? "+" : "") + fmt.format(n);
+    }
+
+    function drawTable(data) {
+      $("tbody").innerHTML = data.map(p => `
+        <tr>
+          <td>${p.product}</td>
+          <td>${fmt.format(p.curr_long_lots)}</td>
+          <td>${fmt.format(p.prev_long_lots)}</td>
+          <td>${signed(p.delta_long_lots)}</td>
+          <td>${fmt.format(p.curr_short_lots)}</td>
+          <td>${fmt.format(p.prev_short_lots)}</td>
+          <td>${signed(p.delta_short_lots)}</td>
+          <td>${signed(p.delta_net_lots)}</td>
+          <td>${money.format(p.curr_gross_notional)}</td>
+        </tr>
+      `).join("");
+    }
+
+    $("filter").addEventListener("input", render);
+    $("limit").addEventListener("change", render);
+    $("reload").addEventListener("click", load);
+    load().catch(err => {
+      document.body.innerHTML = `<main><h1>加载失败</h1><pre>${err.stack || err}</pre></main>`;
+    });
+  </script>
+</body>
+</html>
