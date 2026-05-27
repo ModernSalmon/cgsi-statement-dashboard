@@ -90,6 +90,15 @@
     .detail-row td:first-child { padding-left: 44px; background: #fbfcfe; }
     .client-pill { color: #111827; font-weight: 600; }
     .table-wrap { overflow: auto; max-height: 50vh; }
+    .account-charts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .mini-chart { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .mini-chart h2 { margin: 0; padding: 12px 14px 0; font-size: 15px; letter-spacing: 0; }
+    .mini-chart .chart-wrap { padding-top: 6px; }
     .tooltip {
       position: fixed;
       z-index: 10;
@@ -111,6 +120,7 @@
     @media (max-width: 760px) {
       header { position: static; }
       .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .account-charts { grid-template-columns: 1fr; }
       .toolbar input { flex: 1 1 160px; }
       svg { min-width: 960px; }
     }
@@ -144,6 +154,16 @@
         <span><i class="swatch" style="background:var(--long-soft)"></i>上一日多头名义本金</span>
         <span><i class="swatch" style="background:var(--short)"></i>最新空头名义本金</span>
         <span><i class="swatch" style="background:var(--short-soft)"></i>上一日空头名义本金</span>
+      </div>
+    </section>
+    <section class="account-charts">
+      <div class="mini-chart">
+        <h2>账号 USD NAV</h2>
+        <div class="chart-wrap"><svg id="navChart" height="340" role="img"></svg></div>
+      </div>
+      <div class="mini-chart">
+        <h2>账号 Available Funds / PnL Float</h2>
+        <div class="chart-wrap"><svg id="fundsChart" height="340" role="img"></svg></div>
       </div>
     </section>
     <section class="table-panel" style="margin-top:14px">
@@ -205,7 +225,105 @@
         <div class="metric"><span>多头 / 空头手数</span><b>${fmt.format(view.summary.later_long_lots)} / ${fmt.format(view.summary.later_short_lots)}</b></div>
       `;
       drawChart(filteredProducts());
+      drawAccountCharts();
       drawTable(filteredProducts());
+    }
+
+    function valuationRows() {
+      const earlier = new Map((raw.account_valuations?.earlier || []).map(row => [row.account, row]));
+      const later = new Map((raw.account_valuations?.later || []).map(row => [row.account, row]));
+      const accounts = Array.from(new Set([...earlier.keys(), ...later.keys()])).sort();
+      return accounts.map(account => ({
+        account,
+        prev: earlier.get(account) || { nav: 0, available_funds: 0, pnl_float: 0 },
+        curr: later.get(account) || { nav: 0, available_funds: 0, pnl_float: 0 },
+      }));
+    }
+
+    function drawMiniGroupedBar(svgId, rows, series, options = {}) {
+      const svg = $(svgId);
+      const ns = "http://www.w3.org/2000/svg";
+      const left = 64, right = 18, top = 18, bottom = 74, groupGap = 16;
+      const groupW = Math.max(36, series.length * 12 + 8);
+      const width = Math.max(620, left + right + rows.length * (groupW + groupGap));
+      const height = Number(svg.getAttribute("height")) || 340;
+      const zero = options.signed ? Math.round((height - bottom + top) / 2) : height - bottom;
+      const topLimit = top + 10;
+      const bottomLimit = height - bottom;
+      const maxValue = Math.max(1, ...rows.flatMap(row => series.map(s => Math.abs(s.value(row)))));
+      const positiveScale = (zero - topLimit) / maxValue;
+      const unsignedScale = (bottomLimit - topLimit) / maxValue;
+      svg.setAttribute("width", width);
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = "";
+
+      function line(x1, y1, x2, y2, cls) {
+        const el = document.createElementNS(ns, "line");
+        el.setAttribute("x1", x1); el.setAttribute("y1", y1); el.setAttribute("x2", x2); el.setAttribute("y2", y2);
+        el.setAttribute("class", cls); svg.appendChild(el);
+      }
+      function text(x, y, value, cls, rotate=false) {
+        const el = document.createElementNS(ns, "text");
+        el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("class", cls);
+        el.setAttribute("text-anchor", rotate ? "end" : "middle");
+        if (rotate) el.setAttribute("transform", `rotate(-45 ${x} ${y})`);
+        el.textContent = value; svg.appendChild(el);
+      }
+      function rect(x, y, w, h, fill, label) {
+        const el = document.createElementNS(ns, "rect");
+        el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("width", w); el.setAttribute("height", Math.max(0, h));
+        el.setAttribute("rx", 2); el.setAttribute("fill", fill);
+        const title = document.createElementNS(ns, "title");
+        title.textContent = label;
+        el.appendChild(title);
+        svg.appendChild(el);
+      }
+
+      if (options.signed) {
+        line(left, zero, width - right, zero, "axis");
+        [0.5, 1].forEach(r => {
+          line(left, zero - maxValue * r * positiveScale, width - right, zero - maxValue * r * positiveScale, "grid");
+          line(left, zero + maxValue * r * positiveScale, width - right, zero + maxValue * r * positiveScale, "grid");
+          text(36, zero - maxValue * r * positiveScale + 4, money.format(maxValue * r), "small");
+          text(36, zero + maxValue * r * positiveScale + 4, "-" + money.format(maxValue * r), "small");
+        });
+      } else {
+        line(left, bottomLimit, width - right, bottomLimit, "axis");
+        [0.5, 1].forEach(r => {
+          const y = bottomLimit - maxValue * r * unsignedScale;
+          line(left, y, width - right, y, "grid");
+          text(36, y + 4, money.format(maxValue * r), "small");
+        });
+      }
+
+      rows.forEach((row, i) => {
+        const x = left + i * (groupW + groupGap);
+        series.forEach((s, j) => {
+          const value = s.value(row);
+          const barW = 10;
+          const bx = x + j * 12;
+          if (options.signed) {
+            const h = Math.abs(value) * positiveScale;
+            rect(bx, value >= 0 ? zero - h : zero, barW, h, s.color, `${row.account} ${s.label}: ${money.format(value)}`);
+          } else {
+            const h = Math.abs(value) * unsignedScale;
+            rect(bx, bottomLimit - h, barW, h, s.color, `${row.account} ${s.label}: ${money.format(value)}`);
+          }
+        });
+        text(x + groupW / 2, height - 28, row.account, "label", true);
+      });
+    }
+
+    function drawAccountCharts() {
+      const rows = valuationRows();
+      drawMiniGroupedBar("navChart", rows, [
+        { label: raw.dates.earlier + " NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
+        { label: raw.dates.later + " NAV", color: "#166534", value: row => row.curr.nav || 0 },
+      ]);
+      drawMiniGroupedBar("fundsChart", rows, [
+        { label: "Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
+        { label: "PnL Float", color: "#9333ea", value: row => row.curr.pnl_float || 0 },
+      ], { signed: true });
     }
 
     function drawChart(data) {
