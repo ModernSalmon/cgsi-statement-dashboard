@@ -92,10 +92,11 @@
     .table-wrap { overflow: auto; max-height: 50vh; }
     .account-charts {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
       margin-top: 14px;
     }
+    .account-toolbar { margin-top: 14px; margin-bottom: 0; }
     .mini-chart { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
     .mini-chart h2 { margin: 0; padding: 12px 14px 0; font-size: 15px; letter-spacing: 0; }
     .mini-chart .chart-wrap { padding-top: 6px; }
@@ -150,31 +151,37 @@
     <section class="chart-panel">
       <div class="chart-wrap"><svg id="chart" height="520" role="img"></svg></div>
       <div class="legend">
-        <span><i class="swatch" style="background:var(--long)"></i>最新多头名义本金</span>
-        <span><i class="swatch" style="background:var(--long-soft)"></i>上一日多头名义本金</span>
-        <span><i class="swatch" style="background:var(--short)"></i>最新空头名义本金</span>
-        <span><i class="swatch" style="background:var(--short-soft)"></i>上一日空头名义本金</span>
+        <span><i class="swatch" style="background:var(--long)"></i><span id="legendCurrLong"></span></span>
+        <span><i class="swatch" style="background:var(--long-soft)"></i><span id="legendPrevLong"></span></span>
+        <span><i class="swatch" style="background:var(--short)"></i><span id="legendCurrShort"></span></span>
+        <span><i class="swatch" style="background:var(--short-soft)"></i><span id="legendPrevShort"></span></span>
       </div>
     </section>
+    <div class="toolbar account-toolbar">
+      <select id="accountScope">
+        <option value="all">全部账号</option>
+        <option value="main">主账号</option>
+        <option value="sub">子账号</option>
+      </select>
+    </div>
     <section class="account-charts">
       <div class="mini-chart">
-        <h2>账号 USD NAV</h2>
+        <h2 id="navTitle">账号 USD NAV</h2>
         <div class="chart-wrap"><svg id="navChart" height="340" role="img"></svg></div>
       </div>
       <div class="mini-chart">
-        <h2>账号 Available Funds / PnL Float</h2>
+        <h2 id="fundsTitle">账号 Available Funds</h2>
         <div class="chart-wrap"><svg id="fundsChart" height="340" role="img"></svg></div>
+      </div>
+      <div class="mini-chart">
+        <h2 id="pnlTitle">账号 PnL Float</h2>
+        <div class="chart-wrap"><svg id="pnlChart" height="340" role="img"></svg></div>
       </div>
     </section>
     <section class="table-panel" style="margin-top:14px">
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>品种 / 客户</th><th>最新多头本金</th><th>前日多头本金</th><th>多头本金变化</th>
-              <th>最新空头本金</th><th>前日空头本金</th><th>空头本金变化</th><th>最新多头手数</th><th>最新空头手数</th><th>多头手数变化</th><th>空头手数变化</th><th>最新总名义本金</th>
-            </tr>
-          </thead>
+          <thead id="productTableHead"></thead>
           <tbody id="tbody"></tbody>
         </table>
       </div>
@@ -194,6 +201,10 @@
       return raw.views?.[scope] || raw;
     }
 
+    function dateLabel(kind) {
+      return kind === "curr" ? raw.dates.later : raw.dates.earlier;
+    }
+
     async function load() {
       const res = await fetch("statement_dashboard_data.json?ts=" + Date.now());
       raw = await res.json();
@@ -211,6 +222,7 @@
     function render() {
       const view = currentView();
       const scopeLabel = raw.market_views?.[$("marketScope").value] || "全部";
+      renderStaticLabels();
       $("meta").innerHTML = `
         <span>日期：${raw.dates.earlier} → ${raw.dates.later}</span>
         <span>更新时间：${raw.generated_at}</span>
@@ -220,8 +232,8 @@
       `;
       $("metrics").innerHTML = `
         <div class="metric"><span>品种数</span><b>${view.summary.product_count}</b></div>
-        <div class="metric"><span>最新持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
-        <div class="metric"><span>最新总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
+        <div class="metric"><span>${raw.dates.later} 持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
+        <div class="metric"><span>${raw.dates.later} 总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
         <div class="metric"><span>多头 / 空头手数</span><b>${fmt.format(view.summary.later_long_lots)} / ${fmt.format(view.summary.later_short_lots)}</b></div>
       `;
       drawChart(filteredProducts());
@@ -229,15 +241,44 @@
       drawTable(filteredProducts());
     }
 
+    function renderStaticLabels() {
+      $("legendCurrLong").textContent = `${dateLabel("curr")} 多头名义本金`;
+      $("legendPrevLong").textContent = `${dateLabel("prev")} 多头名义本金`;
+      $("legendCurrShort").textContent = `${dateLabel("curr")} 空头名义本金`;
+      $("legendPrevShort").textContent = `${dateLabel("prev")} 空头名义本金`;
+      $("navTitle").textContent = `账号 USD NAV（左：${raw.dates.later}，右：${raw.dates.earlier}）`;
+      $("fundsTitle").textContent = `账号 Available Funds（左：${raw.dates.later}，右：${raw.dates.earlier}）`;
+      $("pnlTitle").textContent = `账号 PnL Float（左：${raw.dates.later}，右：${raw.dates.earlier}）`;
+      $("productTableHead").innerHTML = `
+        <tr>
+          <th>品种 / 客户</th>
+          <th>${dateLabel("curr")} 多头本金</th>
+          <th>${dateLabel("prev")} 多头本金</th>
+          <th>多头本金变化</th>
+          <th>${dateLabel("curr")} 空头本金</th>
+          <th>${dateLabel("prev")} 空头本金</th>
+          <th>空头本金变化</th>
+          <th>${dateLabel("curr")} 多头手数</th>
+          <th>${dateLabel("curr")} 空头手数</th>
+          <th>多头手数变化</th>
+          <th>空头手数变化</th>
+          <th>${dateLabel("curr")} 总名义本金</th>
+        </tr>
+      `;
+    }
+
     function valuationRows() {
       const earlier = new Map((raw.account_valuations?.earlier || []).map(row => [row.account, row]));
       const later = new Map((raw.account_valuations?.later || []).map(row => [row.account, row]));
       const accounts = Array.from(new Set([...earlier.keys(), ...later.keys()])).sort();
+      const scope = $("accountScope").value;
       return accounts.map(account => ({
         account,
+        account_type: (later.get(account) || earlier.get(account) || {}).account_type || "sub",
+        client_name: (later.get(account) || earlier.get(account) || {}).client_name || "",
         prev: earlier.get(account) || { nav: 0, available_funds: 0, pnl_float: 0 },
         curr: later.get(account) || { nav: 0, available_funds: 0, pnl_float: 0 },
-      }));
+      })).filter(row => scope === "all" || row.account_type === scope);
     }
 
     function drawMiniGroupedBar(svgId, rows, series, options = {}) {
@@ -269,13 +310,42 @@
         if (rotate) el.setAttribute("transform", `rotate(-45 ${x} ${y})`);
         el.textContent = value; svg.appendChild(el);
       }
+      function moveTooltip(event) {
+        const x = Math.min(window.innerWidth - 16, Math.max(16, event.clientX));
+        const y = Math.min(window.innerHeight - 16, Math.max(40, event.clientY - 14));
+        tooltip.style.left = x + "px";
+        tooltip.style.top = y + "px";
+      }
+      function bindMiniTooltip(el, label) {
+        const title = document.createElementNS(ns, "title");
+        title.textContent = label;
+        el.appendChild(title);
+        let holdTimer = null;
+        const show = (event) => {
+          tooltip.textContent = label;
+          moveTooltip(event);
+          tooltip.classList.add("visible");
+        };
+        const hide = () => {
+          if (holdTimer) clearTimeout(holdTimer);
+          holdTimer = null;
+          tooltip.classList.remove("visible");
+        };
+        el.addEventListener("pointerenter", show);
+        el.addEventListener("pointermove", moveTooltip);
+        el.addEventListener("pointerleave", hide);
+        el.addEventListener("pointerdown", (event) => {
+          if (holdTimer) clearTimeout(holdTimer);
+          holdTimer = setTimeout(() => show(event), 280);
+        });
+        el.addEventListener("pointerup", hide);
+        el.addEventListener("pointercancel", hide);
+      }
       function rect(x, y, w, h, fill, label) {
         const el = document.createElementNS(ns, "rect");
         el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("width", w); el.setAttribute("height", Math.max(0, h));
         el.setAttribute("rx", 2); el.setAttribute("fill", fill);
-        const title = document.createElementNS(ns, "title");
-        title.textContent = label;
-        el.appendChild(title);
+        bindMiniTooltip(el, label);
         svg.appendChild(el);
       }
 
@@ -302,12 +372,14 @@
           const value = s.value(row);
           const barW = 10;
           const bx = x + j * 12;
+          const clientLine = row.client_name ? `客户名: ${row.client_name}\n` : "";
+          const label = `${row.account}\n${clientLine}${s.label}: ${money.format(value)}`;
           if (options.signed) {
             const h = Math.abs(value) * positiveScale;
-            rect(bx, value >= 0 ? zero - h : zero, barW, h, s.color, `${row.account} ${s.label}: ${money.format(value)}`);
+            rect(bx, value >= 0 ? zero - h : zero, barW, h, s.color, label);
           } else {
             const h = Math.abs(value) * unsignedScale;
-            rect(bx, bottomLimit - h, barW, h, s.color, `${row.account} ${s.label}: ${money.format(value)}`);
+            rect(bx, bottomLimit - h, barW, h, s.color, label);
           }
         });
         text(x + groupW / 2, height - 28, row.account, "label", true);
@@ -316,13 +388,20 @@
 
     function drawAccountCharts() {
       const rows = valuationRows();
-      drawMiniGroupedBar("navChart", rows, [
-        { label: raw.dates.earlier + " NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
+      const navRows = rows.slice().sort((a, b) => (b.curr.nav || 0) - (a.curr.nav || 0));
+      const fundsRows = rows.slice().sort((a, b) => (b.curr.available_funds || 0) - (a.curr.available_funds || 0));
+      const pnlRows = rows.slice().sort((a, b) => Math.abs(b.curr.pnl_float || 0) - Math.abs(a.curr.pnl_float || 0));
+      drawMiniGroupedBar("navChart", navRows, [
         { label: raw.dates.later + " NAV", color: "#166534", value: row => row.curr.nav || 0 },
+        { label: raw.dates.earlier + " NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
       ]);
-      drawMiniGroupedBar("fundsChart", rows, [
-        { label: "Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
-        { label: "PnL Float", color: "#9333ea", value: row => row.curr.pnl_float || 0 },
+      drawMiniGroupedBar("fundsChart", fundsRows, [
+        { label: raw.dates.later + " Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
+        { label: raw.dates.earlier + " Available Funds", color: "#93c5fd", value: row => row.prev.available_funds || 0 },
+      ], { signed: true });
+      drawMiniGroupedBar("pnlChart", pnlRows, [
+        { label: raw.dates.later + " PnL Float", color: "#9333ea", value: row => row.curr.pnl_float || 0 },
+        { label: raw.dates.earlier + " PnL Float", color: "#d8b4fe", value: row => row.prev.pnl_float || 0 },
       ], { signed: true });
     }
 
@@ -407,10 +486,10 @@
         const currLongH = Math.abs(p.curr_long_notional) * scale;
         const prevShortH = Math.abs(p.prev_short_notional) * scale;
         const currShortH = Math.abs(p.curr_short_notional) * scale;
-        bindTooltip(rect(x, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} 上一日多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
-        bindTooltip(rect(x + 15, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} 最新多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
-        bindTooltip(rect(x, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} 上一日空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
-        bindTooltip(rect(x + 15, mid, 13, currShortH, "#b42318", 0.95), `${p.product} 最新空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} ${raw.dates.later} 多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x + 15, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} ${raw.dates.earlier} 多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
+        bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), `${p.product} ${raw.dates.later} 空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} ${raw.dates.earlier} 空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
         text(x + 14, height - 34, p.product, "label", true);
         const lotChanges = [];
         if (p.delta_long_lots !== 0) lotChanges.push("多" + signed(p.delta_long_lots));
@@ -490,6 +569,7 @@
       expandedProducts.clear();
       render();
     });
+    $("accountScope").addEventListener("change", drawAccountCharts);
     $("limit").addEventListener("change", render);
     $("reload").addEventListener("click", load);
     load().catch(err => {

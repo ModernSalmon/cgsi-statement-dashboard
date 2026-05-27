@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27 16:46:25",
+  "generated_at": "2026-05-27 17:19:50",
   "dates": {
     "earlier": "2026-05-22",
     "later": "2026-05-25"
@@ -8441,6 +8441,8 @@
     "earlier": [
       {
         "account": "51001",
+        "account_type": "main",
+        "client_name": "NR",
         "date": "2026-05-22",
         "nav": 246676.190409,
         "available_funds": 246676.190409,
@@ -8448,6 +8450,8 @@
       },
       {
         "account": "50803",
+        "account_type": "sub",
+        "client_name": "Zenith",
         "date": "2026-05-22",
         "nav": -1.799093,
         "available_funds": 0.0,
@@ -8455,6 +8459,8 @@
       },
       {
         "account": "50701",
+        "account_type": "sub",
+        "client_name": "Manifold Longitude",
         "date": "2026-05-22",
         "nav": 2953446.692067,
         "available_funds": 1296588.692067,
@@ -8462,6 +8468,8 @@
       },
       {
         "account": "50805",
+        "account_type": "sub",
+        "client_name": "Manifold Master Fund-1",
         "date": "2026-05-22",
         "nav": 1354456.002479,
         "available_funds": 269182.658627,
@@ -8469,6 +8477,8 @@
       },
       {
         "account": "60300",
+        "account_type": "main",
+        "client_name": "Zeneith",
         "date": "2026-05-22",
         "nav": 646120.777407,
         "available_funds": 51304.767603,
@@ -8476,6 +8486,8 @@
       },
       {
         "account": "50804",
+        "account_type": "sub",
+        "client_name": "DH_HH",
         "date": "2026-05-22",
         "nav": 7141.566766,
         "available_funds": 7141.566766,
@@ -8483,6 +8495,8 @@
       },
       {
         "account": "50802",
+        "account_type": "sub",
+        "client_name": "Dunhe",
         "date": "2026-05-22",
         "nav": 4432012.52,
         "available_funds": 2775275.349025,
@@ -8490,6 +8504,8 @@
       },
       {
         "account": "50801",
+        "account_type": "sub",
+        "client_name": "Jingan",
         "date": "2026-05-22",
         "nav": 8481349.701243,
         "available_funds": 4671968.856983,
@@ -8497,6 +8513,8 @@
       },
       {
         "account": "60401",
+        "account_type": "main",
+        "client_name": "Jingan Multi Strategy",
         "date": "2026-05-22",
         "nav": 1025921.277248,
         "available_funds": 823526.809295,
@@ -8504,6 +8522,8 @@
       },
       {
         "account": "51200",
+        "account_type": "main",
+        "client_name": "Union",
         "date": "2026-05-22",
         "nav": 7625450.522444,
         "available_funds": 758689.453183,
@@ -8511,6 +8531,8 @@
       },
       {
         "account": "50999",
+        "account_type": "main",
+        "client_name": "Veracity",
         "date": "2026-05-22",
         "nav": 23148169.442904,
         "available_funds": 17060136.442914,
@@ -8518,6 +8540,8 @@
       },
       {
         "account": "50702",
+        "account_type": "main",
+        "client_name": "GS",
         "date": "2026-05-22",
         "nav": 4126635.503902,
         "available_funds": 0.0,
@@ -8525,6 +8549,8 @@
       },
       {
         "account": "50704",
+        "account_type": "main",
+        "client_name": "GS Backup",
         "date": "2026-05-22",
         "nav": 47371.899869,
         "available_funds": 47371.899869,
@@ -8532,6 +8558,8 @@
       },
       {
         "account": "50703",
+        "account_type": "main",
+        "client_name": "GS-Flow M",
         "date": "2026-05-22",
         "nav": -343711.608966,
         "available_funds": 0.0,
@@ -8541,6 +8569,8 @@
     "later": [
       {
         "account": "51001",
+        "account_type": "main",
+        "client_name": "NR",
         "date": "2026-05-25",
         "nav": 245784.074598,
         "available_funds": 245784.074598,
@@ -8548,6 +8578,8 @@
       },
       {
         "account": "50803",
+        "account_type": "sub",
+        "client_name": "Zenith",
         "date": "2026-05-25",
         "nav": -1.799093,
         "available_funds": 0.0,
@@ -8555,6 +8587,8 @@
       },
       {
         "account": "50702",
+        "account_type": "main",
+        "client_name": "GS",
         "date": "2026-05-25",
         "nav": 1912631.583527,
         "available_funds": 0.0,
@@ -8562,6 +8596,8 @@
       },
       {
         "account": "50701",
+        "account_type": "sub",
+        "client_name": "Manifold Longitude",
         "date": "2026-05-25",
         "nav": 2884806.688704,
         "available_funds": 1216807.888704,
@@ -8569,6 +8605,8 @@
       },
       {
         "account": "50805",
+        "account_type": "sub",
+        "client_name": "Manifold Master Fund-1",
         "date": "2026-05-25",
         "nav": 1385184.435396,
         "available_funds": 294778.500348,
@@ -8576,6 +8614,8 @@
       },
       {
         "account": "50704",
+        "account_type": "main",
+        "client_name": "GS Backup",
         "date": "2026-05-25",
         "nav": 47371.937119,
         "available_funds": 47371.937119,
@@ -8583,6 +8623,8 @@
       },
       {
         "account": "50703",
+        "account_type": "main",
+        "client_name": "GS-Flow M",
         "date": "2026-05-25",
         "nav": -293067.150921,
         "available_funds": 0.0,
@@ -8590,6 +8632,8 @@
       },
       {
         "account": "60300",
+        "account_type": "main",
+        "client_name": "Zeneith",
         "date": "2026-05-25",
         "nav": 643022.264054,
         "available_funds": 48276.485548,
@@ -8597,6 +8641,8 @@
       },
       {
         "account": "50804",
+        "account_type": "sub",
+        "client_name": "DH_HH",
         "date": "2026-05-25",
         "nav": 7141.566766,
         "available_funds": 7141.566766,
@@ -8604,6 +8650,8 @@
       },
       {
         "account": "50802",
+        "account_type": "sub",
+        "client_name": "Dunhe",
         "date": "2026-05-25",
         "nav": 4404554.221068,
         "available_funds": 2941193.651135,
@@ -8611,6 +8659,8 @@
       },
       {
         "account": "50801",
+        "account_type": "sub",
+        "client_name": "Jingan",
         "date": "2026-05-25",
         "nav": 8180001.480475,
         "available_funds": 4502264.483665,
@@ -8618,6 +8668,8 @@
       },
       {
         "account": "60401",
+        "account_type": "main",
+        "client_name": "Jingan Multi Strategy",
         "date": "2026-05-25",
         "nav": 1032093.032192,
         "available_funds": 829337.683574,
@@ -8625,6 +8677,8 @@
       },
       {
         "account": "51200",
+        "account_type": "main",
+        "client_name": "Union",
         "date": "2026-05-25",
         "nav": 7837484.387962,
         "available_funds": 2228635.858474,
@@ -8632,6 +8686,8 @@
       },
       {
         "account": "50999",
+        "account_type": "main",
+        "client_name": "Veracity",
         "date": "2026-05-25",
         "nav": 22235999.481863,
         "available_funds": 15727912.468547,
