@@ -125,6 +125,11 @@
     <section class="metrics" id="metrics"></section>
     <div class="toolbar">
       <input id="filter" placeholder="筛选品种">
+      <select id="marketScope">
+        <option value="all">全部</option>
+        <option value="domestic">内盘</option>
+        <option value="foreign">外盘</option>
+      </select>
       <select id="limit">
         <option value="20">Top 20</option>
         <option value="40">Top 40</option>
@@ -147,7 +152,7 @@
           <thead>
             <tr>
               <th>品种 / 客户</th><th>最新多头本金</th><th>前日多头本金</th><th>多头本金变化</th>
-              <th>最新空头本金</th><th>前日空头本金</th><th>空头本金变化</th><th>最新总手数</th><th>最新净手数</th><th>净手数变化</th><th>最新总名义本金</th>
+              <th>最新空头本金</th><th>前日空头本金</th><th>空头本金变化</th><th>最新多头手数</th><th>最新空头手数</th><th>多头手数变化</th><th>空头手数变化</th><th>最新总名义本金</th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
@@ -164,6 +169,11 @@
     const $ = (id) => document.getElementById(id);
     const tooltip = $("tooltip");
 
+    function currentView() {
+      const scope = $("marketScope").value;
+      return raw.views?.[scope] || raw;
+    }
+
     async function load() {
       const res = await fetch("statement_dashboard_data.json?ts=" + Date.now());
       raw = await res.json();
@@ -173,23 +183,26 @@
     function filteredProducts() {
       const q = $("filter").value.trim().toUpperCase();
       const limit = Number($("limit").value);
-      return raw.products
+      return currentView().products
         .filter(p => !q || p.product.includes(q))
         .slice(0, limit);
     }
 
     function render() {
+      const view = currentView();
+      const scopeLabel = raw.market_views?.[$("marketScope").value] || "全部";
       $("meta").innerHTML = `
         <span>日期：${raw.dates.earlier} → ${raw.dates.later}</span>
         <span>更新时间：${raw.generated_at}</span>
         <span>名义本金口径：USD，汇率日 ${raw.fx?.rate_date || raw.dates.later}</span>
+        <span>市场范围：${scopeLabel}</span>
         <span>账号：${raw.target_accounts.join(", ")}</span>
       `;
       $("metrics").innerHTML = `
-        <div class="metric"><span>品种数</span><b>${raw.summary.product_count}</b></div>
-        <div class="metric"><span>最新持仓行数</span><b>${fmt.format(raw.summary.later_position_rows)}</b></div>
-        <div class="metric"><span>最新总名义本金(USD)</span><b>${money.format(raw.summary.later_gross_notional)}</b></div>
-        <div class="metric"><span>最新净手数</span><b>${fmt.format(raw.summary.later_net_lots)}</b></div>
+        <div class="metric"><span>品种数</span><b>${view.summary.product_count}</b></div>
+        <div class="metric"><span>最新持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
+        <div class="metric"><span>最新总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
+        <div class="metric"><span>多头 / 空头手数</span><b>${fmt.format(view.summary.later_long_lots)} / ${fmt.format(view.summary.later_short_lots)}</b></div>
       `;
       drawChart(filteredProducts());
       drawTable(filteredProducts());
@@ -276,12 +289,15 @@
         const currLongH = Math.abs(p.curr_long_notional) * scale;
         const prevShortH = Math.abs(p.prev_short_notional) * scale;
         const currShortH = Math.abs(p.curr_short_notional) * scale;
-        bindTooltip(rect(x, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} 上一日多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n手数: ${fmt.format(p.prev_long_lots)}\n总手数: ${fmt.format(p.prev_total_lots)}\n净手数: ${fmt.format(p.prev_net_lots)}`);
-        bindTooltip(rect(x + 15, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} 最新多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n手数: ${fmt.format(p.curr_long_lots)}\n总手数: ${fmt.format(p.curr_total_lots)}\n净手数: ${fmt.format(p.curr_net_lots)}`);
-        bindTooltip(rect(x, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} 上一日空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n手数: ${fmt.format(p.prev_short_lots)}\n总手数: ${fmt.format(p.prev_total_lots)}\n净手数: ${fmt.format(p.prev_net_lots)}`);
-        bindTooltip(rect(x + 15, mid, 13, currShortH, "#b42318", 0.95), `${p.product} 最新空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n手数: ${fmt.format(p.curr_short_lots)}\n总手数: ${fmt.format(p.curr_total_lots)}\n净手数: ${fmt.format(p.curr_net_lots)}`);
+        bindTooltip(rect(x, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} 上一日多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
+        bindTooltip(rect(x + 15, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} 最新多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} 上一日空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
+        bindTooltip(rect(x + 15, mid, 13, currShortH, "#b42318", 0.95), `${p.product} 最新空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
         text(x + 14, height - 34, p.product, "label", true);
-        if (p.delta_net_lots !== 0) text(x + 14, mid - 8, "手数 " + (p.delta_net_lots > 0 ? "+" : "") + fmt.format(p.delta_net_lots), "lot-tag");
+        const lotChanges = [];
+        if (p.delta_long_lots !== 0) lotChanges.push("多" + signed(p.delta_long_lots));
+        if (p.delta_short_lots !== 0) lotChanges.push("空" + signed(p.delta_short_lots));
+        if (lotChanges.length) text(x + 14, mid - 8, lotChanges.join(" "), "lot-tag");
       });
     }
 
@@ -312,9 +328,10 @@
             <td title="手数: ${fmt.format(p.curr_short_lots)}">${money.format(p.curr_short_notional)}</td>
             <td title="手数: ${fmt.format(p.prev_short_lots)}">${money.format(p.prev_short_notional)}</td>
             <td>${signedMoney(p.delta_short_notional)}</td>
-            <td>${fmt.format(p.curr_total_lots)}</td>
-            <td>${fmt.format(p.curr_net_lots)}</td>
-            <td>${signed(p.delta_net_lots)}</td>
+            <td>${fmt.format(p.curr_long_lots)}</td>
+            <td>${fmt.format(p.curr_short_lots)}</td>
+            <td>${signed(p.delta_long_lots)}</td>
+            <td>${signed(p.delta_short_lots)}</td>
             <td>${money.format(p.curr_gross_notional)}</td>
           </tr>
         `);
@@ -329,9 +346,10 @@
                 <td title="手数: ${fmt.format(d.curr_short_lots)}">${money.format(d.curr_short_notional)}</td>
                 <td title="手数: ${fmt.format(d.prev_short_lots)}">${money.format(d.prev_short_notional)}</td>
                 <td>${signedMoney(d.delta_short_notional)}</td>
-                <td>${fmt.format(d.curr_total_lots)}</td>
-                <td>${fmt.format(d.curr_net_lots)}</td>
-                <td>${signed(d.delta_net_lots)}</td>
+                <td>${fmt.format(d.curr_long_lots)}</td>
+                <td>${fmt.format(d.curr_short_lots)}</td>
+                <td>${signed(d.delta_long_lots)}</td>
+                <td>${signed(d.delta_short_lots)}</td>
                 <td>${money.format(d.curr_gross_notional)}</td>
               </tr>
             `);
@@ -350,6 +368,10 @@
     }
 
     $("filter").addEventListener("input", render);
+    $("marketScope").addEventListener("change", () => {
+      expandedProducts.clear();
+      render();
+    });
     $("limit").addEventListener("change", render);
     $("reload").addEventListener("click", load);
     load().catch(err => {
