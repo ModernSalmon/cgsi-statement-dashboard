@@ -177,6 +177,7 @@
     .detail-row td { background: #fbfcfe; color: #475467; }
     .detail-row td:first-child { padding-left: 44px; background: #fbfcfe; }
     .client-pill { color: #111827; font-weight: 600; }
+    .source-note { color: var(--muted); font-size: 12px; margin-left: 6px; white-space: nowrap; }
     .table-wrap { overflow: auto; max-height: 50vh; }
     .account-charts, .activity-charts, .client-product-charts {
       display: grid;
@@ -360,15 +361,14 @@
       if (category !== "all" && meta.client_category !== category) return false;
       if (scope === "expanded") return meta.account_type === "sub" || !hasChildren(String(account));
       if (scope === "collapsed") {
-        if (meta.parent_account === "50700") return true;
-        return meta.account_type === "main";
+        return true;
       }
       return true;
     }
 
     function scopedAccount(account) {
       const meta = accountMeta(String(account));
-      if ($("accountScope").value === "collapsed" && meta.parent_account === "50700") return "50700";
+      if ($("accountScope").value === "collapsed" && meta.parent_account) return meta.parent_account;
       return String(account);
     }
 
@@ -1029,6 +1029,26 @@
         el.addEventListener("pointerup", hide);
         el.addEventListener("pointercancel", hide);
       }
+      function accountContributionLines(p, prefix, side) {
+        const notionalKey = `${prefix}_${side}_notional`;
+        const lotsKey = `${prefix}_${side}_lots`;
+        return (p.details || [])
+          .filter(d => Math.abs(d[notionalKey] || 0) > 0 || Math.abs(d[lotsKey] || 0) > 0)
+          .sort((a, b) => Math.abs(b[notionalKey] || 0) - Math.abs(a[notionalKey] || 0))
+          .slice(0, 10)
+          .map(d => {
+            const meta = accountMeta(String(d.client));
+            const name = meta.client_name ? ` ${meta.client_name}` : "";
+            return `${d.client}${name}: ${money.format(d[notionalKey] || 0)} USD / ${fmt.format(d[lotsKey] || 0)}手`;
+          });
+      }
+      function chartTooltip(p, prefix, side, label) {
+        const date = prefix === "curr" ? raw.dates.later : raw.dates.earlier;
+        const notional = p[`${prefix}_${side}_notional`] || 0;
+        const lots = p[`${prefix}_${side}_lots`] || 0;
+        const contribution = accountContributionLines(p, prefix, side);
+        return `${p.product} ${date} ${label}\n名义本金(USD): ${money.format(notional)}\n手数: ${fmt.format(lots)}${contribution.length ? "\n\n账号贡献:\n" + contribution.join("\n") : ""}`;
+      }
 
       [0.25, 0.5, 0.75, 1].forEach(r => {
         const y1 = mid - maxNotional * r * scale;
@@ -1046,10 +1066,10 @@
         const currLongH = Math.abs(p.curr_long_notional) * scale;
         const prevShortH = Math.abs(p.prev_short_notional) * scale;
         const currShortH = Math.abs(p.curr_short_notional) * scale;
-        bindTooltip(rect(x, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} ${raw.dates.later} 多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
-        bindTooltip(rect(x + 15, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} ${raw.dates.earlier} 多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
-        bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), `${p.product} ${raw.dates.later} 空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
-        bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} ${raw.dates.earlier} 空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
+        bindTooltip(rect(x, mid - currLongH, 13, currLongH, "#166534", 0.95), chartTooltip(p, "curr", "long", "多头"));
+        bindTooltip(rect(x + 15, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), chartTooltip(p, "prev", "long", "多头"));
+        bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), chartTooltip(p, "curr", "short", "空头"));
+        bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), chartTooltip(p, "prev", "short", "空头"));
         text(x + 14, height - 34, p.product, "label", true);
         const lotChanges = [];
         if (p.delta_long_lots !== 0) lotChanges.push("多" + signed(p.delta_long_lots));
@@ -1070,6 +1090,13 @@
       return String(value).replace(/[&<>"']/g, ch => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
       }[ch]));
+    }
+
+    function sourceNoteHtml(row) {
+      const accounts = (row.accounts || []).map(String).filter(Boolean);
+      const sources = accounts.filter(account => account !== String(row.client));
+      if (!sources.length) return "";
+      return `<span class="source-note" title="该子账号记录来自母账号结算单">来自 ${escapeHtml([...new Set(sources)].join(", "))}</span>`;
     }
 
     function drawTable(data) {
@@ -1096,7 +1123,7 @@
           p.details.forEach(d => {
             rows.push(`
               <tr class="detail-row">
-                <td><span class="client-pill">${escapeHtml(d.client)}</span> <span title="来源账号">${escapeHtml((d.accounts || []).join(", "))}</span></td>
+                <td><span class="client-pill">${escapeHtml(d.client)}</span>${sourceNoteHtml(d)}</td>
                 <td title="手数: ${fmt.format(d.curr_long_lots)}">${money.format(d.curr_long_notional)}</td>
                 <td title="手数: ${fmt.format(d.prev_long_lots)}">${money.format(d.prev_long_notional)}</td>
                 <td>${signedMoney(d.delta_long_notional)}</td>
