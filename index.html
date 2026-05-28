@@ -80,15 +80,59 @@
     }
     .filter-summary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 10px;
     }
     .filter-group {
-      border-left: 3px solid var(--accent);
-      padding-left: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fbfcfe;
     }
-    .filter-group strong { display: block; font-size: 13px; margin-bottom: 4px; }
-    .filter-group .children { color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .filter-group .parent-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .filter-group strong { font-size: 13px; }
+    .filter-group .tag {
+      border-radius: 999px;
+      padding: 2px 7px;
+      font-size: 11px;
+      background: #eef4ff;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .account-tree {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .account-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      color: var(--muted);
+      background: #fff;
+    }
+    .account-pill.active {
+      border-color: #9ec5fe;
+      color: #174ea6;
+      background: #eaf2ff;
+      font-weight: 600;
+    }
+    .account-pill.inactive {
+      opacity: 0.42;
+      background: #f8fafc;
+    }
+    .account-pill.virtual::after {
+      content: " 聚合";
+      color: var(--muted);
+      font-weight: 400;
+    }
     .filter-group .empty { color: var(--muted); font-size: 12px; }
     input, select, button {
       height: 36px;
@@ -400,26 +444,31 @@
           .filter(child => child.parent_account === meta.account)
           .filter(child => childVisible(child))
           .sort((a, b) => a.account.localeCompare(b.account));
-        let detail = "";
+        let tag = "";
+        let parentActive = false;
+        let childActive = false;
         if (scope === "collapsed") {
-          if (meta.virtual && children.length) {
-            detail = `折叠为虚拟主账号，包含 ${children.map(child => `${child.account} ${child.client_name}`).join("、")}`;
-          } else if (children.length) {
-            detail = `折叠显示主账号；其子账号 ${children.map(child => `${child.account} ${child.client_name}`).join("、")} 不单独展示`;
-          } else {
-            detail = "无子账号，显示该账号本身";
-          }
+          tag = children.length ? "折叠" : "使用";
+          parentActive = true;
+          childActive = Boolean(meta.virtual);
         } else {
-          if (children.length) {
-            detail = `展开显示子账号：${children.map(child => `${child.account} ${child.client_name}`).join("、")}；主账号本身不单独展示`;
-          } else {
-            detail = "无子账号，显示该账号本身";
-          }
+          tag = children.length ? "展开" : "使用";
+          parentActive = !children.length;
+          childActive = true;
         }
+        const childPills = children.map(child => `
+          <span class="account-pill ${childActive ? "active" : "inactive"}">${escapeHtml(child.account)} ${escapeHtml(child.client_name || "")}</span>
+        `).join("");
         return `
           <div class="filter-group">
-            <strong>${escapeHtml(meta.account)} ${escapeHtml(meta.client_name || "")}</strong>
-            <div class="children">${escapeHtml(detail)}</div>
+            <div class="parent-row">
+              <strong>${escapeHtml(meta.account)} ${escapeHtml(meta.client_name || "")}</strong>
+              <span class="tag">${escapeHtml(tag)}</span>
+            </div>
+            <div class="account-tree">
+              <span class="account-pill ${parentActive ? "active" : "inactive"} ${meta.virtual ? "virtual" : ""}">${escapeHtml(meta.account)} ${escapeHtml(meta.client_name || "")}</span>
+              ${childPills}
+            </div>
           </div>
         `;
       });
