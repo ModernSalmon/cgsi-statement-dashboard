@@ -66,6 +66,30 @@
       color: var(--muted);
       font-size: 12px;
     }
+    .filter-summary {
+      margin: -4px 0 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+    }
+    .filter-summary h2 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+    .filter-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+    }
+    .filter-group {
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+    }
+    .filter-group strong { display: block; font-size: 13px; margin-bottom: 4px; }
+    .filter-group .children { color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .filter-group .empty { color: var(--muted); font-size: 12px; }
     input, select, button {
       height: 36px;
       border: 1px solid var(--line);
@@ -185,6 +209,7 @@
       </label>
       <button id="reload">刷新</button>
     </div>
+    <section class="filter-summary" id="filterSummary"></section>
     <section class="section-block">
       <h2 class="section-title">主账号持仓名义本金</h2>
       <section class="chart-panel">
@@ -310,11 +335,6 @@
       return raw.views?.[market]?.[accountScope]?.[category] || raw.views?.all?.collapsed?.all;
     }
 
-    function mainPositionView() {
-      const category = $("clientCategory").value;
-      return raw.views?.all?.collapsed?.[category] || raw.views?.all?.collapsed?.all;
-    }
-
     async function load() {
       const res = await fetch("statement_dashboard_data.json?ts=" + Date.now());
       raw = await res.json();
@@ -325,10 +345,6 @@
       const limit = Number($("limit").value);
       return currentView().products
         .slice(0, limit);
-    }
-
-    function mainChartProducts() {
-      return (mainPositionView().products || []).slice(0, 40);
     }
 
     function render() {
@@ -351,12 +367,66 @@
         <div class="metric"><span>T-1 总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
         <div class="metric"><span>多头 / 空头手数</span><b>${fmt.format(view.summary.later_long_lots)} / ${fmt.format(view.summary.later_short_lots)}</b></div>
       `;
-      drawChart(mainChartProducts());
+      renderFilterSummary();
+      drawChart(filteredProducts());
       drawAccountCharts();
       drawActivityCharts();
       drawRiskMatrixCharts();
       drawClientProductCharts();
       drawTable(filteredProducts());
+    }
+
+    function accountLabel(account) {
+      const meta = accountMeta(account);
+      return `${account} ${meta.client_name || ""}`.trim();
+    }
+
+    function childVisible(child) {
+      const meta = accountMeta(child);
+      const category = $("clientCategory").value;
+      if (category !== "all" && meta.client_category !== category) return false;
+      return true;
+    }
+
+    function renderFilterSummary() {
+      const category = $("clientCategory").value;
+      const scope = $("accountScope").value;
+      const groups = Object.values(raw.account_metadata || {})
+        .filter(meta => meta.account_type === "main")
+        .filter(meta => category === "all" || meta.client_category === category)
+        .sort((a, b) => a.account.localeCompare(b.account));
+      const cards = groups.map(meta => {
+        const children = Object.values(raw.account_metadata || {})
+          .filter(child => child.parent_account === meta.account)
+          .filter(child => childVisible(child))
+          .sort((a, b) => a.account.localeCompare(b.account));
+        let detail = "";
+        if (scope === "collapsed") {
+          if (meta.virtual && children.length) {
+            detail = `折叠为虚拟主账号，包含 ${children.map(child => `${child.account} ${child.client_name}`).join("、")}`;
+          } else if (children.length) {
+            detail = `折叠显示主账号；其子账号 ${children.map(child => `${child.account} ${child.client_name}`).join("、")} 不单独展示`;
+          } else {
+            detail = "无子账号，显示该账号本身";
+          }
+        } else {
+          if (children.length) {
+            detail = `展开显示子账号：${children.map(child => `${child.account} ${child.client_name}`).join("、")}；主账号本身不单独展示`;
+          } else {
+            detail = "无子账号，显示该账号本身";
+          }
+        }
+        return `
+          <div class="filter-group">
+            <strong>${escapeHtml(meta.account)} ${escapeHtml(meta.client_name || "")}</strong>
+            <div class="children">${escapeHtml(detail)}</div>
+          </div>
+        `;
+      });
+      $("filterSummary").innerHTML = `
+        <h2>当前筛选客户</h2>
+        <div class="filter-summary-grid">${cards.length ? cards.join("") : '<div class="filter-group"><span class="empty">当前筛选下没有客户</span></div>'}</div>
+      `;
     }
 
     function renderStaticLabels() {
