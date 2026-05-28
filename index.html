@@ -167,7 +167,6 @@
         <select id="accountScope">
           <option value="collapsed">折叠子账号</option>
           <option value="expanded">展开子账号</option>
-          <option value="all">全部明细</option>
         </select>
       </label>
       <label class="field">市场
@@ -286,7 +285,6 @@
       const category = $("clientCategory").value;
       const scope = $("accountScope").value;
       if (category !== "all" && meta.client_category !== category) return false;
-      if (scope === "all") return true;
       if (scope === "expanded") return meta.account_type === "sub" || !hasChildren(String(account));
       if (scope === "collapsed") {
         if (meta.parent_account === "50700") return true;
@@ -313,7 +311,8 @@
     }
 
     function mainPositionView() {
-      return raw.views?.all?.collapsed?.all || raw.views?.all?.all?.all;
+      const category = $("clientCategory").value;
+      return raw.views?.all?.collapsed?.[category] || raw.views?.all?.collapsed?.all;
     }
 
     async function load() {
