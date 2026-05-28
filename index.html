@@ -46,6 +46,13 @@
       flex-wrap: wrap;
       margin: 10px 0 14px;
     }
+    .field {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
     input, select, button {
       height: 36px;
       border: 1px solid var(--line);
@@ -96,9 +103,11 @@
       gap: 14px;
       margin-top: 14px;
     }
+    .client-product-charts { grid-template-columns: 1fr; }
     .account-toolbar { margin-top: 14px; margin-bottom: 0; }
     .mini-chart { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
     .mini-chart h2 { margin: 0; padding: 12px 14px 0; font-size: 15px; letter-spacing: 0; }
+    .mini-chart .subhead { margin: 3px 14px 0; color: var(--muted); font-size: 12px; }
     .mini-chart .chart-wrap { padding-top: 6px; }
     .tooltip {
       position: fixed;
@@ -135,20 +144,34 @@
   <main>
     <section class="metrics" id="metrics"></section>
     <div class="toolbar">
-      <select id="include50702">
-        <option value="yes">包含 50702</option>
-        <option value="no">不含 50702</option>
-      </select>
-      <select id="marketScope">
-        <option value="all">全部</option>
-        <option value="domestic">内盘</option>
-        <option value="foreign">外盘</option>
-      </select>
-      <select id="limit">
-        <option value="20">Top 20</option>
-        <option value="40">Top 40</option>
-        <option value="9999">全部</option>
-      </select>
+      <label class="field">客户类型
+        <select id="clientCategory">
+          <option value="all">全部客户</option>
+          <option value="normal">普通客户</option>
+          <option value="foreign_bank">外资行客户</option>
+        </select>
+      </label>
+      <label class="field">账号层级
+        <select id="accountScope">
+          <option value="all">全部账号</option>
+          <option value="main">主账号</option>
+          <option value="sub">子账号</option>
+        </select>
+      </label>
+      <label class="field">市场
+        <select id="marketScope">
+          <option value="all">全部</option>
+          <option value="domestic">内盘</option>
+          <option value="foreign">外盘</option>
+        </select>
+      </label>
+      <label class="field">显示
+        <select id="limit">
+          <option value="20">Top 20</option>
+          <option value="40">Top 40</option>
+          <option value="9999">全部</option>
+        </select>
+      </label>
       <button id="reload">刷新</button>
     </div>
     <section class="chart-panel">
@@ -160,13 +183,6 @@
         <span><i class="swatch" style="background:var(--short-soft)"></i><span id="legendPrevShort"></span></span>
       </div>
     </section>
-    <div class="toolbar account-toolbar">
-      <select id="accountScope">
-        <option value="all">全部账号</option>
-        <option value="main">主账号</option>
-        <option value="sub">子账号</option>
-      </select>
-    </div>
     <section class="account-charts">
       <div class="mini-chart">
         <h2 id="navTitle">账号 USD NAV</h2>
@@ -214,18 +230,39 @@
     const $ = (id) => document.getElementById(id);
     const tooltip = $("tooltip");
 
-    function include50702() {
-      return $("include50702").value === "yes";
+    function accountMeta(account) {
+      return raw.account_metadata?.[account] || {
+        account,
+        client_name: "",
+        account_type: "sub",
+        client_category: "normal",
+        parent_account: "",
+        parent_name: "",
+      };
     }
 
     function accountAllowed(account) {
-      return include50702() || String(account) !== "50702";
+      const meta = accountMeta(String(account));
+      const category = $("clientCategory").value;
+      const scope = $("accountScope").value;
+      if (category !== "all" && meta.client_category !== category) return false;
+      if (scope === "all") return true;
+      if (scope === "sub") return meta.account_type === "sub";
+      if (scope === "main") return meta.account_type === "main" || meta.parent_account === "50700";
+      return true;
+    }
+
+    function scopedAccount(account) {
+      const meta = accountMeta(String(account));
+      if ($("accountScope").value === "main" && meta.parent_account === "50700") return "50700";
+      return String(account);
     }
 
     function currentView() {
-      const scope = $("marketScope").value;
-      const source = include50702() ? raw.views : raw.views_excluding_50702;
-      return source?.[scope] || raw;
+      const market = $("marketScope").value;
+      const accountScope = $("accountScope").value;
+      const category = $("clientCategory").value;
+      return raw.views?.[market]?.[accountScope]?.[category] || raw.views?.all?.all?.all;
     }
 
     async function load() {
@@ -243,12 +280,17 @@
     function render() {
       const view = currentView();
       const scopeLabel = raw.market_views?.[$("marketScope").value] || "全部";
+      const accountScopeLabel = raw.account_scope_views?.[$("accountScope").value] || "全部账号";
+      const categoryLabel = raw.client_category_views?.[$("clientCategory").value] || "全部客户";
       renderStaticLabels();
       $("meta").innerHTML = `
         <span>对比日期：左侧柱 ${raw.dates.later}，右侧柱 ${raw.dates.earlier}</span>
         <span>更新时间：${raw.generated_at}</span>
         <span>名义本金口径：USD，汇率日 ${raw.fx?.rate_date || raw.dates.later}</span>
         <span>市场范围：${scopeLabel}</span>
+        <span>客户类型：${categoryLabel}</span>
+        <span>账号层级：${accountScopeLabel}</span>
+        <span>虚拟主账号：50700 Manifold 聚合 Milvus/Jingan/Dunhe/Zenith/DH_HH/Manifold Master Fund</span>
         <span>账号：${raw.target_accounts.join(", ")}</span>
       `;
       $("metrics").innerHTML = `
@@ -291,17 +333,38 @@
     }
 
     function valuationRows() {
-      const earlier = new Map((raw.account_valuations?.earlier || []).map(row => [row.account, row]));
-      const later = new Map((raw.account_valuations?.later || []).map(row => [row.account, row]));
+      const aggregate = (rows) => {
+        const map = new Map();
+        rows.forEach(row => {
+          if (!accountAllowed(row.account)) return;
+          const account = scopedAccount(row.account);
+          const meta = accountMeta(account);
+          const current = map.get(account) || {
+            account,
+            account_type: meta.account_type,
+            client_category: meta.client_category,
+            client_name: meta.client_name || row.client_name || "",
+            nav: 0,
+            available_funds: 0,
+            pnl_float: 0,
+          };
+          current.nav += row.nav || 0;
+          current.available_funds += row.available_funds || 0;
+          current.pnl_float += row.pnl_float || 0;
+          map.set(account, current);
+        });
+        return map;
+      };
+      const earlier = aggregate(raw.account_valuations?.earlier || []);
+      const later = aggregate(raw.account_valuations?.later || []);
       const accounts = Array.from(new Set([...earlier.keys(), ...later.keys()])).sort();
-      const scope = $("accountScope").value;
       return accounts.map(account => ({
         account,
-        account_type: (later.get(account) || earlier.get(account) || {}).account_type || "sub",
-        client_name: (later.get(account) || earlier.get(account) || {}).client_name || "",
+        account_type: accountMeta(account).account_type,
+        client_name: accountMeta(account).client_name || (later.get(account) || earlier.get(account) || {}).client_name || "",
         prev: earlier.get(account) || { nav: 0, available_funds: 0, pnl_float: 0 },
         curr: later.get(account) || { nav: 0, available_funds: 0, pnl_float: 0 },
-      })).filter(row => accountAllowed(row.account) && (scope === "all" || row.account_type === scope));
+      }));
     }
 
     function drawMiniGroupedBar(svgId, rows, series, options = {}) {
@@ -430,34 +493,36 @@
 
     function accountInfoMap() {
       const map = new Map();
+      Object.entries(raw.account_metadata || {}).forEach(([account, meta]) => map.set(account, meta));
       [...(raw.account_valuations?.earlier || []), ...(raw.account_valuations?.later || [])].forEach(row => {
         if (!map.has(row.account) || row.client_name) map.set(row.account, row);
       });
       return map;
     }
 
-    function scopedClients() {
-      const scope = $("accountScope").value;
-      const info = accountInfoMap();
-      return new Set(Array.from(info.values())
-        .filter(row => accountAllowed(row.account) && (scope === "all" || row.account_type === scope))
-        .map(row => row.account));
-    }
-
     function rowWithClientMeta(row, clientKey = "client") {
-      const info = accountInfoMap().get(row[clientKey]) || {};
+      const account = scopedAccount(row[clientKey]);
+      const info = accountInfoMap().get(account) || {};
       return {
         ...row,
-        account: row[clientKey],
+        account,
         client_name: info.client_name || "",
         account_type: info.account_type || "sub",
       };
     }
 
     function drawActivityCharts() {
-      const allowed = scopedClients();
-      const cashflowRows = (raw.latest_activity?.cashflow_by_client || [])
-        .filter(row => allowed.has(row.client))
+      const cashflowMap = new Map();
+      (raw.latest_activity?.cashflow_by_client || []).forEach(row => {
+        if (!accountAllowed(row.client)) return;
+        const account = scopedAccount(row.client);
+        const current = cashflowMap.get(account) || { client: account, deposit: 0, withdrawal: 0, pnl_settlement: 0 };
+        current.deposit += row.deposit || 0;
+        current.withdrawal += row.withdrawal || 0;
+        current.pnl_settlement += row.pnl_settlement || 0;
+        cashflowMap.set(account, current);
+      });
+      const cashflowRows = Array.from(cashflowMap.values())
         .map(row => rowWithClientMeta(row))
         .sort((a, b) => Math.abs((b.deposit || 0) + (b.withdrawal || 0) + (b.pnl_settlement || 0)) - Math.abs((a.deposit || 0) + (a.withdrawal || 0) + (a.pnl_settlement || 0)));
       drawMiniGroupedBar("cashflowChart", cashflowRows, [
@@ -466,8 +531,15 @@
         { label: "累计 PnL Settlement", color: "#1d4ed8", value: row => row.pnl_settlement || 0 },
       ], { signed: true });
 
-      const commissionRows = (raw.latest_activity?.commission_by_client || [])
-        .filter(row => allowed.has(row.client))
+      const commissionMap = new Map();
+      (raw.latest_activity?.commission_by_client || []).forEach(row => {
+        if (!accountAllowed(row.client)) return;
+        const account = scopedAccount(row.client);
+        const current = commissionMap.get(account) || { client: account, commission: 0 };
+        current.commission += row.commission || 0;
+        commissionMap.set(account, current);
+      });
+      const commissionRows = Array.from(commissionMap.values())
         .map(row => rowWithClientMeta(row))
         .sort((a, b) => (b.commission || 0) - (a.commission || 0));
       drawMiniGroupedBar("clientCommissionChart", commissionRows, [
@@ -476,7 +548,7 @@
 
       const productMap = new Map();
       (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
-        if (!allowed.has(row.client)) return;
+        if (!accountAllowed(row.client)) return;
         const current = productMap.get(row.product) || { account: row.product, product: row.product, commission: 0 };
         current.commission += row.commission || 0;
         productMap.set(row.product, current);
@@ -487,14 +559,121 @@
       ]);
     }
 
+    function drawDualAxisClientChart(svgId, rows) {
+      const svg = $(svgId);
+      const ns = "http://www.w3.org/2000/svg";
+      const left = 64, right = 76, top = 28, bottom = 84, groupGap = 18, groupW = 34;
+      const width = Math.max(780, left + right + rows.length * (groupW + groupGap));
+      const height = Number(svg.getAttribute("height")) || 380;
+      const zero = Math.round((height - bottom + top) / 2);
+      const maxLots = Math.max(1, ...rows.flatMap(row => [Math.abs(row.long_lots || 0), Math.abs(row.short_lots || 0)]));
+      const maxMoney = Math.max(1, ...rows.flatMap(row => [Math.abs(row.pnl_realized || 0), Math.abs(row.commission || 0)]));
+      const lotScale = (zero - top - 12) / maxLots;
+      const moneyScale = (zero - top - 12) / maxMoney;
+      svg.setAttribute("width", width);
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = "";
+
+      function line(x1, y1, x2, y2, cls, stroke) {
+        const el = document.createElementNS(ns, "line");
+        el.setAttribute("x1", x1); el.setAttribute("y1", y1); el.setAttribute("x2", x2); el.setAttribute("y2", y2);
+        el.setAttribute("class", cls);
+        if (stroke) el.setAttribute("stroke", stroke);
+        svg.appendChild(el);
+      }
+      function text(x, y, value, cls, anchor = "middle", rotate = false) {
+        const el = document.createElementNS(ns, "text");
+        el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("class", cls);
+        el.setAttribute("text-anchor", anchor);
+        if (rotate) el.setAttribute("transform", `rotate(-45 ${x} ${y})`);
+        el.textContent = value; svg.appendChild(el);
+      }
+      function moveTooltip(event) {
+        tooltip.style.left = Math.min(window.innerWidth - 16, Math.max(16, event.clientX)) + "px";
+        tooltip.style.top = Math.min(window.innerHeight - 16, Math.max(40, event.clientY - 14)) + "px";
+      }
+      function bind(el, label) {
+        const title = document.createElementNS(ns, "title");
+        title.textContent = label; el.appendChild(title);
+        let holdTimer = null;
+        const show = (event) => { tooltip.textContent = label; moveTooltip(event); tooltip.classList.add("visible"); };
+        const hide = () => { if (holdTimer) clearTimeout(holdTimer); holdTimer = null; tooltip.classList.remove("visible"); };
+        el.addEventListener("pointerenter", show);
+        el.addEventListener("pointermove", moveTooltip);
+        el.addEventListener("pointerleave", hide);
+        el.addEventListener("pointerdown", event => { if (holdTimer) clearTimeout(holdTimer); holdTimer = setTimeout(() => show(event), 280); });
+        el.addEventListener("pointerup", hide);
+        el.addEventListener("pointercancel", hide);
+      }
+      function rect(x, y, w, h, fill, label) {
+        const el = document.createElementNS(ns, "rect");
+        el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("width", w); el.setAttribute("height", Math.max(0, h));
+        el.setAttribute("rx", 2); el.setAttribute("fill", fill); bind(el, label); svg.appendChild(el);
+      }
+      function circle(x, y, fill, label) {
+        const el = document.createElementNS(ns, "circle");
+        el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", 4); el.setAttribute("fill", fill);
+        bind(el, label); svg.appendChild(el);
+      }
+      function polyline(points, stroke) {
+        if (points.length < 2) return;
+        const el = document.createElementNS(ns, "polyline");
+        el.setAttribute("points", points.map(p => p.join(",")).join(" "));
+        el.setAttribute("fill", "none"); el.setAttribute("stroke", stroke); el.setAttribute("stroke-width", 2);
+        svg.appendChild(el);
+      }
+
+      line(left, zero, width - right, zero, "axis");
+      [0.5, 1].forEach(r => {
+        line(left, zero - maxLots * r * lotScale, width - right, zero - maxLots * r * lotScale, "grid");
+        line(left, zero + maxLots * r * lotScale, width - right, zero + maxLots * r * lotScale, "grid");
+        text(38, zero - maxLots * r * lotScale + 4, fmt.format(maxLots * r), "small", "end");
+        text(38, zero + maxLots * r * lotScale + 4, fmt.format(maxLots * r), "small", "end");
+        text(width - 34, zero - maxMoney * r * moneyScale + 4, money.format(maxMoney * r), "small", "start");
+        text(width - 34, zero + maxMoney * r * moneyScale + 4, "-" + money.format(maxMoney * r), "small", "start");
+      });
+      text(16, top + 8, "手数", "small", "start");
+      text(width - 72, top + 8, "USD", "small", "start");
+
+      const pnlPoints = [];
+      const commissionPoints = [];
+      rows.forEach((row, i) => {
+        const x = left + i * (groupW + groupGap);
+        const longH = Math.abs(row.long_lots || 0) * lotScale;
+        const shortH = Math.abs(row.short_lots || 0) * lotScale;
+        rect(x, zero - longH, 12, longH, "#166534", `${row.product}\n多头交易量: ${fmt.format(row.long_lots || 0)}\n总收益(USD): ${money.format(row.pnl_realized || 0)}\nCommission(USD): ${money.format(row.commission || 0)}`);
+        rect(x + 14, zero, 12, shortH, "#b42318", `${row.product}\n空头交易量: ${fmt.format(row.short_lots || 0)}\n总收益(USD): ${money.format(row.pnl_realized || 0)}\nCommission(USD): ${money.format(row.commission || 0)}`);
+        const cx = x + 13;
+        pnlPoints.push([cx, zero - (row.pnl_realized || 0) * moneyScale]);
+        commissionPoints.push([cx, zero - (row.commission || 0) * moneyScale]);
+        text(x + 13, height - 30, row.product, "label", "end", true);
+      });
+      polyline(pnlPoints, "#1d4ed8");
+      polyline(commissionPoints, "#7c3aed");
+      rows.forEach((row, i) => {
+        const cx = left + i * (groupW + groupGap) + 13;
+        circle(cx, zero - (row.pnl_realized || 0) * moneyScale, "#1d4ed8", `${row.product}\n总收益(USD): ${money.format(row.pnl_realized || 0)}`);
+        circle(cx, zero - (row.commission || 0) * moneyScale, "#7c3aed", `${row.product}\nCommission(USD): ${money.format(row.commission || 0)}`);
+      });
+    }
+
     function drawClientProductCharts() {
-      const allowed = scopedClients();
       const container = $("clientProductCharts");
       const byClient = new Map();
       (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
-        if (!allowed.has(row.client)) return;
-        if (!byClient.has(row.client)) byClient.set(row.client, []);
-        byClient.get(row.client).push(row);
+        if (!accountAllowed(row.client)) return;
+        const account = scopedAccount(row.client);
+        const list = byClient.get(account) || [];
+        const existing = list.find(item => item.product === row.product);
+        if (existing) {
+          existing.long_lots += row.long_lots || 0;
+          existing.short_lots += row.short_lots || 0;
+          existing.pnl_realized += row.pnl_realized || 0;
+          existing.commission += row.commission || 0;
+        } else {
+          list.push({ ...row, client: account });
+        }
+        byClient.set(account, list);
       });
       const info = accountInfoMap();
       const clients = Array.from(byClient.keys()).sort((a, b) => {
@@ -505,19 +684,21 @@
       container.innerHTML = clients.map(client => `
         <div class="mini-chart">
           <h2>${escapeHtml(client)} ${escapeHtml(info.get(client)?.client_name || "")}</h2>
-          <div class="chart-wrap"><svg id="clientProduct_${escapeHtml(client)}" height="340" role="img"></svg></div>
+          <div class="subhead">多头/空头交易量使用左轴，总收益与 Commission 使用右轴</div>
+          <div class="legend">
+            <span><i class="swatch" style="background:#166534"></i>多头交易量</span>
+            <span><i class="swatch" style="background:#b42318"></i>空头交易量</span>
+            <span><i class="swatch" style="background:#1d4ed8"></i>总收益</span>
+            <span><i class="swatch" style="background:#7c3aed"></i>Commission</span>
+          </div>
+          <div class="chart-wrap"><svg id="clientProduct_${escapeHtml(client)}" height="380" role="img"></svg></div>
         </div>
       `).join("");
       clients.forEach(client => {
         const rows = byClient.get(client)
-          .map(row => ({ ...row, account: row.product, client_name: info.get(client)?.client_name || "" }))
-          .sort((a, b) => Math.abs(b.pnl_realized || 0) - Math.abs(a.pnl_realized || 0))
-          .slice(0, 12);
-        drawMiniGroupedBar(`clientProduct_${client}`, rows, [
-          { label: "多头交易量", color: "#166534", value: row => row.long_lots || 0 },
-          { label: "空头交易量", color: "#b42318", value: row => row.short_lots || 0 },
-          { label: "总收益(USD)", color: "#1d4ed8", value: row => row.pnl_realized || 0 },
-        ], { signed: true });
+          .sort((a, b) => Math.abs(b.pnl_realized || 0) + Math.abs(b.commission || 0) - Math.abs(a.pnl_realized || 0) - Math.abs(a.commission || 0))
+          .slice(0, 16);
+        drawDualAxisClientChart(`clientProduct_${client}`, rows);
       });
     }
 
@@ -680,7 +861,11 @@
       });
     }
 
-    $("include50702").addEventListener("change", () => {
+    $("clientCategory").addEventListener("change", () => {
+      expandedProducts.clear();
+      render();
+    });
+    $("accountScope").addEventListener("change", () => {
       expandedProducts.clear();
       render();
     });
@@ -688,7 +873,6 @@
       expandedProducts.clear();
       render();
     });
-    $("accountScope").addEventListener("change", render);
     $("limit").addEventListener("change", render);
     $("reload").addEventListener("click", load);
     load().catch(err => {
