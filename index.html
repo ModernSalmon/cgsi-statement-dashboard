@@ -90,7 +90,7 @@
     .detail-row td:first-child { padding-left: 44px; background: #fbfcfe; }
     .client-pill { color: #111827; font-weight: 600; }
     .table-wrap { overflow: auto; max-height: 50vh; }
-    .account-charts {
+    .account-charts, .activity-charts, .client-product-charts {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
@@ -121,7 +121,7 @@
     @media (max-width: 760px) {
       header { position: static; }
       .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .account-charts { grid-template-columns: 1fr; }
+      .account-charts, .activity-charts, .client-product-charts { grid-template-columns: 1fr; }
       .toolbar input { flex: 1 1 160px; }
       svg { min-width: 960px; }
     }
@@ -135,7 +135,10 @@
   <main>
     <section class="metrics" id="metrics"></section>
     <div class="toolbar">
-      <input id="filter" placeholder="筛选品种">
+      <select id="include50702">
+        <option value="yes">包含 50702</option>
+        <option value="no">不含 50702</option>
+      </select>
       <select id="marketScope">
         <option value="all">全部</option>
         <option value="domestic">内盘</option>
@@ -178,6 +181,21 @@
         <div class="chart-wrap"><svg id="pnlChart" height="340" role="img"></svg></div>
       </div>
     </section>
+    <section class="activity-charts">
+      <div class="mini-chart">
+        <h2>累计入金 / 出金 / PnL Settlement</h2>
+        <div class="chart-wrap"><svg id="cashflowChart" height="360" role="img"></svg></div>
+      </div>
+      <div class="mini-chart">
+        <h2>客户累计 Commission</h2>
+        <div class="chart-wrap"><svg id="clientCommissionChart" height="360" role="img"></svg></div>
+      </div>
+      <div class="mini-chart">
+        <h2>品种累计 Commission</h2>
+        <div class="chart-wrap"><svg id="productCommissionChart" height="360" role="img"></svg></div>
+      </div>
+    </section>
+    <section class="client-product-charts" id="clientProductCharts"></section>
     <section class="table-panel" style="margin-top:14px">
       <div class="table-wrap">
         <table>
@@ -196,13 +214,18 @@
     const $ = (id) => document.getElementById(id);
     const tooltip = $("tooltip");
 
-    function currentView() {
-      const scope = $("marketScope").value;
-      return raw.views?.[scope] || raw;
+    function include50702() {
+      return $("include50702").value === "yes";
     }
 
-    function dateLabel(kind) {
-      return kind === "curr" ? raw.dates.later : raw.dates.earlier;
+    function accountAllowed(account) {
+      return include50702() || String(account) !== "50702";
+    }
+
+    function currentView() {
+      const scope = $("marketScope").value;
+      const source = include50702() ? raw.views : raw.views_excluding_50702;
+      return source?.[scope] || raw;
     }
 
     async function load() {
@@ -212,10 +235,8 @@
     }
 
     function filteredProducts() {
-      const q = $("filter").value.trim().toUpperCase();
       const limit = Number($("limit").value);
       return currentView().products
-        .filter(p => !q || p.product.includes(q))
         .slice(0, limit);
     }
 
@@ -224,7 +245,7 @@
       const scopeLabel = raw.market_views?.[$("marketScope").value] || "全部";
       renderStaticLabels();
       $("meta").innerHTML = `
-        <span>日期：${raw.dates.earlier} → ${raw.dates.later}</span>
+        <span>对比日期：左侧柱 ${raw.dates.later}，右侧柱 ${raw.dates.earlier}</span>
         <span>更新时间：${raw.generated_at}</span>
         <span>名义本金口径：USD，汇率日 ${raw.fx?.rate_date || raw.dates.later}</span>
         <span>市场范围：${scopeLabel}</span>
@@ -232,37 +253,39 @@
       `;
       $("metrics").innerHTML = `
         <div class="metric"><span>品种数</span><b>${view.summary.product_count}</b></div>
-        <div class="metric"><span>${raw.dates.later} 持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
-        <div class="metric"><span>${raw.dates.later} 总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
+        <div class="metric"><span>左侧日持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
+        <div class="metric"><span>左侧日总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
         <div class="metric"><span>多头 / 空头手数</span><b>${fmt.format(view.summary.later_long_lots)} / ${fmt.format(view.summary.later_short_lots)}</b></div>
       `;
       drawChart(filteredProducts());
       drawAccountCharts();
+      drawActivityCharts();
+      drawClientProductCharts();
       drawTable(filteredProducts());
     }
 
     function renderStaticLabels() {
-      $("legendCurrLong").textContent = `${dateLabel("curr")} 多头名义本金`;
-      $("legendPrevLong").textContent = `${dateLabel("prev")} 多头名义本金`;
-      $("legendCurrShort").textContent = `${dateLabel("curr")} 空头名义本金`;
-      $("legendPrevShort").textContent = `${dateLabel("prev")} 空头名义本金`;
-      $("navTitle").textContent = `账号 USD NAV（左：${raw.dates.later}，右：${raw.dates.earlier}）`;
-      $("fundsTitle").textContent = `账号 Available Funds（左：${raw.dates.later}，右：${raw.dates.earlier}）`;
-      $("pnlTitle").textContent = `账号 PnL Float（左：${raw.dates.later}，右：${raw.dates.earlier}）`;
+      $("legendCurrLong").textContent = "左侧多头名义本金";
+      $("legendPrevLong").textContent = "右侧多头名义本金";
+      $("legendCurrShort").textContent = "左侧空头名义本金";
+      $("legendPrevShort").textContent = "右侧空头名义本金";
+      $("navTitle").textContent = "账号 USD NAV";
+      $("fundsTitle").textContent = "账号 Available Funds";
+      $("pnlTitle").textContent = "账号 PnL Float";
       $("productTableHead").innerHTML = `
         <tr>
           <th>品种 / 客户</th>
-          <th>${dateLabel("curr")} 多头本金</th>
-          <th>${dateLabel("prev")} 多头本金</th>
+          <th>左侧多头本金</th>
+          <th>右侧多头本金</th>
           <th>多头本金变化</th>
-          <th>${dateLabel("curr")} 空头本金</th>
-          <th>${dateLabel("prev")} 空头本金</th>
+          <th>左侧空头本金</th>
+          <th>右侧空头本金</th>
           <th>空头本金变化</th>
-          <th>${dateLabel("curr")} 多头手数</th>
-          <th>${dateLabel("curr")} 空头手数</th>
+          <th>左侧多头手数</th>
+          <th>左侧空头手数</th>
           <th>多头手数变化</th>
           <th>空头手数变化</th>
-          <th>${dateLabel("curr")} 总名义本金</th>
+          <th>左侧总名义本金</th>
         </tr>
       `;
     }
@@ -278,7 +301,7 @@
         client_name: (later.get(account) || earlier.get(account) || {}).client_name || "",
         prev: earlier.get(account) || { nav: 0, available_funds: 0, pnl_float: 0 },
         curr: later.get(account) || { nav: 0, available_funds: 0, pnl_float: 0 },
-      })).filter(row => scope === "all" || row.account_type === scope);
+      })).filter(row => accountAllowed(row.account) && (scope === "all" || row.account_type === scope));
     }
 
     function drawMiniGroupedBar(svgId, rows, series, options = {}) {
@@ -392,17 +415,110 @@
       const fundsRows = rows.slice().sort((a, b) => (b.curr.available_funds || 0) - (a.curr.available_funds || 0));
       const pnlRows = rows.slice().sort((a, b) => Math.abs(b.curr.pnl_float || 0) - Math.abs(a.curr.pnl_float || 0));
       drawMiniGroupedBar("navChart", navRows, [
-        { label: raw.dates.later + " NAV", color: "#166534", value: row => row.curr.nav || 0 },
-        { label: raw.dates.earlier + " NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
+        { label: "左侧 NAV", color: "#166534", value: row => row.curr.nav || 0 },
+        { label: "右侧 NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
       ]);
       drawMiniGroupedBar("fundsChart", fundsRows, [
-        { label: raw.dates.later + " Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
-        { label: raw.dates.earlier + " Available Funds", color: "#93c5fd", value: row => row.prev.available_funds || 0 },
+        { label: "左侧 Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
+        { label: "右侧 Available Funds", color: "#93c5fd", value: row => row.prev.available_funds || 0 },
       ], { signed: true });
       drawMiniGroupedBar("pnlChart", pnlRows, [
-        { label: raw.dates.later + " PnL Float", color: "#9333ea", value: row => row.curr.pnl_float || 0 },
-        { label: raw.dates.earlier + " PnL Float", color: "#d8b4fe", value: row => row.prev.pnl_float || 0 },
+        { label: "左侧 PnL Float", color: "#9333ea", value: row => row.curr.pnl_float || 0 },
+        { label: "右侧 PnL Float", color: "#d8b4fe", value: row => row.prev.pnl_float || 0 },
       ], { signed: true });
+    }
+
+    function accountInfoMap() {
+      const map = new Map();
+      [...(raw.account_valuations?.earlier || []), ...(raw.account_valuations?.later || [])].forEach(row => {
+        if (!map.has(row.account) || row.client_name) map.set(row.account, row);
+      });
+      return map;
+    }
+
+    function scopedClients() {
+      const scope = $("accountScope").value;
+      const info = accountInfoMap();
+      return new Set(Array.from(info.values())
+        .filter(row => accountAllowed(row.account) && (scope === "all" || row.account_type === scope))
+        .map(row => row.account));
+    }
+
+    function rowWithClientMeta(row, clientKey = "client") {
+      const info = accountInfoMap().get(row[clientKey]) || {};
+      return {
+        ...row,
+        account: row[clientKey],
+        client_name: info.client_name || "",
+        account_type: info.account_type || "sub",
+      };
+    }
+
+    function drawActivityCharts() {
+      const allowed = scopedClients();
+      const cashflowRows = (raw.latest_activity?.cashflow_by_client || [])
+        .filter(row => allowed.has(row.client))
+        .map(row => rowWithClientMeta(row))
+        .sort((a, b) => Math.abs((b.deposit || 0) + (b.withdrawal || 0) + (b.pnl_settlement || 0)) - Math.abs((a.deposit || 0) + (a.withdrawal || 0) + (a.pnl_settlement || 0)));
+      drawMiniGroupedBar("cashflowChart", cashflowRows, [
+        { label: "累计入金", color: "#166534", value: row => row.deposit || 0 },
+        { label: "累计出金", color: "#b42318", value: row => row.withdrawal || 0 },
+        { label: "累计 PnL Settlement", color: "#1d4ed8", value: row => row.pnl_settlement || 0 },
+      ], { signed: true });
+
+      const commissionRows = (raw.latest_activity?.commission_by_client || [])
+        .filter(row => allowed.has(row.client))
+        .map(row => rowWithClientMeta(row))
+        .sort((a, b) => (b.commission || 0) - (a.commission || 0));
+      drawMiniGroupedBar("clientCommissionChart", commissionRows, [
+        { label: "累计 Commission", color: "#7c3aed", value: row => row.commission || 0 },
+      ]);
+
+      const productMap = new Map();
+      (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
+        if (!allowed.has(row.client)) return;
+        const current = productMap.get(row.product) || { account: row.product, product: row.product, commission: 0 };
+        current.commission += row.commission || 0;
+        productMap.set(row.product, current);
+      });
+      const productRows = Array.from(productMap.values()).sort((a, b) => (b.commission || 0) - (a.commission || 0)).slice(0, 30);
+      drawMiniGroupedBar("productCommissionChart", productRows, [
+        { label: "累计 Commission", color: "#0f766e", value: row => row.commission || 0 },
+      ]);
+    }
+
+    function drawClientProductCharts() {
+      const allowed = scopedClients();
+      const container = $("clientProductCharts");
+      const byClient = new Map();
+      (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
+        if (!allowed.has(row.client)) return;
+        if (!byClient.has(row.client)) byClient.set(row.client, []);
+        byClient.get(row.client).push(row);
+      });
+      const info = accountInfoMap();
+      const clients = Array.from(byClient.keys()).sort((a, b) => {
+        const aSum = byClient.get(a).reduce((s, row) => s + Math.abs(row.pnl_realized || 0), 0);
+        const bSum = byClient.get(b).reduce((s, row) => s + Math.abs(row.pnl_realized || 0), 0);
+        return bSum - aSum;
+      });
+      container.innerHTML = clients.map(client => `
+        <div class="mini-chart">
+          <h2>${escapeHtml(client)} ${escapeHtml(info.get(client)?.client_name || "")}</h2>
+          <div class="chart-wrap"><svg id="clientProduct_${escapeHtml(client)}" height="340" role="img"></svg></div>
+        </div>
+      `).join("");
+      clients.forEach(client => {
+        const rows = byClient.get(client)
+          .map(row => ({ ...row, account: row.product, client_name: info.get(client)?.client_name || "" }))
+          .sort((a, b) => Math.abs(b.pnl_realized || 0) - Math.abs(a.pnl_realized || 0))
+          .slice(0, 12);
+        drawMiniGroupedBar(`clientProduct_${client}`, rows, [
+          { label: "多头交易量", color: "#166534", value: row => row.long_lots || 0 },
+          { label: "空头交易量", color: "#b42318", value: row => row.short_lots || 0 },
+          { label: "总收益(USD)", color: "#1d4ed8", value: row => row.pnl_realized || 0 },
+        ], { signed: true });
+      });
     }
 
     function drawChart(data) {
@@ -476,7 +592,7 @@
         line(left, y1, width - right, y1, "grid");
         line(left, y2, width - right, y2, "grid");
         text(34, y1 + 4, money.format(maxNotional * r), "small");
-        text(34, y2 + 4, "-" + money.format(maxNotional * r), "small");
+        text(34, y2 + 4, money.format(maxNotional * r), "small");
       });
       line(left, mid, width - right, mid, "axis");
 
@@ -486,10 +602,10 @@
         const currLongH = Math.abs(p.curr_long_notional) * scale;
         const prevShortH = Math.abs(p.prev_short_notional) * scale;
         const currShortH = Math.abs(p.curr_short_notional) * scale;
-        bindTooltip(rect(x, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} ${raw.dates.later} 多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
-        bindTooltip(rect(x + 15, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} ${raw.dates.earlier} 多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
-        bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), `${p.product} ${raw.dates.later} 空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
-        bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} ${raw.dates.earlier} 空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
+        bindTooltip(rect(x, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} 左侧多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x + 15, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} 右侧多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
+        bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), `${p.product} 左侧空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} 右侧空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
         text(x + 14, height - 34, p.product, "label", true);
         const lotChanges = [];
         if (p.delta_long_lots !== 0) lotChanges.push("多" + signed(p.delta_long_lots));
@@ -564,12 +680,15 @@
       });
     }
 
-    $("filter").addEventListener("input", render);
+    $("include50702").addEventListener("change", () => {
+      expandedProducts.clear();
+      render();
+    });
     $("marketScope").addEventListener("change", () => {
       expandedProducts.clear();
       render();
     });
-    $("accountScope").addEventListener("change", drawAccountCharts);
+    $("accountScope").addEventListener("change", render);
     $("limit").addEventListener("change", render);
     $("reload").addEventListener("click", load);
     load().catch(err => {
