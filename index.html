@@ -319,7 +319,7 @@
       </section>
     </section>
     <section class="section-block">
-      <h2 class="section-title">分客户交易量与 Commission</h2>
+      <h2 class="section-title">分客户总交易量与总 Commission</h2>
       <section class="client-product-charts" id="clientProductCharts"></section>
     </section>
     <section class="section-block">
@@ -652,11 +652,11 @@
       const rows = valuationRows();
       const navRows = rows.slice().sort((a, b) => (b.curr.nav || 0) - (a.curr.nav || 0));
       const fundsRows = rows.slice().sort((a, b) => (b.curr.available_funds || 0) - (a.curr.available_funds || 0));
-      const pnlRows = rows.slice().sort((a, b) => Math.abs(b.curr.pnl_float || 0) - Math.abs(a.curr.pnl_float || 0));
+      const pnlRows = rows.slice().sort((a, b) => (b.curr.pnl_float || 0) - (a.curr.pnl_float || 0));
       drawMiniGroupedBar("navChart", navRows, [
         { label: "T-1 NAV", color: "#166534", value: row => row.curr.nav || 0 },
         { label: "T-2 NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
-      ]);
+      ], { signed: true });
       drawMiniGroupedBar("fundsChart", fundsRows, [
         { label: "T-1 Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
         { label: "T-2 Available Funds", color: "#93c5fd", value: row => row.prev.available_funds || 0 },
@@ -905,8 +905,8 @@
         const x = left + i * (groupW + groupGap);
         const longH = Math.abs(row.long_lots || 0) * lotScale;
         const shortH = Math.abs(row.short_lots || 0) * lotScale;
-        rect(x, zero - longH, 12, longH, "#166534", `${row.product}\n多头交易量: ${fmt.format(row.long_lots || 0)}\nCommission(USD): ${money.format(row.commission || 0)}`);
-        rect(x + 14, zero, 12, shortH, "#b42318", `${row.product}\n空头交易量: ${fmt.format(row.short_lots || 0)}\nCommission(USD): ${money.format(row.commission || 0)}`);
+        rect(x, zero - longH, 12, longH, "#166534", `${row.product}\n多头总交易量: ${fmt.format(row.long_lots || 0)}\n总 Commission(USD): ${money.format(row.commission || 0)}`);
+        rect(x + 14, zero, 12, shortH, "#b42318", `${row.product}\n空头总交易量: ${fmt.format(row.short_lots || 0)}\n总 Commission(USD): ${money.format(row.commission || 0)}`);
         const cx = x + 13;
         commissionPoints.push([cx, zero - (row.commission || 0) * moneyScale]);
         text(x + 13, height - 30, row.product, "label", "end", true);
@@ -914,7 +914,7 @@
       polyline(commissionPoints, "#7c3aed");
       rows.forEach((row, i) => {
         const cx = left + i * (groupW + groupGap) + 13;
-        circle(cx, zero - (row.commission || 0) * moneyScale, "#7c3aed", `${row.product}\nCommission(USD): ${money.format(row.commission || 0)}`);
+        circle(cx, zero - (row.commission || 0) * moneyScale, "#7c3aed", `${row.product}\n总 Commission(USD): ${money.format(row.commission || 0)}`);
       });
     }
 
@@ -947,14 +947,14 @@
       });
       container.innerHTML = clients.map(client => `
         <div class="mini-chart">
-          <h2>${escapeHtml(client)} ${escapeHtml(info.get(client)?.client_name || "")}</h2>
-          <div class="subhead">多头/空头交易量使用左轴，Commission 使用右轴</div>
+          <h2>${escapeHtml(client)} ${escapeHtml(info.get(client)?.client_name || "")} 总交易量与总 Commission</h2>
+          <div class="subhead">按品种拆分；多头/空头总交易量使用左轴，总 Commission 使用右轴</div>
           <div class="legend">
-            <span><i class="swatch" style="background:#166534"></i>多头交易量</span>
-            <span><i class="swatch" style="background:#b42318"></i>空头交易量</span>
-            <span><i class="swatch" style="background:#7c3aed"></i>Commission</span>
+            <span><i class="swatch" style="background:#166534"></i>多头总交易量</span>
+            <span><i class="swatch" style="background:#b42318"></i>空头总交易量</span>
+            <span><i class="swatch" style="background:#7c3aed"></i>总 Commission</span>
           </div>
-          <div class="chart-wrap"><svg id="clientProduct_${escapeHtml(client)}" height="380" role="img"></svg></div>
+          <div class="chart-wrap"><svg id="clientProduct_${escapeHtml(client)}" height="300" role="img"></svg></div>
         </div>
       `).join("");
       clients.forEach(client => {
