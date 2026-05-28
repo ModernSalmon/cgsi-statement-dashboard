@@ -311,6 +311,10 @@
           <h2>客户 + 品种 + 总收益</h2>
           <div class="chart-wrap"><svg id="clientProductRevenueChart" height="420" role="img"></svg></div>
         </div>
+        <div class="mini-chart">
+          <h2>客户 + 品种 + Commission</h2>
+          <div class="chart-wrap"><svg id="clientProductCommissionChart" height="420" role="img"></svg></div>
+        </div>
       </section>
     </section>
     <section class="section-block">
@@ -815,8 +819,10 @@
     function drawRiskMatrixCharts() {
       const pnlRows = aggregateClientProductMetric(raw.latest_client_product_pnl_float || [], "pnl_float");
       const revenueRows = aggregateClientProductMetric(raw.latest_activity?.trade_by_client_product || [], "pnl_realized");
+      const commissionRows = aggregateClientProductMetric(raw.latest_activity?.trade_by_client_product || [], "commission");
       drawBubbleMatrix("clientProductPnlFloatChart", pnlRows, { label: "PnL Float(USD)" });
       drawBubbleMatrix("clientProductRevenueChart", revenueRows, { label: "总收益(USD)" });
+      drawBubbleMatrix("clientProductCommissionChart", commissionRows, { label: "Commission(USD)" });
     }
 
     function drawDualAxisClientChart(svgId, rows) {
@@ -932,9 +938,12 @@
       });
       const info = accountInfoMap();
       const clients = Array.from(byClient.keys()).sort((a, b) => {
-        const aSum = byClient.get(a).reduce((s, row) => s + Math.abs(row.long_lots || 0) + Math.abs(row.short_lots || 0), 0);
-        const bSum = byClient.get(b).reduce((s, row) => s + Math.abs(row.long_lots || 0) + Math.abs(row.short_lots || 0), 0);
-        return bSum - aSum;
+        const aProducts = new Set(byClient.get(a).map(row => row.product)).size;
+        const bProducts = new Set(byClient.get(b).map(row => row.product)).size;
+        if (bProducts !== aProducts) return bProducts - aProducts;
+        const aLots = byClient.get(a).reduce((s, row) => s + Math.abs(row.long_lots || 0) + Math.abs(row.short_lots || 0), 0);
+        const bLots = byClient.get(b).reduce((s, row) => s + Math.abs(row.long_lots || 0) + Math.abs(row.short_lots || 0), 0);
+        return bLots - aLots;
       });
       container.innerHTML = clients.map(client => `
         <div class="mini-chart">
