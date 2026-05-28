@@ -8,6 +8,7 @@
     :root {
       --bg: #f6f7f9;
       --panel: #ffffff;
+      --section: #eef2f7;
       --text: #1f2933;
       --muted: #697586;
       --line: #d9dee7;
@@ -35,6 +36,18 @@
     h1 { margin: 0 0 8px; font-size: clamp(20px, 3vw, 30px); letter-spacing: 0; }
     .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 10px 18px; }
     main { padding: 18px clamp(12px, 3vw, 32px) 30px; }
+    .section-block {
+      margin-top: 18px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--section);
+    }
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
     .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
     .metric { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
     .metric b { display: block; font-size: 20px; margin-top: 4px; }
@@ -101,7 +114,6 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
-      margin-top: 14px;
     }
     .client-product-charts { grid-template-columns: 1fr; }
     .account-toolbar { margin-top: 14px; margin-bottom: 0; }
@@ -153,9 +165,9 @@
       </label>
       <label class="field">账号层级
         <select id="accountScope">
-          <option value="all">全部账号</option>
-          <option value="main">主账号</option>
-          <option value="sub">子账号</option>
+          <option value="collapsed">折叠子账号</option>
+          <option value="expanded">展开子账号</option>
+          <option value="all">全部明细</option>
         </select>
       </label>
       <label class="field">市场
@@ -174,51 +186,79 @@
       </label>
       <button id="reload">刷新</button>
     </div>
-    <section class="chart-panel">
-      <div class="chart-wrap"><svg id="chart" height="520" role="img"></svg></div>
-      <div class="legend">
-        <span><i class="swatch" style="background:var(--long)"></i><span id="legendCurrLong"></span></span>
-        <span><i class="swatch" style="background:var(--long-soft)"></i><span id="legendPrevLong"></span></span>
-        <span><i class="swatch" style="background:var(--short)"></i><span id="legendCurrShort"></span></span>
-        <span><i class="swatch" style="background:var(--short-soft)"></i><span id="legendPrevShort"></span></span>
-      </div>
+    <section class="section-block">
+      <h2 class="section-title">主账号持仓名义本金</h2>
+      <section class="chart-panel">
+        <div class="chart-wrap"><svg id="chart" height="520" role="img"></svg></div>
+        <div class="legend">
+          <span><i class="swatch" style="background:var(--long)"></i><span id="legendCurrLong"></span></span>
+          <span><i class="swatch" style="background:var(--long-soft)"></i><span id="legendPrevLong"></span></span>
+          <span><i class="swatch" style="background:var(--short)"></i><span id="legendCurrShort"></span></span>
+          <span><i class="swatch" style="background:var(--short-soft)"></i><span id="legendPrevShort"></span></span>
+        </div>
+      </section>
     </section>
-    <section class="account-charts">
-      <div class="mini-chart">
-        <h2 id="navTitle">账号 USD NAV</h2>
-        <div class="chart-wrap"><svg id="navChart" height="340" role="img"></svg></div>
-      </div>
-      <div class="mini-chart">
-        <h2 id="fundsTitle">账号 Available Funds</h2>
-        <div class="chart-wrap"><svg id="fundsChart" height="340" role="img"></svg></div>
-      </div>
-      <div class="mini-chart">
-        <h2 id="pnlTitle">账号 PnL Float</h2>
-        <div class="chart-wrap"><svg id="pnlChart" height="340" role="img"></svg></div>
-      </div>
+    <section class="section-block">
+      <h2 class="section-title">客户资金与浮动盈亏</h2>
+      <section class="account-charts">
+        <div class="mini-chart">
+          <h2 id="navTitle">账号 USD NAV</h2>
+          <div class="chart-wrap"><svg id="navChart" height="340" role="img"></svg></div>
+        </div>
+        <div class="mini-chart">
+          <h2 id="fundsTitle">账号 Available Funds</h2>
+          <div class="chart-wrap"><svg id="fundsChart" height="340" role="img"></svg></div>
+        </div>
+        <div class="mini-chart">
+          <h2 id="pnlTitle">账号 PnL Float</h2>
+          <div class="chart-wrap"><svg id="pnlChart" height="340" role="img"></svg></div>
+        </div>
+      </section>
     </section>
-    <section class="activity-charts">
-      <div class="mini-chart">
-        <h2>累计入金 / 出金 / PnL Settlement</h2>
-        <div class="chart-wrap"><svg id="cashflowChart" height="360" role="img"></svg></div>
-      </div>
-      <div class="mini-chart">
-        <h2>客户累计 Commission</h2>
-        <div class="chart-wrap"><svg id="clientCommissionChart" height="360" role="img"></svg></div>
-      </div>
-      <div class="mini-chart">
-        <h2>品种累计 Commission</h2>
-        <div class="chart-wrap"><svg id="productCommissionChart" height="360" role="img"></svg></div>
-      </div>
+    <section class="section-block">
+      <h2 class="section-title">累计现金流与 Commission</h2>
+      <section class="activity-charts">
+        <div class="mini-chart">
+          <h2>累计入金 / 出金 / PnL Settlement</h2>
+          <div class="chart-wrap"><svg id="cashflowChart" height="360" role="img"></svg></div>
+        </div>
+        <div class="mini-chart">
+          <h2>客户累计 Commission</h2>
+          <div class="chart-wrap"><svg id="clientCommissionChart" height="360" role="img"></svg></div>
+        </div>
+        <div class="mini-chart">
+          <h2>品种累计 Commission</h2>
+          <div class="chart-wrap"><svg id="productCommissionChart" height="360" role="img"></svg></div>
+        </div>
+      </section>
     </section>
-    <section class="client-product-charts" id="clientProductCharts"></section>
-    <section class="table-panel" style="margin-top:14px">
-      <div class="table-wrap">
-        <table>
-          <thead id="productTableHead"></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
+    <section class="section-block">
+      <h2 class="section-title">客户-品种风险与收益</h2>
+      <section class="activity-charts">
+        <div class="mini-chart">
+          <h2>客户 + 品种 + PnL Float</h2>
+          <div class="chart-wrap"><svg id="clientProductPnlFloatChart" height="420" role="img"></svg></div>
+        </div>
+        <div class="mini-chart">
+          <h2>客户 + 品种 + 总收益</h2>
+          <div class="chart-wrap"><svg id="clientProductRevenueChart" height="420" role="img"></svg></div>
+        </div>
+      </section>
+    </section>
+    <section class="section-block">
+      <h2 class="section-title">分客户交易量与 Commission</h2>
+      <section class="client-product-charts" id="clientProductCharts"></section>
+    </section>
+    <section class="section-block">
+      <h2 class="section-title">品种持仓明细</h2>
+      <section class="table-panel">
+        <div class="table-wrap">
+          <table>
+            <thead id="productTableHead"></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </section>
     </section>
   </main>
   <div class="tooltip" id="tooltip"></div>
@@ -247,22 +287,33 @@
       const scope = $("accountScope").value;
       if (category !== "all" && meta.client_category !== category) return false;
       if (scope === "all") return true;
-      if (scope === "sub") return meta.account_type === "sub";
-      if (scope === "main") return meta.account_type === "main" || meta.parent_account === "50700";
+      if (scope === "expanded") return meta.account_type === "sub" || !hasChildren(String(account));
+      if (scope === "collapsed") {
+        if (meta.parent_account === "50700") return true;
+        return meta.account_type === "main";
+      }
       return true;
     }
 
     function scopedAccount(account) {
       const meta = accountMeta(String(account));
-      if ($("accountScope").value === "main" && meta.parent_account === "50700") return "50700";
+      if ($("accountScope").value === "collapsed" && meta.parent_account === "50700") return "50700";
       return String(account);
+    }
+
+    function hasChildren(account) {
+      return Object.values(raw.account_metadata || {}).some(meta => meta.parent_account === account);
     }
 
     function currentView() {
       const market = $("marketScope").value;
       const accountScope = $("accountScope").value;
       const category = $("clientCategory").value;
-      return raw.views?.[market]?.[accountScope]?.[category] || raw.views?.all?.all?.all;
+      return raw.views?.[market]?.[accountScope]?.[category] || raw.views?.all?.collapsed?.all;
+    }
+
+    function mainPositionView() {
+      return raw.views?.all?.collapsed?.all || raw.views?.all?.all?.all;
     }
 
     async function load() {
@@ -277,6 +328,10 @@
         .slice(0, limit);
     }
 
+    function mainChartProducts() {
+      return (mainPositionView().products || []).slice(0, 40);
+    }
+
     function render() {
       const view = currentView();
       const scopeLabel = raw.market_views?.[$("marketScope").value] || "全部";
@@ -284,50 +339,49 @@
       const categoryLabel = raw.client_category_views?.[$("clientCategory").value] || "全部客户";
       renderStaticLabels();
       $("meta").innerHTML = `
-        <span>对比日期：左侧柱 ${raw.dates.later}，右侧柱 ${raw.dates.earlier}</span>
+        <span>对比日期：T-1 ${raw.dates.later}，T-2 ${raw.dates.earlier}</span>
         <span>更新时间：${raw.generated_at}</span>
         <span>名义本金口径：USD，汇率日 ${raw.fx?.rate_date || raw.dates.later}</span>
         <span>市场范围：${scopeLabel}</span>
         <span>客户类型：${categoryLabel}</span>
         <span>账号层级：${accountScopeLabel}</span>
-        <span>虚拟主账号：50700 Manifold 聚合 Milvus/Jingan/Dunhe/Zenith/DH_HH/Manifold Master Fund</span>
-        <span>账号：${raw.target_accounts.join(", ")}</span>
       `;
       $("metrics").innerHTML = `
         <div class="metric"><span>品种数</span><b>${view.summary.product_count}</b></div>
-        <div class="metric"><span>左侧日持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
-        <div class="metric"><span>左侧日总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
+        <div class="metric"><span>T-1 持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
+        <div class="metric"><span>T-1 总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
         <div class="metric"><span>多头 / 空头手数</span><b>${fmt.format(view.summary.later_long_lots)} / ${fmt.format(view.summary.later_short_lots)}</b></div>
       `;
-      drawChart(filteredProducts());
+      drawChart(mainChartProducts());
       drawAccountCharts();
       drawActivityCharts();
+      drawRiskMatrixCharts();
       drawClientProductCharts();
       drawTable(filteredProducts());
     }
 
     function renderStaticLabels() {
-      $("legendCurrLong").textContent = "左侧多头名义本金";
-      $("legendPrevLong").textContent = "右侧多头名义本金";
-      $("legendCurrShort").textContent = "左侧空头名义本金";
-      $("legendPrevShort").textContent = "右侧空头名义本金";
+      $("legendCurrLong").textContent = "T-1 多头名义本金";
+      $("legendPrevLong").textContent = "T-2 多头名义本金";
+      $("legendCurrShort").textContent = "T-1 空头名义本金";
+      $("legendPrevShort").textContent = "T-2 空头名义本金";
       $("navTitle").textContent = "账号 USD NAV";
       $("fundsTitle").textContent = "账号 Available Funds";
       $("pnlTitle").textContent = "账号 PnL Float";
       $("productTableHead").innerHTML = `
         <tr>
           <th>品种 / 客户</th>
-          <th>左侧多头本金</th>
-          <th>右侧多头本金</th>
+          <th>T-1 多头本金</th>
+          <th>T-2 多头本金</th>
           <th>多头本金变化</th>
-          <th>左侧空头本金</th>
-          <th>右侧空头本金</th>
+          <th>T-1 空头本金</th>
+          <th>T-2 空头本金</th>
           <th>空头本金变化</th>
-          <th>左侧多头手数</th>
-          <th>左侧空头手数</th>
+          <th>T-1 多头手数</th>
+          <th>T-1 空头手数</th>
           <th>多头手数变化</th>
           <th>空头手数变化</th>
-          <th>左侧总名义本金</th>
+          <th>T-1 总名义本金</th>
         </tr>
       `;
     }
@@ -478,16 +532,16 @@
       const fundsRows = rows.slice().sort((a, b) => (b.curr.available_funds || 0) - (a.curr.available_funds || 0));
       const pnlRows = rows.slice().sort((a, b) => Math.abs(b.curr.pnl_float || 0) - Math.abs(a.curr.pnl_float || 0));
       drawMiniGroupedBar("navChart", navRows, [
-        { label: "左侧 NAV", color: "#166534", value: row => row.curr.nav || 0 },
-        { label: "右侧 NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
+        { label: "T-1 NAV", color: "#166534", value: row => row.curr.nav || 0 },
+        { label: "T-2 NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
       ]);
       drawMiniGroupedBar("fundsChart", fundsRows, [
-        { label: "左侧 Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
-        { label: "右侧 Available Funds", color: "#93c5fd", value: row => row.prev.available_funds || 0 },
+        { label: "T-1 Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
+        { label: "T-2 Available Funds", color: "#93c5fd", value: row => row.prev.available_funds || 0 },
       ], { signed: true });
       drawMiniGroupedBar("pnlChart", pnlRows, [
-        { label: "左侧 PnL Float", color: "#9333ea", value: row => row.curr.pnl_float || 0 },
-        { label: "右侧 PnL Float", color: "#d8b4fe", value: row => row.prev.pnl_float || 0 },
+        { label: "T-1 PnL Float", color: "#9333ea", value: row => row.curr.pnl_float || 0 },
+        { label: "T-2 PnL Float", color: "#d8b4fe", value: row => row.prev.pnl_float || 0 },
       ], { signed: true });
     }
 
@@ -559,15 +613,103 @@
       ]);
     }
 
+    function aggregateClientProductMetric(rows, valueKey) {
+      const map = new Map();
+      rows.forEach(row => {
+        if (!accountAllowed(row.client)) return;
+        const client = scopedAccount(row.client);
+        const key = `${client}||${row.product}`;
+        const current = map.get(key) || { client, product: row.product, value: 0 };
+        current.value += row[valueKey] || 0;
+        map.set(key, current);
+      });
+      return Array.from(map.values());
+    }
+
+    function drawBubbleMatrix(svgId, rows, options) {
+      const svg = $(svgId);
+      const ns = "http://www.w3.org/2000/svg";
+      const info = accountInfoMap();
+      const clientTotals = new Map();
+      const productTotals = new Map();
+      rows.forEach(row => {
+        clientTotals.set(row.client, (clientTotals.get(row.client) || 0) + Math.abs(row.value || 0));
+        productTotals.set(row.product, (productTotals.get(row.product) || 0) + Math.abs(row.value || 0));
+      });
+      const clients = Array.from(clientTotals.entries()).sort((a, b) => b[1] - a[1]).slice(0, 12).map(item => item[0]);
+      const products = Array.from(productTotals.entries()).sort((a, b) => b[1] - a[1]).slice(0, 18).map(item => item[0]);
+      const filtered = rows.filter(row => clients.includes(row.client) && products.includes(row.product));
+      const cellW = 42, cellH = 30, left = 128, right = 28, top = 34, bottom = 92;
+      const width = Math.max(760, left + right + products.length * cellW);
+      const height = Math.max(300, top + bottom + clients.length * cellH);
+      const maxValue = Math.max(1, ...filtered.map(row => Math.abs(row.value || 0)));
+      svg.setAttribute("width", width);
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = "";
+
+      function text(x, y, value, cls, anchor = "middle", rotate = false) {
+        const el = document.createElementNS(ns, "text");
+        el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("class", cls);
+        el.setAttribute("text-anchor", anchor);
+        if (rotate) el.setAttribute("transform", `rotate(-45 ${x} ${y})`);
+        el.textContent = value; svg.appendChild(el);
+      }
+      function moveTooltip(event) {
+        tooltip.style.left = Math.min(window.innerWidth - 16, Math.max(16, event.clientX)) + "px";
+        tooltip.style.top = Math.min(window.innerHeight - 16, Math.max(40, event.clientY - 14)) + "px";
+      }
+      function bind(el, label) {
+        const title = document.createElementNS(ns, "title");
+        title.textContent = label; el.appendChild(title);
+        let holdTimer = null;
+        const show = (event) => { tooltip.textContent = label; moveTooltip(event); tooltip.classList.add("visible"); };
+        const hide = () => { if (holdTimer) clearTimeout(holdTimer); holdTimer = null; tooltip.classList.remove("visible"); };
+        el.addEventListener("pointerenter", show);
+        el.addEventListener("pointermove", moveTooltip);
+        el.addEventListener("pointerleave", hide);
+        el.addEventListener("pointerdown", event => { if (holdTimer) clearTimeout(holdTimer); holdTimer = setTimeout(() => show(event), 280); });
+        el.addEventListener("pointerup", hide);
+        el.addEventListener("pointercancel", hide);
+      }
+      products.forEach((product, i) => text(left + i * cellW + cellW / 2, height - 30, product, "label", "end", true));
+      clients.forEach((client, i) => {
+        const meta = info.get(client) || {};
+        const label = `${client} ${meta.client_name || ""}`.trim();
+        text(left - 10, top + i * cellH + 18, label, "label", "end");
+      });
+      filtered.forEach(row => {
+        const x = left + products.indexOf(row.product) * cellW + cellW / 2;
+        const y = top + clients.indexOf(row.client) * cellH + cellH / 2;
+        const radius = 4 + Math.sqrt(Math.abs(row.value || 0) / maxValue) * 11;
+        const el = document.createElementNS(ns, "circle");
+        el.setAttribute("cx", x);
+        el.setAttribute("cy", y);
+        el.setAttribute("r", radius);
+        el.setAttribute("fill", row.value >= 0 ? "#166534" : "#b42318");
+        el.setAttribute("opacity", 0.78);
+        bind(el, `${row.client} ${info.get(row.client)?.client_name || ""}\n品种: ${row.product}\n${options.label}: ${money.format(row.value || 0)}`);
+        svg.appendChild(el);
+      });
+      text(left, 18, options.label, "small", "start");
+      text(width - 150, 18, "绿色为正，红色为负，圆点越大绝对值越高", "small", "start");
+    }
+
+    function drawRiskMatrixCharts() {
+      const pnlRows = aggregateClientProductMetric(raw.latest_client_product_pnl_float || [], "pnl_float");
+      const revenueRows = aggregateClientProductMetric(raw.latest_activity?.trade_by_client_product || [], "pnl_realized");
+      drawBubbleMatrix("clientProductPnlFloatChart", pnlRows, { label: "PnL Float(USD)" });
+      drawBubbleMatrix("clientProductRevenueChart", revenueRows, { label: "总收益(USD)" });
+    }
+
     function drawDualAxisClientChart(svgId, rows) {
       const svg = $(svgId);
       const ns = "http://www.w3.org/2000/svg";
-      const left = 64, right = 76, top = 28, bottom = 84, groupGap = 18, groupW = 34;
+      const left = 116, right = 112, top = 28, bottom = 84, groupGap = 18, groupW = 34;
       const width = Math.max(780, left + right + rows.length * (groupW + groupGap));
       const height = Number(svg.getAttribute("height")) || 380;
       const zero = Math.round((height - bottom + top) / 2);
       const maxLots = Math.max(1, ...rows.flatMap(row => [Math.abs(row.long_lots || 0), Math.abs(row.short_lots || 0)]));
-      const maxMoney = Math.max(1, ...rows.flatMap(row => [Math.abs(row.pnl_realized || 0), Math.abs(row.commission || 0)]));
+      const maxMoney = Math.max(1, ...rows.map(row => Math.abs(row.commission || 0)));
       const lotScale = (zero - top - 12) / maxLots;
       const moneyScale = (zero - top - 12) / maxMoney;
       svg.setAttribute("width", width);
@@ -627,32 +769,27 @@
       [0.5, 1].forEach(r => {
         line(left, zero - maxLots * r * lotScale, width - right, zero - maxLots * r * lotScale, "grid");
         line(left, zero + maxLots * r * lotScale, width - right, zero + maxLots * r * lotScale, "grid");
-        text(38, zero - maxLots * r * lotScale + 4, fmt.format(maxLots * r), "small", "end");
-        text(38, zero + maxLots * r * lotScale + 4, fmt.format(maxLots * r), "small", "end");
-        text(width - 34, zero - maxMoney * r * moneyScale + 4, money.format(maxMoney * r), "small", "start");
-        text(width - 34, zero + maxMoney * r * moneyScale + 4, "-" + money.format(maxMoney * r), "small", "start");
+        text(104, zero - maxLots * r * lotScale + 4, fmt.format(maxLots * r), "small", "end");
+        text(104, zero + maxLots * r * lotScale + 4, fmt.format(maxLots * r), "small", "end");
+        text(width - 102, zero - maxMoney * r * moneyScale + 4, money.format(maxMoney * r), "small", "start");
       });
-      text(16, top + 8, "手数", "small", "start");
-      text(width - 72, top + 8, "USD", "small", "start");
+      text(70, top + 8, "手数", "small", "start");
+      text(width - 104, top + 8, "Commission USD", "small", "start");
 
-      const pnlPoints = [];
       const commissionPoints = [];
       rows.forEach((row, i) => {
         const x = left + i * (groupW + groupGap);
         const longH = Math.abs(row.long_lots || 0) * lotScale;
         const shortH = Math.abs(row.short_lots || 0) * lotScale;
-        rect(x, zero - longH, 12, longH, "#166534", `${row.product}\n多头交易量: ${fmt.format(row.long_lots || 0)}\n总收益(USD): ${money.format(row.pnl_realized || 0)}\nCommission(USD): ${money.format(row.commission || 0)}`);
-        rect(x + 14, zero, 12, shortH, "#b42318", `${row.product}\n空头交易量: ${fmt.format(row.short_lots || 0)}\n总收益(USD): ${money.format(row.pnl_realized || 0)}\nCommission(USD): ${money.format(row.commission || 0)}`);
+        rect(x, zero - longH, 12, longH, "#166534", `${row.product}\n多头交易量: ${fmt.format(row.long_lots || 0)}\nCommission(USD): ${money.format(row.commission || 0)}`);
+        rect(x + 14, zero, 12, shortH, "#b42318", `${row.product}\n空头交易量: ${fmt.format(row.short_lots || 0)}\nCommission(USD): ${money.format(row.commission || 0)}`);
         const cx = x + 13;
-        pnlPoints.push([cx, zero - (row.pnl_realized || 0) * moneyScale]);
         commissionPoints.push([cx, zero - (row.commission || 0) * moneyScale]);
         text(x + 13, height - 30, row.product, "label", "end", true);
       });
-      polyline(pnlPoints, "#1d4ed8");
       polyline(commissionPoints, "#7c3aed");
       rows.forEach((row, i) => {
         const cx = left + i * (groupW + groupGap) + 13;
-        circle(cx, zero - (row.pnl_realized || 0) * moneyScale, "#1d4ed8", `${row.product}\n总收益(USD): ${money.format(row.pnl_realized || 0)}`);
         circle(cx, zero - (row.commission || 0) * moneyScale, "#7c3aed", `${row.product}\nCommission(USD): ${money.format(row.commission || 0)}`);
       });
     }
@@ -677,18 +814,17 @@
       });
       const info = accountInfoMap();
       const clients = Array.from(byClient.keys()).sort((a, b) => {
-        const aSum = byClient.get(a).reduce((s, row) => s + Math.abs(row.pnl_realized || 0), 0);
-        const bSum = byClient.get(b).reduce((s, row) => s + Math.abs(row.pnl_realized || 0), 0);
+        const aSum = byClient.get(a).reduce((s, row) => s + Math.abs(row.long_lots || 0) + Math.abs(row.short_lots || 0), 0);
+        const bSum = byClient.get(b).reduce((s, row) => s + Math.abs(row.long_lots || 0) + Math.abs(row.short_lots || 0), 0);
         return bSum - aSum;
       });
       container.innerHTML = clients.map(client => `
         <div class="mini-chart">
           <h2>${escapeHtml(client)} ${escapeHtml(info.get(client)?.client_name || "")}</h2>
-          <div class="subhead">多头/空头交易量使用左轴，总收益与 Commission 使用右轴</div>
+          <div class="subhead">多头/空头交易量使用左轴，Commission 使用右轴</div>
           <div class="legend">
             <span><i class="swatch" style="background:#166534"></i>多头交易量</span>
             <span><i class="swatch" style="background:#b42318"></i>空头交易量</span>
-            <span><i class="swatch" style="background:#1d4ed8"></i>总收益</span>
             <span><i class="swatch" style="background:#7c3aed"></i>Commission</span>
           </div>
           <div class="chart-wrap"><svg id="clientProduct_${escapeHtml(client)}" height="380" role="img"></svg></div>
@@ -696,7 +832,7 @@
       `).join("");
       clients.forEach(client => {
         const rows = byClient.get(client)
-          .sort((a, b) => Math.abs(b.pnl_realized || 0) + Math.abs(b.commission || 0) - Math.abs(a.pnl_realized || 0) - Math.abs(a.commission || 0))
+          .sort((a, b) => Math.abs(b.long_lots || 0) + Math.abs(b.short_lots || 0) - Math.abs(a.long_lots || 0) - Math.abs(a.short_lots || 0))
           .slice(0, 16);
         drawDualAxisClientChart(`clientProduct_${client}`, rows);
       });
@@ -783,10 +919,10 @@
         const currLongH = Math.abs(p.curr_long_notional) * scale;
         const prevShortH = Math.abs(p.prev_short_notional) * scale;
         const currShortH = Math.abs(p.curr_short_notional) * scale;
-        bindTooltip(rect(x, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} 左侧多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
-        bindTooltip(rect(x + 15, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} 右侧多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
-        bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), `${p.product} 左侧空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
-        bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} 右侧空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
+        bindTooltip(rect(x, mid - currLongH, 13, currLongH, "#166534", 0.95), `${p.product} ${raw.dates.later} 多头\n名义本金(USD): ${money.format(p.curr_long_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x + 15, mid - prevLongH, 13, prevLongH, "#9bd7ad", 0.95), `${p.product} ${raw.dates.earlier} 多头\n名义本金(USD): ${money.format(p.prev_long_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
+        bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), `${p.product} ${raw.dates.later} 空头\n名义本金(USD): ${money.format(p.curr_short_notional)}\n多头手数: ${fmt.format(p.curr_long_lots)}\n空头手数: ${fmt.format(p.curr_short_lots)}`);
+        bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), `${p.product} ${raw.dates.earlier} 空头\n名义本金(USD): ${money.format(p.prev_short_notional)}\n多头手数: ${fmt.format(p.prev_long_lots)}\n空头手数: ${fmt.format(p.prev_short_lots)}`);
         text(x + 14, height - 34, p.product, "label", true);
         const lotChanges = [];
         if (p.delta_long_lots !== 0) lotChanges.push("多" + signed(p.delta_long_lots));
