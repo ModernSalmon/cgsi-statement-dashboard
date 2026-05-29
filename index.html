@@ -407,7 +407,6 @@
       `;
       $("metrics").innerHTML = `
         <div class="metric"><span>品种数</span><b>${view.summary.product_count}</b></div>
-        <div class="metric"><span>T-1 持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
         <div class="metric"><span>T-1 总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
         <div class="metric"><span>T-1 总名义本金(去除 XUC)</span><b>${money.format(view.summary.later_gross_notional_ex_xuc)}</b></div>
         <div class="metric"><span>多头 / 空头手数</span><b>${fmt.format(view.summary.later_long_lots)} / ${fmt.format(view.summary.later_short_lots)}</b></div>
@@ -731,14 +730,16 @@
       const totals = new Map();
       (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
         if (!accountAllowed(row.client)) return;
-        const client = scopedAccount(row.client);
+        if (accountMeta(String(row.client)).account_type !== "main") return;
+        const client = String(row.client);
         const current = totals.get(client) || { commission: 0, holding_fee: 0, holding_fee_discount: 0 };
         current.commission += row.commission || 0;
         totals.set(client, current);
       });
       (raw.latest_activity?.cashflow_by_client || []).forEach(row => {
         if (!accountAllowed(row.client)) return;
-        const client = scopedAccount(row.client);
+        if (accountMeta(String(row.client)).account_type !== "main") return;
+        const client = String(row.client);
         const current = totals.get(client) || { commission: 0, holding_fee: 0, holding_fee_discount: 0 };
         current.holding_fee += row.holding_fee || 0;
         current.holding_fee_discount += row.holding_fee_discount || 0;
@@ -767,11 +768,11 @@
         clientSignedTotals.set(row.client, (clientSignedTotals.get(row.client) || 0) + (row.value || 0));
         productSignedTotals.set(row.product, (productSignedTotals.get(row.product) || 0) + (row.value || 0));
       });
-      const clients = Array.from(clientTotals.entries()).sort((a, b) => b[1] - a[1]).slice(0, 12).map(item => item[0]);
+      const clients = Array.from(clientTotals.entries()).sort((a, b) => b[1] - a[1]).slice(0, 24).map(item => item[0]);
       const products = Array.from(productTotals.entries()).sort((a, b) => b[1] - a[1]).slice(0, 18).map(item => item[0]);
       const filtered = rows.filter(row => clients.includes(row.client) && products.includes(row.product));
       const extraSeries = options.extraClientTotals || [];
-      const cellW = 42, cellH = 30, left = 128, right = 128 + extraSeries.length * 38, top = 62, bottom = 92;
+      const cellW = 54, cellH = 34, left = 210, right = 128 + extraSeries.length * 42, top = 94, bottom = 92;
       const width = Math.max(760, left + right + products.length * cellW);
       const height = Math.max(300, top + bottom + clients.length * cellH);
       const maxValue = Math.max(1, ...filtered.map(row => Math.abs(row.value || 0)));
@@ -787,6 +788,15 @@
         el.setAttribute("text-anchor", anchor);
         if (rotate) el.setAttribute("transform", `rotate(-45 ${x} ${y})`);
         el.textContent = value; svg.appendChild(el);
+      }
+      function shortMoney(value) {
+        const n = Number(value || 0);
+        const abs = Math.abs(n);
+        const sign = n < 0 ? "-" : "";
+        if (abs >= 1000000000) return sign + (abs / 1000000000).toFixed(1) + "B";
+        if (abs >= 1000000) return sign + (abs / 1000000).toFixed(1) + "M";
+        if (abs >= 1000) return sign + (abs / 1000).toFixed(0) + "K";
+        return sign + money.format(abs);
       }
       function moveTooltip(event) {
         tooltip.style.left = Math.min(window.innerWidth - 16, Math.max(16, event.clientX)) + "px";
@@ -815,6 +825,36 @@
         bind(el, label);
         svg.appendChild(el);
       }
+      function summaryBox(x, y, w, h, value, fill, label) {
+        const group = document.createElementNS(ns, "g");
+        const bg = document.createElementNS(ns, "rect");
+        bg.setAttribute("x", x); bg.setAttribute("y", y);
+        bg.setAttribute("width", w); bg.setAttribute("height", h);
+        bg.setAttribute("rx", 5);
+        bg.setAttribute("fill", "#fff");
+        bg.setAttribute("stroke", "#cfd6e3");
+        group.appendChild(bg);
+        const dot = document.createElementNS(ns, "circle");
+        dot.setAttribute("cx", x + 10); dot.setAttribute("cy", y + h / 2);
+        dot.setAttribute("r", 4); dot.setAttribute("fill", fill);
+        group.appendChild(dot);
+        const valueText = document.createElementNS(ns, "text");
+        valueText.setAttribute("x", x + 18); valueText.setAttribute("y", y + h / 2 + 4);
+        valueText.setAttribute("class", "small");
+        valueText.textContent = shortMoney(value);
+        group.appendChild(valueText);
+        bind(group, label);
+        svg.appendChild(group);
+      }
+      function polyline(points, stroke) {
+        if (points.length < 2) return;
+        const el = document.createElementNS(ns, "polyline");
+        el.setAttribute("points", points.map(p => p.join(",")).join(" "));
+        el.setAttribute("fill", "none");
+        el.setAttribute("stroke", stroke);
+        el.setAttribute("stroke-width", 2);
+        svg.appendChild(el);
+      }
       function totalCircleRadius(value, maxTotal) {
         return 4 + Math.sqrt(Math.abs(value || 0) / maxTotal) * 10;
       }
@@ -822,23 +862,29 @@
         return value >= 0 ? positiveColor : negativeColor;
       }
       products.forEach((product, i) => text(left + i * cellW + cellW / 2, height - 30, product, "label", "end", true));
+      const lineSeriesPoints = extraSeries.map(() => []);
       clients.forEach((client, i) => {
         const meta = info.get(client) || {};
         const label = `${client} ${meta.client_name || ""}`.trim();
         const y = top + i * cellH + 18;
-        text(left - 10, y, label, "label", "end");
+        text(left - 92, y, label, "label", "end");
         const total = clientSignedTotals.get(client) || 0;
-        circle(left + products.length * cellW + 24, y - 4, totalCircleRadius(total, maxClientTotal), valueColor(total), `${label}\n${options.label} 客户合计: ${money.format(total)}`);
+        summaryBox(left - 82, y - 15, 70, 24, total, valueColor(total), `${label}\n${options.label} 客户合计: ${money.format(total)}`);
         extraSeries.forEach((series, idx) => {
           const value = series.values.get(client) || 0;
-          circle(left + products.length * cellW + 62 + idx * 38, y - 4, totalCircleRadius(value, maxClientTotal), series.color || valueColor(value), `${label}\n${series.label}: ${money.format(value)}`, 0.82);
+          if (value === 0 || meta.account_type !== "main") return;
+          const x = left + products.length * cellW + 34 + idx * 42;
+          const yValue = top + i * cellH + cellH / 2;
+          lineSeriesPoints[idx].push([x, yValue]);
+          circle(x, yValue, totalCircleRadius(value, maxClientTotal), series.color || valueColor(value), `${label}\n${series.label}: ${money.format(value)}`, 0.88);
         });
       });
       products.forEach((product, i) => {
         const total = productSignedTotals.get(product) || 0;
         const x = left + i * cellW + cellW / 2;
-        circle(x, top - 24, totalCircleRadius(total, maxProductTotal), valueColor(total), `${product}\n${options.label} 品种合计: ${money.format(total)}`);
+        summaryBox(x - 23, top - 56, 46, 24, total, valueColor(total), `${product}\n${options.label} 品种合计: ${money.format(total)}`);
       });
+      lineSeriesPoints.forEach((points, idx) => polyline(points, extraSeries[idx]?.color || "#1d4ed8"));
       filtered.forEach(row => {
         const x = left + products.indexOf(row.product) * cellW + cellW / 2;
         const y = top + clients.indexOf(row.client) * cellH + cellH / 2;
@@ -846,9 +892,9 @@
         circle(x, y, radius, valueColor(row.value || 0), `${row.client} ${info.get(row.client)?.client_name || ""}\n品种: ${row.product}\n${options.label}: ${money.format(row.value || 0)}`);
       });
       text(left, 18, options.label, "small", "start");
-      text(left + products.length * cellW + 12, 18, "客户合计", "small", "start");
-      extraSeries.forEach((series, idx) => text(left + products.length * cellW + 50 + idx * 38, 18, series.shortLabel || series.label, "small", "start"));
-      text(width - 260, 18, "顶部为品种合计，右侧为客户合计", "small", "start");
+      text(left - 82, 22, "客户合计", "small", "start");
+      extraSeries.forEach((series, idx) => text(left + products.length * cellW + 18 + idx * 42, 22, series.shortLabel || series.label, "small", "start"));
+      text(left, 46, "顶部方框为品种合计，客户名旁方框为客户合计", "small", "start");
     }
 
     function drawRiskMatrixCharts() {
@@ -869,7 +915,7 @@
     function drawDualAxisClientChart(svgId, rows) {
       const svg = $(svgId);
       const ns = "http://www.w3.org/2000/svg";
-      const left = 116, right = 112, top = 28, bottom = 84, groupGap = 18, groupW = 34;
+      const left = 116, right = 112, top = 28, bottom = 96, groupGap = 24, groupW = 38;
       const width = Math.max(780, left + right + rows.length * (groupW + groupGap));
       const height = Number(svg.getAttribute("height")) || 380;
       const zero = Math.round((height - bottom + top) / 2);
@@ -965,6 +1011,7 @@
       (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
         if (!accountAllowed(row.client)) return;
         const account = scopedAccount(row.client);
+        if (account === "60300") return;
         const list = byClient.get(account) || [];
         const existing = list.find(item => item.product === row.product);
         if (existing) {
@@ -1010,7 +1057,7 @@
 
     function drawChart(data) {
       const svg = $("chart");
-      const barGap = 18, groupW = 34, left = 62, right = 20, top = 24, bottom = 96;
+      const barGap = 26, groupW = 38, left = 70, right = 24, top = 24, bottom = 108;
       const width = Math.max(780, left + right + data.length * (groupW + barGap));
       const height = 520, mid = 250;
       svg.setAttribute("width", width);
@@ -1117,7 +1164,7 @@
         const lotChanges = [];
         if (p.delta_long_lots !== 0) lotChanges.push("多" + signed(p.delta_long_lots));
         if (p.delta_short_lots !== 0) lotChanges.push("空" + signed(p.delta_short_lots));
-        if (lotChanges.length) text(x + 14, mid - 8, lotChanges.join(" "), "lot-tag");
+        if (lotChanges.length && data.length <= 40) text(x + 14, mid - 8 - (i % 2) * 14, lotChanges.join(" "), "lot-tag");
       });
     }
 
