@@ -184,6 +184,7 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
     }
+    .risk-charts { grid-template-columns: 1fr; }
     .client-product-charts { grid-template-columns: 1fr; }
     .account-toolbar { margin-top: 14px; margin-bottom: 0; }
     .mini-chart { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
@@ -286,7 +287,7 @@
     </section>
     <section class="section-block">
       <h2 class="section-title">累计现金流与 Commission</h2>
-      <section class="activity-charts">
+      <section class="activity-charts risk-charts">
         <div class="mini-chart">
           <h2>累计入金 / 出金</h2>
           <div class="chart-wrap"><svg id="cashflowChart" height="360" role="img"></svg></div>
@@ -309,7 +310,7 @@
           <div class="chart-wrap"><svg id="clientProductRevenueChart" height="420" role="img"></svg></div>
         </div>
         <div class="mini-chart">
-          <h2>客户 + 品种 + Commission</h2>
+          <h2>客户 + 品种 + Commission 与利润拆分</h2>
           <div class="chart-wrap"><svg id="clientProductCommissionChart" height="420" role="img"></svg></div>
         </div>
       </section>
@@ -730,16 +731,16 @@
       const totals = new Map();
       (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
         if (!accountAllowed(row.client)) return;
-        if (accountMeta(String(row.client)).account_type !== "main") return;
-        const client = String(row.client);
+        const client = scopedAccount(row.client);
+        if (accountMeta(client).account_type !== "main") return;
         const current = totals.get(client) || { commission: 0, holding_fee: 0, holding_fee_discount: 0 };
         current.commission += row.commission || 0;
         totals.set(client, current);
       });
       (raw.latest_activity?.cashflow_by_client || []).forEach(row => {
         if (!accountAllowed(row.client)) return;
-        if (accountMeta(String(row.client)).account_type !== "main") return;
-        const client = String(row.client);
+        const client = scopedAccount(row.client);
+        if (accountMeta(client).account_type !== "main") return;
         const current = totals.get(client) || { commission: 0, holding_fee: 0, holding_fee_discount: 0 };
         current.holding_fee += row.holding_fee || 0;
         current.holding_fee_discount += row.holding_fee_discount || 0;
@@ -777,9 +778,9 @@
       const filtered = rows.filter(row => clients.includes(row.client) && products.includes(row.product));
       const extraSeries = options.extraClientTotals || [];
       const hasExtraLines = extraSeries.length > 0;
-      const sideW = hasExtraLines ? 150 : 58;
+      const sideW = hasExtraLines ? 170 : 64;
       const topSummaryH = 32;
-      const cellW = 54, cellH = 34, left = 168 + sideW, right = hasExtraLines ? 188 : 48, top = 78 + topSummaryH, bottom = 92;
+      const cellW = 62, cellH = 38, left = 184 + sideW, right = hasExtraLines ? 202 : 54, top = 82 + topSummaryH, bottom = 98;
       const width = Math.max(760, left + right + products.length * cellW);
       const height = Math.max(300, top + bottom + clients.length * cellH);
       const maxValue = Math.max(1, ...filtered.map(row => Math.abs(row.value || 0)));
@@ -902,8 +903,8 @@
         const minLine = Math.min(...lineValues, 0);
         const maxLine = Math.max(...lineValues, 0);
         const span = Math.max(1, maxLine - minLine);
-        const xMin = sideLeft + 18;
-        const xMax = sideLeft + sideW - 18;
+        const xMin = sideLeft + 20;
+        const xMax = sideLeft + sideW - 20;
         lineScale = value => xMin + ((value - minLine) / span) * (xMax - xMin);
         line(lineScale(0), sideTop + 8, lineScale(0), sideTop + sideHeight - 8, "#d9dee7", 1);
       }
@@ -911,7 +912,7 @@
       clients.forEach((client, i) => {
         const meta = info.get(client) || {};
         const label = `${client} ${meta.client_name || ""}`.trim();
-        const y = top + i * cellH + 18;
+        const y = top + i * cellH + 20;
         text(sideLeft - 10, y, label, "label", "end");
         const total = clientSignedTotals.get(client) || 0;
         if (!hasExtraLines) {
@@ -944,7 +945,7 @@
       text(left, 18, options.label, "small", "start");
       if (hasExtraLines) {
         extraSeries.forEach((series, idx) => {
-          const lx = sideLeft + 10 + (idx % 2) * 68;
+          const lx = sideLeft + 10 + (idx % 2) * 78;
           const ly = 20 + Math.floor(idx / 2) * 14;
           line(lx, ly - 4, lx + 16, ly - 4, series.color || "#1d4ed8", series.emphasis ? 3 : 1.7);
           text(lx + 21, ly, series.shortLabel || series.label, "small", "start");
