@@ -156,6 +156,7 @@
     .label { fill: #344054; font-size: 12px; }
     .small { fill: #697586; font-size: 11px; }
     .lot-tag { fill: #697586; font-size: 11px; font-weight: 600; }
+    .line-label { fill: #1d4ed8; font-size: 11px; font-weight: 600; }
     .legend { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
     .swatch { width: 14px; height: 9px; display: inline-block; border-radius: 2px; margin-right: 5px; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -544,7 +545,7 @@
     function drawMiniGroupedBar(svgId, rows, series, options = {}) {
       const svg = $(svgId);
       const ns = "http://www.w3.org/2000/svg";
-      const left = 64, right = 18, top = 18, bottom = 74, groupGap = 16;
+      const left = 64, right = options.percentLine ? 58 : 18, top = 18, bottom = 74, groupGap = 16;
       const groupW = Math.max(36, series.length * 12 + 8);
       const width = Math.max(620, left + right + rows.length * (groupW + groupGap));
       const height = Number(svg.getAttribute("height")) || 340;
@@ -608,6 +609,33 @@
         bindMiniTooltip(el, label);
         svg.appendChild(el);
       }
+      function circle(x, y, r, fill, label) {
+        const el = document.createElementNS(ns, "circle");
+        el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", r);
+        el.setAttribute("fill", fill);
+        bindMiniTooltip(el, label);
+        svg.appendChild(el);
+      }
+      function polyline(points, stroke) {
+        if (points.length < 2) return;
+        const el = document.createElementNS(ns, "polyline");
+        el.setAttribute("points", points.map(p => p.join(",")).join(" "));
+        el.setAttribute("fill", "none");
+        el.setAttribute("stroke", stroke);
+        el.setAttribute("stroke-width", 2);
+        svg.appendChild(el);
+      }
+      function percentChange(row) {
+        if (!options.percentLine) return 0;
+        const curr = options.percentLine.curr(row) || 0;
+        const prev = options.percentLine.prev(row) || 0;
+        if (prev === 0) return curr === 0 ? 0 : (curr > 0 ? 1 : -1);
+        return (curr - prev) / Math.abs(prev);
+      }
+      const percentValues = options.percentLine ? rows.map(percentChange) : [];
+      const maxPct = Math.max(0.01, ...percentValues.map(v => Math.abs(v || 0)));
+      const percentScale = options.signed ? (zero - topLimit) / maxPct : (bottomLimit - topLimit) / (2 * maxPct);
+      const percentZero = options.signed ? zero : (topLimit + bottomLimit) / 2;
 
       if (options.signed) {
         line(left, zero, width - right, zero, "axis");
@@ -625,7 +653,14 @@
           text(36, y + 4, money.format(maxValue * r), "small");
         });
       }
+      if (options.percentLine) {
+        line(width - right + 18, topLimit, width - right + 18, bottomLimit, "axis");
+        text(width - right + 40, topLimit + 4, (maxPct * 100).toFixed(0) + "%", "small");
+        text(width - right + 40, percentZero + 4, "0%", "small");
+        text(width - right + 40, bottomLimit + 4, "-" + (maxPct * 100).toFixed(0) + "%", "small");
+      }
 
+      const pctPoints = [];
       rows.forEach((row, i) => {
         const x = left + i * (groupW + groupGap);
         series.forEach((s, j) => {
@@ -642,8 +677,18 @@
             rect(bx, bottomLimit - h, barW, h, s.color, label);
           }
         });
+        if (options.percentLine) {
+          const pct = percentChange(row);
+          const cx = x + groupW / 2;
+          const cy = percentZero - pct * percentScale;
+          pctPoints.push([cx, cy]);
+          const label = `${row.account}\n${options.percentLine.label}: ${(pct * 100).toFixed(1)}%`;
+          circle(cx, cy, 3.5, options.percentLine.color || "#1d4ed8", label);
+          if (rows.length <= 16) text(cx + 8, cy - 6, (pct * 100).toFixed(1) + "%", "line-label");
+        }
         text(x + groupW / 2, height - 28, row.account, "label", true);
       });
+      if (options.percentLine) polyline(pctPoints, options.percentLine.color || "#1d4ed8");
     }
 
     function drawAccountCharts() {
@@ -654,15 +699,15 @@
       drawMiniGroupedBar("navChart", navRows, [
         { label: "T-1 NAV", color: "#166534", value: row => row.curr.nav || 0 },
         { label: "T-2 NAV", color: "#9bd7ad", value: row => row.prev.nav || 0 },
-      ], { signed: true });
+      ], { signed: true, percentLine: { label: "NAV 变动", color: "#1d4ed8", curr: row => row.curr.nav || 0, prev: row => row.prev.nav || 0 } });
       drawMiniGroupedBar("fundsChart", fundsRows, [
         { label: "T-1 Available Funds", color: "#1d4ed8", value: row => row.curr.available_funds || 0 },
         { label: "T-2 Available Funds", color: "#93c5fd", value: row => row.prev.available_funds || 0 },
-      ], { signed: true });
+      ], { signed: true, percentLine: { label: "Available Funds 变动", color: "#7c3aed", curr: row => row.curr.available_funds || 0, prev: row => row.prev.available_funds || 0 } });
       drawMiniGroupedBar("pnlChart", pnlRows, [
         { label: "T-1 PnL Float", color: "#9333ea", value: row => row.curr.pnl_float || 0 },
         { label: "T-2 PnL Float", color: "#d8b4fe", value: row => row.prev.pnl_float || 0 },
-      ], { signed: true });
+      ], { signed: true, percentLine: { label: "PnL Float 变动", color: "#0f766e", curr: row => row.curr.pnl_float || 0, prev: row => row.prev.pnl_float || 0 } });
     }
 
     function accountInfoMap() {
@@ -1117,7 +1162,7 @@
 
     function drawChart(data) {
       const svg = $("chart");
-      const barGap = 26, groupW = 38, left = 70, right = 24, top = 24, bottom = 108;
+      const barGap = 26, groupW = 38, left = 70, right = 78, top = 24, bottom = 108;
       const width = Math.max(780, left + right + data.length * (groupW + barGap));
       const height = 520, mid = 250;
       svg.setAttribute("width", width);
@@ -1144,6 +1189,23 @@
         el.setAttribute("x", x); el.setAttribute("y", y); el.setAttribute("width", w); el.setAttribute("height", Math.max(0, h));
         el.setAttribute("rx", 2); el.setAttribute("fill", fill); el.setAttribute("opacity", opacity); svg.appendChild(el);
         return el;
+      }
+      function circle(x, y, r, fill, label) {
+        const el = document.createElementNS(ns, "circle");
+        el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", r);
+        el.setAttribute("fill", fill);
+        svg.appendChild(el);
+        bindTooltip(el, label);
+        return el;
+      }
+      function polyline(points, stroke) {
+        if (points.length < 2) return;
+        const el = document.createElementNS(ns, "polyline");
+        el.setAttribute("points", points.map(p => p.join(",")).join(" "));
+        el.setAttribute("fill", "none");
+        el.setAttribute("stroke", stroke);
+        el.setAttribute("stroke-width", 2.2);
+        svg.appendChild(el);
       }
       function title(el, value) {
         const t = document.createElementNS(ns, "title");
@@ -1209,7 +1271,16 @@
         text(34, y2 + 4, money.format(maxNotional * r), "small");
       });
       line(left, mid, width - right, mid, "axis");
+      const maxLotDelta = Math.max(1, ...data.map(p => Math.abs((p.delta_long_lots || 0) + (p.delta_short_lots || 0))));
+      const lotScale = (mid - top - 20) / maxLotDelta;
+      const rightAxisX = width - right + 24;
+      line(rightAxisX, top, rightAxisX, height - bottom, "axis");
+      [1, 0.5, -0.5, -1].forEach(r => {
+        const y = mid - maxLotDelta * r * lotScale;
+        text(rightAxisX + 35, y + 4, fmt.format(maxLotDelta * r), "small");
+      });
 
+      const lotDeltaPoints = [];
       data.forEach((p, i) => {
         const x = left + i * (groupW + barGap);
         const prevLongH = Math.abs(p.prev_long_notional) * scale;
@@ -1221,11 +1292,14 @@
         bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), chartTooltip(p, "curr", "short", "空头"));
         bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), chartTooltip(p, "prev", "short", "空头"));
         text(x + 14, height - 34, p.product, "label", true);
-        const lotChanges = [];
-        if (p.delta_long_lots !== 0) lotChanges.push("多" + signed(p.delta_long_lots));
-        if (p.delta_short_lots !== 0) lotChanges.push("空" + signed(p.delta_short_lots));
-        if (lotChanges.length && data.length <= 40) text(x + 14, mid - 8 - (i % 2) * 14, lotChanges.join(" "), "lot-tag");
+        const lotDelta = (p.delta_long_lots || 0) + (p.delta_short_lots || 0);
+        const lx = x + 14;
+        const ly = mid - lotDelta * lotScale;
+        lotDeltaPoints.push([lx, ly]);
+        circle(lx, ly, 3.5, "#1d4ed8", `${p.product}\n净手数变动: ${signed(lotDelta)}\n多头变动: ${signed(p.delta_long_lots || 0)}\n空头变动: ${signed(p.delta_short_lots || 0)}`);
+        if (lotDelta !== 0 && data.length <= 40) text(lx + 7, ly - 6 - (i % 2) * 10, signed(lotDelta), "line-label");
       });
+      polyline(lotDeltaPoints, "#1d4ed8");
     }
 
     function signed(n) {
