@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28 23:20:34",
+  "generated_at": "2026-05-29 15:48:18",
   "dates": {
     "earlier": "2026-05-22",
     "later": "2026-05-25"
@@ -326,6 +326,7 @@
             "later_position_rows": 129,
             "earlier_position_rows": 128,
             "later_gross_notional": 406148299.51,
+            "later_gross_notional_ex_xuc": 370947318.57,
             "later_long_lots": 20012790.0,
             "later_short_lots": 10112.0
           },
@@ -3920,6 +3921,7 @@
             "later_position_rows": 116,
             "earlier_position_rows": 115,
             "later_gross_notional": 266393011.74,
+            "later_gross_notional_ex_xuc": 231192030.81,
             "later_long_lots": 20006090.0,
             "later_short_lots": 6502.0
           },
@@ -7243,6 +7245,7 @@
             "later_position_rows": 13,
             "earlier_position_rows": 13,
             "later_gross_notional": 139755287.76,
+            "later_gross_notional_ex_xuc": 139755287.76,
             "later_long_lots": 6700.0,
             "later_short_lots": 3610.0
           },
@@ -7660,6 +7663,7 @@
             "later_position_rows": 129,
             "earlier_position_rows": 128,
             "later_gross_notional": 406148299.51,
+            "later_gross_notional_ex_xuc": 370947318.57,
             "later_long_lots": 20012790.0,
             "later_short_lots": 10112.0
           },
@@ -11849,6 +11853,7 @@
             "later_position_rows": 116,
             "earlier_position_rows": 115,
             "later_gross_notional": 266393011.74,
+            "later_gross_notional_ex_xuc": 231192030.81,
             "later_long_lots": 20006090.0,
             "later_short_lots": 6502.0
           },
@@ -15767,6 +15772,7 @@
             "later_position_rows": 13,
             "earlier_position_rows": 13,
             "later_gross_notional": 139755287.76,
+            "later_gross_notional_ex_xuc": 139755287.76,
             "later_long_lots": 6700.0,
             "later_short_lots": 3610.0
           },
@@ -16186,6 +16192,7 @@
             "later_position_rows": 96,
             "earlier_position_rows": 96,
             "later_gross_notional": 303141539.49,
+            "later_gross_notional_ex_xuc": 267940558.55,
             "later_long_lots": 12119.0,
             "later_short_lots": 9972.0
           },
@@ -18903,6 +18910,7 @@
             "later_position_rows": 83,
             "earlier_position_rows": 83,
             "later_gross_notional": 163386251.73,
+            "later_gross_notional_ex_xuc": 128185270.79,
             "later_long_lots": 5419.0,
             "later_short_lots": 6362.0
           },
@@ -21349,6 +21357,7 @@
             "later_position_rows": 13,
             "earlier_position_rows": 13,
             "later_gross_notional": 139755287.76,
+            "later_gross_notional_ex_xuc": 139755287.76,
             "later_long_lots": 6700.0,
             "later_short_lots": 3610.0
           },
@@ -21766,6 +21775,7 @@
             "later_position_rows": 96,
             "earlier_position_rows": 96,
             "later_gross_notional": 303141539.49,
+            "later_gross_notional_ex_xuc": 267940558.55,
             "later_long_lots": 12119.0,
             "later_short_lots": 9972.0
           },
@@ -24885,6 +24895,7 @@
             "later_position_rows": 83,
             "earlier_position_rows": 83,
             "later_gross_notional": 163386251.73,
+            "later_gross_notional_ex_xuc": 128185270.79,
             "later_long_lots": 5419.0,
             "later_short_lots": 6362.0
           },
@@ -27733,6 +27744,7 @@
             "later_position_rows": 13,
             "earlier_position_rows": 13,
             "later_gross_notional": 139755287.76,
+            "later_gross_notional_ex_xuc": 139755287.76,
             "later_long_lots": 6700.0,
             "later_short_lots": 3610.0
           },
@@ -28152,6 +28164,7 @@
             "later_position_rows": 33,
             "earlier_position_rows": 32,
             "later_gross_notional": 103006760.02,
+            "later_gross_notional_ex_xuc": 103006760.02,
             "later_long_lots": 20000671.0,
             "later_short_lots": 140.0
           },
@@ -29046,6 +29059,7 @@
             "later_position_rows": 33,
             "earlier_position_rows": 32,
             "later_gross_notional": 103006760.02,
+            "later_gross_notional_ex_xuc": 103006760.02,
             "later_long_lots": 20000671.0,
             "later_short_lots": 140.0
           },
@@ -29940,6 +29954,7 @@
             "later_position_rows": 0,
             "earlier_position_rows": 0,
             "later_gross_notional": 0,
+            "later_gross_notional_ex_xuc": 0,
             "later_long_lots": 0,
             "later_short_lots": 0
           },
@@ -29954,6 +29969,7 @@
             "later_position_rows": 33,
             "earlier_position_rows": 32,
             "later_gross_notional": 103006760.02,
+            "later_gross_notional_ex_xuc": 103006760.02,
             "later_long_lots": 20000671.0,
             "later_short_lots": 140.0
           },
@@ -31042,6 +31058,7 @@
             "later_position_rows": 33,
             "earlier_position_rows": 32,
             "later_gross_notional": 103006760.02,
+            "later_gross_notional_ex_xuc": 103006760.02,
             "later_long_lots": 20000671.0,
             "later_short_lots": 140.0
           },
@@ -32130,6 +32147,7 @@
             "later_position_rows": 0,
             "earlier_position_rows": 0,
             "later_gross_notional": 0,
+            "later_gross_notional_ex_xuc": 0,
             "later_long_lots": 0,
             "later_short_lots": 0
           },
@@ -32144,6 +32162,7 @@
     "later_position_rows": 129,
     "earlier_position_rows": 128,
     "later_gross_notional": 406148299.51,
+    "later_gross_notional_ex_xuc": 370947318.57,
     "later_long_lots": 20012790.0,
     "later_short_lots": 10112.0
   },
@@ -32533,163 +32552,217 @@
         "client": "50701",
         "deposit": 27699973.553244,
         "withdrawal": 22500000.0,
-        "pnl_settlement": -152262.160144
+        "pnl_settlement": -152262.160144,
+        "holding_fee": 39230.33,
+        "holding_fee_discount": 59630.53
       },
       {
         "client": "50702",
         "deposit": 233275.86,
         "withdrawal": 2213671.24,
-        "pnl_settlement": 2110169.775232
+        "pnl_settlement": 2110169.775232,
+        "holding_fee": 151340.44,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50703",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": -38381.218345
+        "pnl_settlement": -38381.218345,
+        "holding_fee": 13373.09,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50704",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 58570.129778
+        "pnl_settlement": 58570.129778,
+        "holding_fee": 11142.05,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50801",
         "deposit": 7999980.0,
         "withdrawal": 5200000.0,
-        "pnl_settlement": 7544847.660863
+        "pnl_settlement": 7544847.660863,
+        "holding_fee": 142132.96,
+        "holding_fee_discount": 89545.43
       },
       {
         "client": "50802",
         "deposit": 45699960.0,
         "withdrawal": 48710000.0,
-        "pnl_settlement": 7361447.179257
+        "pnl_settlement": 7361447.179257,
+        "holding_fee": 277003.56,
+        "holding_fee_discount": 255589.18
       },
       {
         "client": "50803",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": -1.759093
+        "pnl_settlement": -1.759093,
+        "holding_fee": 0.0,
+        "holding_fee_discount": 0.04
       },
       {
         "client": "50804",
         "deposit": 2010000.0,
         "withdrawal": 866889.83,
-        "pnl_settlement": -1130436.903234
+        "pnl_settlement": -1130436.903234,
+        "holding_fee": 4027.56,
+        "holding_fee_discount": 1584.56
       },
       {
         "client": "50805",
         "deposit": 2500000.0,
         "withdrawal": 0.0,
-        "pnl_settlement": -1251862.698359
+        "pnl_settlement": -1251862.698359,
+        "holding_fee": 14551.05,
+        "holding_fee_discount": 11480.35
       },
       {
         "client": "50900",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 94474.256726
+        "pnl_settlement": 94474.256726,
+        "holding_fee": 0.0,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50901",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 290675.042793
+        "pnl_settlement": 290675.042793,
+        "holding_fee": 94211.47,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50902",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 66994.356655
+        "pnl_settlement": 66994.356655,
+        "holding_fee": 17580.3,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50903",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 427866.276079
+        "pnl_settlement": 427866.276079,
+        "holding_fee": 10092.39,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50904",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 2106262.733536
+        "pnl_settlement": 2106262.733536,
+        "holding_fee": 17803.76,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50905",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 3538213.89436
+        "pnl_settlement": 3538213.89436,
+        "holding_fee": 43746.33,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50907",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 315854.936518
+        "pnl_settlement": 315854.936518,
+        "holding_fee": 18961.95,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50910",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 136589.612317
+        "pnl_settlement": 136589.612317,
+        "holding_fee": 2827.51,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50911",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 42547.32236
+        "pnl_settlement": 42547.32236,
+        "holding_fee": 472.26,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50912",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": -500324.77208
+        "pnl_settlement": -500324.77208,
+        "holding_fee": 8324.38,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "50999",
         "deposit": 44226187.7,
         "withdrawal": 30062687.7,
-        "pnl_settlement": 0.0
+        "pnl_settlement": 0.0,
+        "holding_fee": 0.0,
+        "holding_fee_discount": 442694.99
       },
       {
         "client": "51001",
         "deposit": 1760540.08378,
         "withdrawal": 415733.42266,
-        "pnl_settlement": -1098793.065692
+        "pnl_settlement": -1098793.065692,
+        "holding_fee": 0.0,
+        "holding_fee_discount": 0.02
       },
       {
         "client": "51200",
         "deposit": 11000000.0,
         "withdrawal": 6000000.0,
-        "pnl_settlement": 0.0
+        "pnl_settlement": 0.0,
+        "holding_fee": 0.0,
+        "holding_fee_discount": 90242.21
       },
       {
         "client": "51201",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 3181886.183892
+        "pnl_settlement": 3181886.183892,
+        "holding_fee": 32034.11,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "51204",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 83663.535031
+        "pnl_settlement": 83663.535031,
+        "holding_fee": 1784.37,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "51205",
         "deposit": 0.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 37175.222934
+        "pnl_settlement": 37175.222934,
+        "holding_fee": 336.41,
+        "holding_fee_discount": 0.0
       },
       {
         "client": "60300",
         "deposit": 599990.0,
         "withdrawal": 0.0,
-        "pnl_settlement": 0.0
+        "pnl_settlement": 0.0,
+        "holding_fee": 0.0,
+        "holding_fee_discount": 1271.68
       },
       {
         "client": "60401",
         "deposit": 1999980.0,
         "withdrawal": 999990.0,
-        "pnl_settlement": 0.0
+        "pnl_settlement": 0.0,
+        "holding_fee": 0.0,
+        "holding_fee_discount": 701.6
       }
     ],
     "commission_by_client": [
@@ -33214,6 +33287,8 @@
         "product": "SAI",
         "long_lots": 7564.0,
         "short_lots": 7564.0,
+        "long_notional": 300375306.021759,
+        "short_notional": 308014783.866751,
         "pnl_realized": 7550612.770965,
         "commission": 88865.074027
       },
@@ -33222,6 +33297,8 @@
         "product": "AUA",
         "long_lots": 2858.0,
         "short_lots": 2866.0,
+        "long_notional": 438513606.100408,
+        "short_notional": 446654233.530095,
         "pnl_realized": 6856144.500232,
         "commission": 102127.877163
       },
@@ -33230,6 +33307,8 @@
         "product": "SAI",
         "long_lots": 1600.0,
         "short_lots": 1600.0,
+        "long_notional": 75521862.769927,
+        "short_notional": 80894312.610719,
         "pnl_realized": 5349519.258503,
         "commission": 22930.58229
       },
@@ -33238,6 +33317,8 @@
         "product": "PD",
         "long_lots": 300.0,
         "short_lots": 300.0,
+        "long_notional": 20413987.14,
+        "short_notional": 25477694.025,
         "pnl_realized": 5051466.450696,
         "commission": 12240.434304
       },
@@ -33246,6 +33327,8 @@
         "product": "SI",
         "long_lots": 184.0,
         "short_lots": 184.0,
+        "long_notional": 81929225.49,
+        "short_notional": 77773625.51,
         "pnl_realized": -4157439.98,
         "commission": 1840.0
       },
@@ -33254,6 +33337,8 @@
         "product": "LHD",
         "long_lots": 5155.0,
         "short_lots": 5790.0,
+        "long_notional": 138783124.184008,
+        "short_notional": 160842565.211366,
         "pnl_realized": 3465712.797752,
         "commission": 59925.137879
       },
@@ -33262,6 +33347,8 @@
         "product": "ANO",
         "long_lots": 31877.0,
         "short_lots": 31909.0,
+        "long_notional": 261100126.684114,
+        "short_notional": 258272161.344679,
         "pnl_realized": -3190003.973076,
         "commission": 103874.457606
       },
@@ -33270,6 +33357,8 @@
         "product": "LC",
         "long_lots": 2170.0,
         "short_lots": 1670.0,
+        "long_notional": 43311085.094469,
+        "short_notional": 33975991.39356,
         "pnl_realized": 3062782.706924,
         "commission": 31838.366553
       },
@@ -33278,6 +33367,8 @@
         "product": "PA",
         "long_lots": 100.0,
         "short_lots": 100.0,
+        "long_notional": 20209000.0,
+        "short_notional": 17181400.0,
         "pnl_realized": -3030000.0,
         "commission": 2400.0
       },
@@ -33286,6 +33377,8 @@
         "product": "CU",
         "long_lots": 6378.0,
         "short_lots": 6360.0,
+        "long_notional": 469035413.81372,
+        "short_notional": 464861875.893042,
         "pnl_realized": -2929807.409437,
         "commission": 145602.214414
       },
@@ -33294,6 +33387,8 @@
         "product": "LC",
         "long_lots": 3371.0,
         "short_lots": 1433.0,
+        "long_notional": 70655278.602205,
+        "short_notional": 24228255.536829,
         "pnl_realized": 2880030.146346,
         "commission": 32857.418401
       },
@@ -33302,6 +33397,8 @@
         "product": "LP",
         "long_lots": 195.0,
         "short_lots": 165.0,
+        "long_notional": 57449323.5,
+        "short_notional": 49917219.24975,
         "pnl_realized": 2871394.74975,
         "commission": 4176.0
       },
@@ -33310,6 +33407,8 @@
         "product": "PS",
         "long_lots": 1041.0,
         "short_lots": 1041.0,
+        "long_notional": 25164822.469051,
+        "short_notional": 22396384.758063,
         "pnl_realized": -2785103.316838,
         "commission": 16665.60585
       },
@@ -33318,6 +33417,8 @@
         "product": "HG",
         "long_lots": 272.0,
         "short_lots": 338.0,
+        "long_notional": 37795662.64995,
+        "short_notional": 46069099.155,
         "pnl_realized": -2298832.64495,
         "commission": 2550.0
       },
@@ -33326,6 +33427,8 @@
         "product": "XOO",
         "long_lots": 2776.0,
         "short_lots": 2762.0,
+        "long_notional": 159468459.90861,
+        "short_notional": 160325614.69521,
         "pnl_realized": 1685666.236073,
         "commission": 34491.47648
       },
@@ -33334,6 +33437,8 @@
         "product": "PFC",
         "long_lots": 258.0,
         "short_lots": 258.0,
+        "long_notional": 146343500.0,
+        "short_notional": 148136500.0,
         "pnl_realized": 1667000.0,
         "commission": 126000.0
       },
@@ -33342,6 +33447,8 @@
         "product": "AZB",
         "long_lots": 369.0,
         "short_lots": 369.0,
+        "long_notional": 173474250.0,
+        "short_notional": 175187000.0,
         "pnl_realized": 1605800.0,
         "commission": 106950.0
       },
@@ -33350,6 +33457,8 @@
         "product": "LC",
         "long_lots": 3196.0,
         "short_lots": 3194.0,
+        "long_notional": 68974628.050054,
+        "short_notional": 67483487.55381,
         "pnl_realized": -1485262.279943,
         "commission": 47946.220071
       },
@@ -33358,6 +33467,8 @@
         "product": "LC",
         "long_lots": 446.0,
         "short_lots": 402.0,
+        "long_notional": 7491531.770815,
+        "short_notional": 7761995.422293,
         "pnl_realized": 1453298.938063,
         "commission": 5042.365936
       },
@@ -33366,6 +33477,8 @@
         "product": "PT",
         "long_lots": 16950.0,
         "short_lots": 16970.0,
+        "long_notional": 76696271.513895,
+        "short_notional": 78246739.37637,
         "pnl_realized": 1426497.291388,
         "commission": 35860.966013
       },
@@ -33374,6 +33487,8 @@
         "product": "PD",
         "long_lots": 55.0,
         "short_lots": 55.0,
+        "long_notional": 3332289.1764,
+        "short_notional": 4506363.8609,
         "pnl_realized": 1171331.155937,
         "commission": 2743.528563
       },
@@ -33382,6 +33497,8 @@
         "product": "TBS",
         "long_lots": 1796.0,
         "short_lots": 1796.0,
+        "long_notional": 302468735.118568,
+        "short_notional": 301328062.967527,
         "pnl_realized": -1140672.151041,
         "commission": 0.0
       },
@@ -33390,6 +33507,8 @@
         "product": "LN",
         "long_lots": 100.0,
         "short_lots": 100.0,
+        "long_notional": 9729870.0,
+        "short_notional": 10705871.2788,
         "pnl_realized": 973601.2788,
         "commission": 2400.0
       },
@@ -33398,6 +33517,8 @@
         "product": "SN",
         "long_lots": 168.0,
         "short_lots": 168.0,
+        "long_notional": 43982418.4,
+        "short_notional": 43018794.6,
         "pnl_realized": -967655.8,
         "commission": 4032.0
       },
@@ -33406,6 +33527,8 @@
         "product": "VV",
         "long_lots": 5763.0,
         "short_lots": 5315.0,
+        "long_notional": 65928176.704701,
+        "short_notional": 61705995.21279,
         "pnl_realized": 951632.017528,
         "commission": 19783.44609
       },
@@ -33414,6 +33537,8 @@
         "product": "PGR",
         "long_lots": 11857.0,
         "short_lots": 13357.0,
+        "long_notional": 185912524.950905,
+        "short_notional": 213161974.121497,
         "pnl_realized": 951353.648193,
         "commission": 62387.859187
       },
@@ -33422,6 +33547,8 @@
         "product": "AUA",
         "long_lots": 143.0,
         "short_lots": 104.0,
+        "long_notional": 22781545.138015,
+        "short_notional": 16245703.322415,
         "pnl_realized": -940660.222085,
         "commission": 4630.732646
       },
@@ -33430,6 +33557,8 @@
         "product": "AUA",
         "long_lots": 51.0,
         "short_lots": 51.0,
+        "long_notional": 8879069.0266,
+        "short_notional": 7966822.2,
         "pnl_realized": -914081.733123,
         "commission": 1834.906523
       },
@@ -33438,6 +33567,8 @@
         "product": "SAI",
         "long_lots": 203.0,
         "short_lots": 203.0,
+        "long_notional": 7016818.00044,
+        "short_notional": 7850907.58965,
         "pnl_realized": 832256.083488,
         "commission": 1833.505722
       },
@@ -33446,6 +33577,8 @@
         "product": "CO",
         "long_lots": 2079.0,
         "short_lots": 2079.0,
+        "long_notional": 138545149.9865,
+        "short_notional": 139389730.50765,
         "pnl_realized": 814000.52115,
         "commission": 30580.0
       },
@@ -33454,6 +33587,8 @@
         "product": "XII",
         "long_lots": 520.0,
         "short_lots": 520.0,
+        "long_notional": 10818736.7559,
+        "short_notional": 10013591.078716,
         "pnl_realized": -807688.704368,
         "commission": 2543.027183
       },
@@ -33462,6 +33597,8 @@
         "product": "ZME",
         "long_lots": 9271.0,
         "short_lots": 7674.0,
+        "long_notional": 35703787.48052,
+        "short_notional": 29722312.552359,
         "pnl_realized": 803853.894809,
         "commission": 13085.220007
       },
@@ -33470,6 +33607,8 @@
         "product": "AC",
         "long_lots": 12347.0,
         "short_lots": 10118.0,
+        "long_notional": 43113551.201746,
+        "short_notional": 34637073.450683,
         "pnl_realized": -709383.980988,
         "commission": 11747.862925
       },
@@ -33478,6 +33617,8 @@
         "product": "XOO",
         "long_lots": 204.0,
         "short_lots": 180.0,
+        "long_notional": 11166277.941469,
+        "short_notional": 10326799.264101,
         "pnl_realized": 695639.053217,
         "commission": 2319.077961
       },
@@ -33486,6 +33627,8 @@
         "product": "FGL",
         "long_lots": 4000.0,
         "short_lots": 4000.0,
+        "long_notional": 12694681.6972,
+        "short_notional": 13387547.647295,
         "pnl_realized": 683183.96716,
         "commission": 9681.982934
       },
@@ -33494,6 +33637,8 @@
         "product": "XII",
         "long_lots": 4258.0,
         "short_lots": 4242.0,
+        "long_notional": 85941930.618988,
+        "short_notional": 84940304.292937,
         "pnl_realized": -680203.751042,
         "commission": 20846.158491
       },
@@ -33502,6 +33647,8 @@
         "product": "SCP",
         "long_lots": 458.0,
         "short_lots": 458.0,
+        "long_notional": 38302509.325998,
+        "short_notional": 37671559.26163,
         "pnl_realized": -642897.833627,
         "commission": 11947.769259
       },
@@ -33510,6 +33657,8 @@
         "product": "PT",
         "long_lots": 1040.0,
         "short_lots": 1040.0,
+        "long_notional": 5144546.620409,
+        "short_notional": 4535251.254644,
         "pnl_realized": -611182.934352,
         "commission": 1887.568588
       },
@@ -33518,6 +33667,8 @@
         "product": "SYR",
         "long_lots": 7149.0,
         "short_lots": 7149.0,
+        "long_notional": 39157039.754205,
+        "short_notional": 38571324.644987,
         "pnl_realized": -599809.234438,
         "commission": 14094.12522
       },
@@ -33526,6 +33677,8 @@
         "product": "ZST",
         "long_lots": 2170.0,
         "short_lots": 2170.0,
+        "long_notional": 23191452.877225,
+        "short_notional": 22609730.139243,
         "pnl_realized": -587582.027884,
         "commission": 5859.289902
       },
@@ -33534,6 +33687,8 @@
         "product": "LX",
         "long_lots": 489.0,
         "short_lots": 489.0,
+        "long_notional": 36385822.5,
+        "short_notional": 35835232.5,
         "pnl_realized": -562326.0,
         "commission": 11736.0
       },
@@ -33542,6 +33697,8 @@
         "product": "CJP",
         "long_lots": 108.0,
         "short_lots": 72.0,
+        "long_notional": 71739000.0,
+        "short_notional": 46648000.0,
         "pnl_realized": 550000.0,
         "commission": 35200.0
       },
@@ -33550,6 +33707,8 @@
         "product": "LGE",
         "long_lots": 8320.0,
         "short_lots": 8280.0,
+        "long_notional": 50248960.228548,
+        "short_notional": 49456951.524093,
         "pnl_realized": -544196.926841,
         "commission": 17309.617175
       },
@@ -33558,6 +33717,8 @@
         "product": "PL",
         "long_lots": 67.0,
         "short_lots": 67.0,
+        "long_notional": 6195664.9999,
+        "short_notional": 6719490.00015,
         "pnl_realized": 522217.00025,
         "commission": 1608.0
       },
@@ -33566,6 +33727,8 @@
         "product": "AA",
         "long_lots": 6990.0,
         "short_lots": 6942.0,
+        "long_notional": 123557555.732808,
+        "short_notional": 122215387.67229,
         "pnl_realized": -505665.267152,
         "commission": 30736.770861
       },
@@ -33574,6 +33737,8 @@
         "product": "LC",
         "long_lots": 690.0,
         "short_lots": 490.0,
+        "long_notional": 15876981.617295,
+        "short_notional": 10571706.185741,
         "pnl_realized": -486485.334014,
         "commission": 10944.141348
       },
@@ -33582,6 +33747,8 @@
         "product": "PVC",
         "long_lots": 4245.0,
         "short_lots": 4245.0,
+        "long_notional": 15758995.476106,
+        "short_notional": 16238420.230734,
         "pnl_realized": 474973.841757,
         "commission": 4450.912871
       },
@@ -33590,6 +33757,8 @@
         "product": "AUA",
         "long_lots": 30.0,
         "short_lots": 30.0,
+        "long_notional": 4598250.5296,
+        "short_notional": 5071429.072263,
         "pnl_realized": 472123.152703,
         "commission": 1055.38996
       },
@@ -33598,6 +33767,8 @@
         "product": "ANO",
         "long_lots": 1704.0,
         "short_lots": 1704.0,
+        "long_notional": 14106857.682321,
+        "short_notional": 14582713.9371,
         "pnl_realized": 470118.340455,
         "commission": 5737.914324
       },
@@ -33606,6 +33777,8 @@
         "product": "PD",
         "long_lots": 32.0,
         "short_lots": 32.0,
+        "long_notional": 2112674.2145,
+        "short_notional": 2547072.3424,
         "pnl_realized": 432767.216605,
         "commission": 1630.911295
       },
@@ -33614,6 +33787,8 @@
         "product": "PGR",
         "long_lots": 1161.0,
         "short_lots": 1161.0,
+        "long_notional": 18491646.586,
+        "short_notional": 18092600.929362,
         "pnl_realized": -404757.240229,
         "commission": 5711.583592
       },
@@ -33622,6 +33797,8 @@
         "product": "KEE",
         "long_lots": 1120.0,
         "short_lots": 1295.0,
+        "long_notional": 27929094.35288,
+        "short_notional": 33063353.44642,
         "pnl_realized": 380234.595309,
         "commission": 12144.068943
       },
@@ -33630,6 +33807,8 @@
         "product": "CKC",
         "long_lots": 1002.0,
         "short_lots": 882.0,
+        "long_notional": 10363540.2999,
+        "short_notional": 9400540.719531,
         "pnl_realized": 377153.926938,
         "commission": 3952.816204
       },
@@ -33638,6 +33817,8 @@
         "product": "LC",
         "long_lots": 860.0,
         "short_lots": 860.0,
+        "long_notional": 15973401.878305,
+        "short_notional": 15619687.941436,
         "pnl_realized": -364211.995928,
         "commission": 10498.059058
       },
@@ -33646,6 +33827,8 @@
         "product": "AUA",
         "long_lots": 84.0,
         "short_lots": 74.0,
+        "long_notional": 11982638.4893,
+        "short_notional": 10865542.9416,
         "pnl_realized": 347565.015976,
         "commission": 2690.085643
       },
@@ -33654,6 +33837,8 @@
         "product": "ZNA",
         "long_lots": 6750.0,
         "short_lots": 6770.0,
+        "long_notional": 120702637.444672,
+        "short_notional": 120751843.42405,
         "pnl_realized": -342146.701767,
         "commission": 30122.775287
       },
@@ -33662,6 +33847,8 @@
         "product": "LC",
         "long_lots": 428.0,
         "short_lots": 428.0,
+        "long_notional": 9840850.293815,
+        "short_notional": 10186938.676392,
         "pnl_realized": 337676.711209,
         "commission": 8411.671367
       },
@@ -33670,6 +33857,8 @@
         "product": "CKC",
         "long_lots": 3470.0,
         "short_lots": 3470.0,
+        "long_notional": 35831521.168204,
+        "short_notional": 36181809.3423,
         "pnl_realized": 335885.507994,
         "commission": 14402.666102
       },
@@ -33678,6 +33867,8 @@
         "product": "OPT",
         "long_lots": 65.0,
         "short_lots": 65.0,
+        "long_notional": 333395.150994,
+        "short_notional": 0.0,
         "pnl_realized": -334353.055994,
         "commission": 957.905
       },
@@ -33686,6 +33877,8 @@
         "product": "SYR",
         "long_lots": 1753.0,
         "short_lots": 1753.0,
+        "long_notional": 10742293.284233,
+        "short_notional": 11073346.490147,
         "pnl_realized": 327321.604276,
         "commission": 3731.601637
       },
@@ -33694,6 +33887,8 @@
         "product": "PT",
         "long_lots": 10900.0,
         "short_lots": 10900.0,
+        "long_notional": 51190866.15184,
+        "short_notional": 50904558.66324,
         "pnl_realized": -306155.029081,
         "commission": 19847.540482
       },
@@ -33702,6 +33897,8 @@
         "product": "HCT",
         "long_lots": 258.0,
         "short_lots": 179.0,
+        "long_notional": 9231608.727228,
+        "short_notional": 6354901.816,
         "pnl_realized": -302543.55912,
         "commission": 2786.312
       },
@@ -33710,6 +33907,8 @@
         "product": "ZNA",
         "long_lots": 1800.0,
         "short_lots": 1800.0,
+        "long_notional": 30592471.982026,
+        "short_notional": 30316164.27446,
         "pnl_realized": -283990.167192,
         "commission": 7682.459626
       },
@@ -33718,6 +33917,8 @@
         "product": "FGL",
         "long_lots": 2213.0,
         "short_lots": 2213.0,
+        "long_notional": 7083931.4774,
+        "short_notional": 7370922.7628,
         "pnl_realized": 281632.242256,
         "commission": 5359.043144
       },
@@ -33726,6 +33927,8 @@
         "product": "LN",
         "long_lots": 50.0,
         "short_lots": 50.0,
+        "long_notional": 4946880.0,
+        "short_notional": 5212026.0,
         "pnl_realized": 263946.0,
         "commission": 1200.0
       },
@@ -33734,6 +33937,8 @@
         "product": "RBT",
         "long_lots": 2692.0,
         "short_lots": 3172.0,
+        "long_notional": 12455693.801906,
+        "short_notional": 14996969.212723,
         "pnl_realized": 246113.104174,
         "commission": 5490.532603
       },
@@ -33742,6 +33947,8 @@
         "product": "SCO",
         "long_lots": 396.0,
         "short_lots": 396.0,
+        "long_notional": 4225545.9872,
+        "short_notional": 3990509.0998,
         "pnl_realized": -237756.8874,
         "commission": 2720.0
       },
@@ -33750,6 +33957,8 @@
         "product": "RBT",
         "long_lots": 14875.0,
         "short_lots": 14875.0,
+        "long_notional": 67869682.5358,
+        "short_notional": 68133990.630756,
         "pnl_realized": 237107.360322,
         "commission": 27200.734633
       },
@@ -33758,6 +33967,8 @@
         "product": "LGE",
         "long_lots": 1323.0,
         "short_lots": 1263.0,
+        "long_notional": 9183421.38219,
+        "short_notional": 8497881.632396,
         "pnl_realized": -234597.567785,
         "commission": 2911.426761
       },
@@ -33766,6 +33977,8 @@
         "product": "PXL",
         "long_lots": 10000.0,
         "short_lots": 10000.0,
+        "long_notional": 69080192.979312,
+        "short_notional": 69339027.752466,
         "pnl_realized": 234252.209519,
         "commission": 24582.563635
       },
@@ -33774,6 +33987,8 @@
         "product": "LP",
         "long_lots": 28.0,
         "short_lots": 28.0,
+        "long_notional": 8429259.0,
+        "short_notional": 8664013.75,
         "pnl_realized": 234130.75,
         "commission": 624.0
       },
@@ -33782,6 +33997,8 @@
         "product": "BDR",
         "long_lots": 920.0,
         "short_lots": 920.0,
+        "long_notional": 9077310.413754,
+        "short_notional": 9312939.569896,
         "pnl_realized": 234062.855111,
         "commission": 1566.30103
       },
@@ -33790,6 +34007,8 @@
         "product": "PL",
         "long_lots": 84.0,
         "short_lots": 84.0,
+        "long_notional": 10088694.0,
+        "short_notional": 9865800.0,
         "pnl_realized": -224910.0,
         "commission": 2016.0
       },
@@ -33798,6 +34017,8 @@
         "product": "PYL",
         "long_lots": 10473.0,
         "short_lots": 10425.0,
+        "long_notional": 55273868.556338,
+        "short_notional": 54755935.188601,
         "pnl_realized": -222182.71388,
         "commission": 14082.718634
       },
@@ -33806,6 +34027,8 @@
         "product": "BIT",
         "long_lots": 10348.0,
         "short_lots": 10348.0,
+        "long_notional": 59178390.889516,
+        "short_notional": 58984401.864048,
         "pnl_realized": -211593.492991,
         "commission": 17604.467523
       },
@@ -33814,6 +34037,8 @@
         "product": "XII",
         "long_lots": 234.0,
         "short_lots": 234.0,
+        "long_notional": 4707778.860838,
+        "short_notional": 4503494.522907,
         "pnl_realized": -205412.372749,
         "commission": 1128.034818
       },
@@ -33822,6 +34047,8 @@
         "product": "PXL",
         "long_lots": 1984.0,
         "short_lots": 1984.0,
+        "long_notional": 11540764.576059,
+        "short_notional": 11749824.836873,
         "pnl_realized": 204402.142932,
         "commission": 4658.117883
       },
@@ -33830,6 +34057,8 @@
         "product": "BDR",
         "long_lots": 312.0,
         "short_lots": 312.0,
+        "long_notional": 2884417.005716,
+        "short_notional": 3086643.279655,
         "pnl_realized": 201509.746705,
         "commission": 716.527234
       },
@@ -33838,6 +34067,8 @@
         "product": "PT",
         "long_lots": 93.0,
         "short_lots": 153.0,
+        "long_notional": 7669800.941874,
+        "short_notional": 12038777.617027,
         "pnl_realized": -200753.042439,
         "commission": 5112.855159
       },
@@ -33846,6 +34077,8 @@
         "product": "XII",
         "long_lots": 593.0,
         "short_lots": 593.0,
+        "long_notional": 11976181.251695,
+        "short_notional": 11778741.181552,
         "pnl_realized": -200339.904847,
         "commission": 2899.834703
       },
@@ -33854,6 +34087,8 @@
         "product": "AUA",
         "long_lots": 29.0,
         "short_lots": 29.0,
+        "long_notional": 4360401.2444,
+        "short_notional": 4544050.791,
         "pnl_realized": 182622.047296,
         "commission": 1027.499304
       },
@@ -33862,6 +34097,8 @@
         "product": "CKC",
         "long_lots": 11859.0,
         "short_lots": 13109.0,
+        "long_notional": 120285008.467824,
+        "short_notional": 134579097.393978,
         "pnl_realized": 176560.525664,
         "commission": 50972.821172
       },
@@ -33870,6 +34107,8 @@
         "product": "PS",
         "long_lots": 430.0,
         "short_lots": 430.0,
+        "long_notional": 10363556.074437,
+        "short_notional": 10544117.770301,
         "pnl_realized": 174261.968095,
         "commission": 6299.727769
       },
@@ -33878,6 +34117,8 @@
         "product": "SAI",
         "long_lots": 70.0,
         "short_lots": 70.0,
+        "long_notional": 3184215.48465,
+        "short_notional": 3358705.2489,
         "pnl_realized": 173499.534164,
         "commission": 990.230086
       },
@@ -33886,6 +34127,8 @@
         "product": "LX",
         "long_lots": 60.0,
         "short_lots": 60.0,
+        "long_notional": 4657902.5,
+        "short_notional": 4486855.0,
         "pnl_realized": -172487.5,
         "commission": 1440.0
       },
@@ -33894,6 +34137,8 @@
         "product": "BIT",
         "long_lots": 1058.0,
         "short_lots": 1058.0,
+        "long_notional": 5308316.0321,
+        "short_notional": 5480485.4557,
         "pnl_realized": 170551.103377,
         "commission": 1618.320223
       },
@@ -33902,6 +34147,8 @@
         "product": "CKC",
         "long_lots": 375.0,
         "short_lots": 375.0,
+        "long_notional": 3661254.3852,
+        "short_notional": 3823256.7525,
         "pnl_realized": 160505.465072,
         "commission": 1496.902228
       },
@@ -33910,6 +34157,8 @@
         "product": "POL",
         "long_lots": 16032.0,
         "short_lots": 16152.0,
+        "long_notional": 84403979.300379,
+        "short_notional": 84989726.322478,
         "pnl_realized": -158775.199067,
         "commission": 21682.326642
       },
@@ -33918,6 +34167,8 @@
         "product": "PT",
         "long_lots": 4.0,
         "short_lots": 4.0,
+        "long_notional": 260793.3205,
+        "short_notional": 416231.828,
         "pnl_realized": 155240.667696,
         "commission": 197.839804
       },
@@ -33926,6 +34177,8 @@
         "product": "IOE",
         "long_lots": 854.0,
         "short_lots": 868.0,
+        "long_notional": 10127767.458029,
+        "short_notional": 10142696.039088,
         "pnl_realized": -153631.20889,
         "commission": 4054.092699
       },
@@ -33934,6 +34187,8 @@
         "product": "CU",
         "long_lots": 250.0,
         "short_lots": 250.0,
+        "long_notional": 17172746.096632,
+        "short_notional": 17322112.960353,
         "pnl_realized": 144192.634863,
         "commission": 5174.228859
       },
@@ -33942,6 +34197,8 @@
         "product": "BND",
         "long_lots": 330.0,
         "short_lots": 180.0,
+        "long_notional": 12431377.1919,
+        "short_notional": 6734144.3613,
         "pnl_realized": -143299.489988,
         "commission": 3833.104311
       },
@@ -33950,6 +34207,8 @@
         "product": "AA",
         "long_lots": 240.0,
         "short_lots": 240.0,
+        "long_notional": 4003423.828104,
+        "short_notional": 4145153.241354,
         "pnl_realized": 140702.342743,
         "commission": 1027.070507
       },
@@ -33958,6 +34217,8 @@
         "product": "PAL",
         "long_lots": 1800.0,
         "short_lots": 1800.0,
+        "long_notional": 25284848.590015,
+        "short_notional": 25423674.0778,
         "pnl_realized": 132428.305518,
         "commission": 6397.182267
       },
@@ -33966,6 +34227,8 @@
         "product": "FFD",
         "long_lots": 12.0,
         "short_lots": 12.0,
+        "long_notional": 2468818.8724,
+        "short_notional": 2602453.9884,
         "pnl_realized": 132113.734142,
         "commission": 1521.381858
       },
@@ -33974,6 +34237,8 @@
         "product": "BDR",
         "long_lots": 670.0,
         "short_lots": 670.0,
+        "long_notional": 6547593.83625,
+        "short_notional": 6418184.555,
         "pnl_realized": -130324.645689,
         "commission": 915.364439
       },
@@ -33982,6 +34247,8 @@
         "product": "PYL",
         "long_lots": 1800.0,
         "short_lots": 2800.0,
+        "long_notional": 12034019.039874,
+        "short_notional": 17925267.422831,
         "pnl_realized": -129791.797917,
         "commission": 3673.830646
       },
@@ -33990,6 +34257,8 @@
         "product": "SHY",
         "long_lots": 1150.0,
         "short_lots": 1150.0,
+        "long_notional": 11398581.704858,
+        "short_notional": 11274351.00585,
         "pnl_realized": -128765.28555,
         "commission": 4534.586542
       },
@@ -33998,6 +34267,8 @@
         "product": "IOE",
         "long_lots": 5140.0,
         "short_lots": 5140.0,
+        "long_notional": 59491957.407,
+        "short_notional": 59390080.526,
         "pnl_realized": -125653.288587,
         "commission": 23776.407587
       },
@@ -34006,6 +34277,8 @@
         "product": "XII",
         "long_lots": 240.0,
         "short_lots": 240.0,
+        "long_notional": 4230378.152363,
+        "short_notional": 4105925.675947,
         "pnl_realized": -125498.319598,
         "commission": 1045.843183
       },
@@ -34014,6 +34287,8 @@
         "product": "QS",
         "long_lots": 19.0,
         "short_lots": 16.0,
+        "long_notional": 2044824.9999,
+        "short_notional": 1841150.0002,
         "pnl_realized": 125480.0003,
         "commission": 350.0
       },
@@ -34022,6 +34297,8 @@
         "product": "ZSY",
         "long_lots": 1824.0,
         "short_lots": 1824.0,
+        "long_notional": 6696262.9028,
+        "short_notional": 6824430.597695,
         "pnl_realized": 124111.486845,
         "commission": 4056.20805
       },
@@ -34030,6 +34307,8 @@
         "product": "CFI",
         "long_lots": 711.0,
         "short_lots": 711.0,
+        "long_notional": 10413845.786235,
+        "short_notional": 10519533.655487,
         "pnl_realized": 119999.248385,
         "commission": 13539.134345
       },
@@ -34038,6 +34317,8 @@
         "product": "PA",
         "long_lots": 24.0,
         "short_lots": 24.0,
+        "long_notional": 4408236.0,
+        "short_notional": 4291999.9992,
         "pnl_realized": -116812.0008,
         "commission": 576.0
       },
@@ -34046,6 +34327,8 @@
         "product": "PYL",
         "long_lots": 3077.0,
         "short_lots": 2812.0,
+        "long_notional": 18220573.618299,
+        "short_notional": 16604916.960499,
         "pnl_realized": 114592.227679,
         "commission": 4350.410988
       },
@@ -34054,6 +34337,8 @@
         "product": "POL",
         "long_lots": 2323.0,
         "short_lots": 2683.0,
+        "long_notional": 13507483.542557,
+        "short_notional": 15532610.840075,
         "pnl_realized": -113639.15381,
         "commission": 3641.743658
       },
@@ -34062,6 +34347,8 @@
         "product": "GC",
         "long_lots": 3.0,
         "short_lots": 3.0,
+        "long_notional": 1535400.0,
+        "short_notional": 1427400.0,
         "pnl_realized": -108150.0,
         "commission": 150.0
       },
@@ -34070,6 +34357,8 @@
         "product": "ANO",
         "long_lots": 520.0,
         "short_lots": 520.0,
+        "long_notional": 4416322.2646,
+        "short_notional": 4312682.838371,
         "pnl_realized": -105385.22725,
         "commission": 1745.801021
       },
@@ -34078,6 +34367,8 @@
         "product": "XUC",
         "long_lots": 74.0,
         "short_lots": 74.0,
+        "long_notional": 7604235.940452,
+        "short_notional": 7500154.4632,
         "pnl_realized": -104517.692452,
         "commission": 436.2152
       },
@@ -34086,6 +34377,8 @@
         "product": "DCE",
         "long_lots": 374.0,
         "short_lots": 374.0,
+        "long_notional": 2021942.926547,
+        "short_notional": 2124975.957282,
         "pnl_realized": 101996.301014,
         "commission": 1036.729721
       },
@@ -34094,6 +34387,8 @@
         "product": "VV",
         "long_lots": 240.0,
         "short_lots": 240.0,
+        "long_notional": 2601743.665,
+        "short_notional": 2704239.5,
         "pnl_realized": 101661.065003,
         "commission": 834.769996
       },
@@ -34102,6 +34397,8 @@
         "product": "SCP",
         "long_lots": 32.0,
         "short_lots": 32.0,
+        "long_notional": 3354082.252,
+        "short_notional": 3452422.253,
         "pnl_realized": 97470.716949,
         "commission": 869.28405
       },
@@ -34110,6 +34407,8 @@
         "product": "CT",
         "long_lots": 51.0,
         "short_lots": 15.0,
+        "long_notional": 1738590.00001,
+        "short_notional": 604000.000005,
         "pnl_realized": 96400.000005,
         "commission": 660.0
       },
@@ -34118,6 +34417,8 @@
         "product": "XUC",
         "long_lots": 90.0,
         "short_lots": 290.0,
+        "long_notional": 9236853.9126,
+        "short_notional": 29427322.0262,
         "pnl_realized": 96294.5054,
         "commission": 972.642
       },
@@ -34126,6 +34427,8 @@
         "product": "CU",
         "long_lots": 98.0,
         "short_lots": 98.0,
+        "long_notional": 7053518.730868,
+        "short_notional": 7150105.0285,
         "pnl_realized": 94355.613389,
         "commission": 2230.684242
       },
@@ -34134,6 +34437,8 @@
         "product": "SI",
         "long_lots": 416.0,
         "short_lots": 416.0,
+        "long_notional": 4789095.01,
+        "short_notional": 4881033.824,
         "pnl_realized": 90774.603233,
         "commission": 1164.210767
       },
@@ -34142,6 +34447,8 @@
         "product": "XOO",
         "long_lots": 20.0,
         "short_lots": 20.0,
+        "long_notional": 1291338.4672,
+        "short_notional": 1203202.365,
         "pnl_realized": -88403.240683,
         "commission": 267.138483
       },
@@ -34150,6 +34457,8 @@
         "product": "ANO",
         "long_lots": 242.0,
         "short_lots": 242.0,
+        "long_notional": 2137427.9534,
+        "short_notional": 2051014.31176,
         "pnl_realized": -87251.330093,
         "commission": 837.688453
       },
@@ -34158,6 +34467,8 @@
         "product": "URI",
         "long_lots": 240.0,
         "short_lots": 240.0,
+        "long_notional": 1328864.764,
+        "short_notional": 1416432.018,
         "pnl_realized": 87018.194644,
         "commission": 549.059356
       },
@@ -34166,6 +34477,8 @@
         "product": "SHY",
         "long_lots": 1961.0,
         "short_lots": 1981.0,
+        "long_notional": 18428055.546618,
+        "short_notional": 18706120.631113,
         "pnl_realized": 85501.931531,
         "commission": 7426.835236
       },
@@ -34174,6 +34487,8 @@
         "product": "PBL",
         "long_lots": 200.0,
         "short_lots": 200.0,
+        "long_notional": 2569745.95375,
+        "short_notional": 2488931.93,
         "pnl_realized": -81522.238654,
         "commission": 708.214904
       },
@@ -34182,6 +34497,8 @@
         "product": "SI",
         "long_lots": 3598.0,
         "short_lots": 3598.0,
+        "long_notional": 23049098.202511,
+        "short_notional": 22976875.643414,
         "pnl_realized": -81427.753867,
         "commission": 9205.194769
       },
@@ -34190,6 +34507,8 @@
         "product": "JWL",
         "long_lots": 5.0,
         "short_lots": 5.0,
+        "long_notional": 2118750.0,
+        "short_notional": 2200000.0,
         "pnl_realized": 79750.0,
         "commission": 1500.0
       },
@@ -34198,6 +34517,8 @@
         "product": "IFB",
         "long_lots": 27.0,
         "short_lots": 27.0,
+        "long_notional": 5578083.74349,
+        "short_notional": 5501906.42205,
         "pnl_realized": -79501.31849,
         "commission": 3323.99705
       },
@@ -34206,6 +34527,8 @@
         "product": "CFI",
         "long_lots": 172.0,
         "short_lots": 172.0,
+        "long_notional": 1823243.07138,
+        "short_notional": 1748446.60684,
         "pnl_realized": -77296.647315,
         "commission": 2500.182775
       },
@@ -34214,6 +34537,8 @@
         "product": "SYR",
         "long_lots": 250.0,
         "short_lots": 250.0,
+        "long_notional": 1654499.410432,
+        "short_notional": 1579456.396213,
         "pnl_realized": -75587.464799,
         "commission": 544.450581
       },
@@ -34222,6 +34547,8 @@
         "product": "ROC",
         "long_lots": 7250.0,
         "short_lots": 7250.0,
+        "long_notional": 34951837.2168,
+        "short_notional": 34890454.6644,
         "pnl_realized": -75351.010776,
         "commission": 13968.458376
       },
@@ -34230,6 +34557,8 @@
         "product": "FGL",
         "long_lots": 2176.0,
         "short_lots": 2176.0,
+        "long_notional": 7880397.0635,
+        "short_notional": 7811630.507776,
         "pnl_realized": -74183.883921,
         "commission": 5417.328197
       },
@@ -34238,6 +34567,8 @@
         "product": "BIT",
         "long_lots": 199.0,
         "short_lots": 199.0,
+        "long_notional": 1037503.958101,
+        "short_notional": 964890.337997,
         "pnl_realized": -72913.979249,
         "commission": 300.359144
       },
@@ -34246,6 +34577,8 @@
         "product": "GC",
         "long_lots": 4.0,
         "short_lots": 2.0,
+        "long_notional": 1891030.0,
+        "short_notional": 906230.0,
         "pnl_realized": -71740.0,
         "commission": 150.0
       },
@@ -34254,6 +34587,8 @@
         "product": "KEE",
         "long_lots": 240.0,
         "short_lots": 240.0,
+        "long_notional": 5940057.313737,
+        "short_notional": 6010027.129226,
         "pnl_realized": 67579.798601,
         "commission": 2390.016889
       },
@@ -34262,6 +34597,8 @@
         "product": "ZME",
         "long_lots": 11758.0,
         "short_lots": 11810.0,
+        "long_notional": 40934712.004556,
+        "short_notional": 41101429.454074,
         "pnl_realized": -66795.091184,
         "commission": 16396.989024
       },
@@ -34270,6 +34607,8 @@
         "product": "SAI",
         "long_lots": 22.0,
         "short_lots": 22.0,
+        "long_notional": 974173.91115,
+        "short_notional": 1041091.680772,
         "pnl_realized": 66698.658359,
         "commission": 219.111263
       },
@@ -34278,6 +34617,8 @@
         "product": "PA",
         "long_lots": 9.0,
         "short_lots": 9.0,
+        "long_notional": 1337610.0,
+        "short_notional": 1402950.0,
         "pnl_realized": 65124.0,
         "commission": 216.0
       },
@@ -34286,6 +34627,8 @@
         "product": "PVC",
         "long_lots": 9780.0,
         "short_lots": 9900.0,
+        "long_notional": 35385518.743474,
+        "short_notional": 35897616.878551,
         "pnl_realized": 64632.53775,
         "commission": 9891.023583
       },
@@ -34294,6 +34637,8 @@
         "product": "FO",
         "long_lots": 2092.0,
         "short_lots": 2092.0,
+        "long_notional": 11063422.535432,
+        "short_notional": 11130915.047835,
         "pnl_realized": 64163.361765,
         "commission": 3329.150637
       },
@@ -34302,6 +34647,8 @@
         "product": "SHY",
         "long_lots": 463.0,
         "short_lots": 463.0,
+        "long_notional": 4342580.37978,
+        "short_notional": 4280830.87608,
         "pnl_realized": -63474.185951,
         "commission": 1724.682251
       },
@@ -34310,6 +34657,8 @@
         "product": "BDR",
         "long_lots": 288.0,
         "short_lots": 288.0,
+        "long_notional": 3340074.733276,
+        "short_notional": 3402268.55775,
         "pnl_realized": 61384.743279,
         "commission": 809.081195
       },
@@ -34318,6 +34667,8 @@
         "product": "CWR",
         "long_lots": 30.0,
         "short_lots": 30.0,
+        "long_notional": 1602000.0,
+        "short_notional": 1543500.0,
         "pnl_realized": -59700.0,
         "commission": 1200.0
       },
@@ -34326,6 +34677,8 @@
         "product": "PS",
         "long_lots": 123.0,
         "short_lots": 147.0,
+        "long_notional": 2981508.04965,
+        "short_notional": 3319806.20055,
         "pnl_realized": -59427.821172,
         "commission": 1557.275664
       },
@@ -34334,6 +34687,8 @@
         "product": "KEE",
         "long_lots": 101.0,
         "short_lots": 101.0,
+        "long_notional": 2521863.96705,
+        "short_notional": 2582169.24475,
         "pnl_realized": 59396.775545,
         "commission": 964.654399
       },
@@ -34342,6 +34697,8 @@
         "product": "ANO",
         "long_lots": 554.0,
         "short_lots": 554.0,
+        "long_notional": 4454175.7228,
+        "short_notional": 4511594.022182,
         "pnl_realized": 55625.145433,
         "commission": 1793.153949
       },
@@ -34350,6 +34707,8 @@
         "product": "LX",
         "long_lots": 56.0,
         "short_lots": 56.0,
+        "long_notional": 4290272.0,
+        "short_notional": 4345992.0,
         "pnl_realized": 54376.0,
         "commission": 1344.0
       },
@@ -34358,6 +34717,8 @@
         "product": "CO",
         "long_lots": 6.0,
         "short_lots": 40.0,
+        "long_notional": 596930.0,
+        "short_notional": 3629890.0,
         "pnl_realized": -54240.0,
         "commission": 460.0
       },
@@ -34366,6 +34727,8 @@
         "product": "PLR",
         "long_lots": 244.0,
         "short_lots": 244.0,
+        "long_notional": 5272133.278098,
+        "short_notional": 5328023.822188,
         "pnl_realized": 53770.51267,
         "commission": 2120.03142
       },
@@ -34374,6 +34737,8 @@
         "product": "SYR",
         "long_lots": 680.0,
         "short_lots": 680.0,
+        "long_notional": 4640123.50455,
+        "short_notional": 4695351.1489,
         "pnl_realized": 53692.827285,
         "commission": 1534.817065
       },
@@ -34382,6 +34747,8 @@
         "product": "SHY",
         "long_lots": 400.0,
         "short_lots": 400.0,
+        "long_notional": 3937038.1821,
+        "short_notional": 3991837.7166,
         "pnl_realized": 53213.75932,
         "commission": 1585.77518
       },
@@ -34390,6 +34757,8 @@
         "product": "FGL",
         "long_lots": 2150.0,
         "short_lots": 2130.0,
+        "long_notional": 6495111.695,
+        "short_notional": 6500643.964959,
         "pnl_realized": 51709.28287,
         "commission": 5084.037166
       },
@@ -34398,6 +34767,8 @@
         "product": "POL",
         "long_lots": 600.0,
         "short_lots": 600.0,
+        "long_notional": 3755794.450824,
+        "short_notional": 3706077.70755,
         "pnl_realized": -50639.77449,
         "commission": 923.031216
       },
@@ -34406,6 +34777,8 @@
         "product": "XII",
         "long_lots": 150.0,
         "short_lots": 150.0,
+        "long_notional": 3244335.813,
+        "short_notional": 3195022.8636,
         "pnl_realized": -50089.518268,
         "commission": 776.568868
       },
@@ -34414,6 +34787,8 @@
         "product": "IRE",
         "long_lots": 360.0,
         "short_lots": 360.0,
+        "long_notional": 1522598.836753,
+        "short_notional": 1573120.2231,
         "pnl_realized": 49893.495241,
         "commission": 627.891106
       },
@@ -34422,6 +34797,8 @@
         "product": "XUC",
         "long_lots": 55.0,
         "short_lots": 55.0,
+        "long_notional": 5517157.0065,
+        "short_notional": 5567225.964,
         "pnl_realized": 49744.7435,
         "commission": 324.214
       },
@@ -34430,6 +34807,8 @@
         "product": "FO",
         "long_lots": 46951.0,
         "short_lots": 46951.0,
+        "long_notional": 238811708.565124,
+        "short_notional": 238933279.80795,
         "pnl_realized": 49445.871726,
         "commission": 72125.371099
       },
@@ -34438,6 +34817,8 @@
         "product": "URI",
         "long_lots": 1798.0,
         "short_lots": 1798.0,
+        "long_notional": 9332337.883006,
+        "short_notional": 9385329.187594,
         "pnl_realized": 49247.771174,
         "commission": 3743.533414
       },
@@ -34446,6 +34827,8 @@
         "product": "BND",
         "long_lots": 392.0,
         "short_lots": 384.0,
+        "long_notional": 11511646.563012,
+        "short_notional": 11279968.897611,
         "pnl_realized": 48318.696064,
         "commission": 4558.323092
       },
@@ -34454,6 +34837,8 @@
         "product": "LGE",
         "long_lots": 12854.0,
         "short_lots": 12854.0,
+        "long_notional": 94421126.170198,
+        "short_notional": 94499532.904994,
         "pnl_realized": 48148.905008,
         "commission": 30257.829788
       },
@@ -34462,6 +34847,8 @@
         "product": "PRT",
         "long_lots": 166.0,
         "short_lots": 166.0,
+        "long_notional": 3081710.070627,
+        "short_notional": 3034585.565673,
         "pnl_realized": -48041.949298,
         "commission": 917.444345
       },
@@ -34470,6 +34857,8 @@
         "product": "IFD",
         "long_lots": 5.0,
         "short_lots": 5.0,
+        "long_notional": 1213415.106,
+        "short_notional": 1167494.614,
         "pnl_realized": -46634.764916,
         "commission": 714.272916
       },
@@ -34478,6 +34867,8 @@
         "product": "CKC",
         "long_lots": 170.0,
         "short_lots": 170.0,
+        "long_notional": 1601264.945788,
+        "short_notional": 1647920.814,
         "pnl_realized": 46006.03106,
         "commission": 649.837152
       },
@@ -34486,6 +34877,8 @@
         "product": "BND",
         "long_lots": 20.0,
         "short_lots": 20.0,
+        "long_notional": 795179.046,
+        "short_notional": 751321.734,
         "pnl_realized": -44166.612156,
         "commission": 309.300156
       },
@@ -34494,6 +34887,8 @@
         "product": "LP",
         "long_lots": 28.0,
         "short_lots": 18.0,
+        "long_notional": 9398120.85,
+        "short_notional": 5999508.25,
         "pnl_realized": 43064.65,
         "commission": 492.0
       },
@@ -34502,6 +34897,8 @@
         "product": "XUC",
         "long_lots": 885.0,
         "short_lots": 885.0,
+        "long_notional": 90048967.031683,
+        "short_notional": 90012612.530785,
         "pnl_realized": -41556.661898,
         "commission": 5202.161
       },
@@ -34510,6 +34907,8 @@
         "product": "OR",
         "long_lots": 49.0,
         "short_lots": 49.0,
+        "long_notional": 503794.99989,
+        "short_notional": 545680.00095,
         "pnl_realized": 41101.00106,
         "commission": 784.0
       },
@@ -34518,6 +34917,8 @@
         "product": "AH",
         "long_lots": 138.0,
         "short_lots": 138.0,
+        "long_notional": 11348119.5,
+        "short_notional": 11425539.0,
         "pnl_realized": 40802.0,
         "commission": 3312.0
       },
@@ -34526,6 +34927,8 @@
         "product": "ZNA",
         "long_lots": 308.0,
         "short_lots": 308.0,
+        "long_notional": 5076634.916983,
+        "short_notional": 5118200.567625,
         "pnl_realized": 40273.827334,
         "commission": 1291.823308
       },
@@ -34534,6 +34937,8 @@
         "product": "SCO",
         "long_lots": 270.0,
         "short_lots": 270.0,
+        "long_notional": 2726815.0,
+        "short_notional": 2768200.0,
         "pnl_realized": 40160.0,
         "commission": 1225.0
       },
@@ -34542,6 +34947,8 @@
         "product": "CA",
         "long_lots": 22.0,
         "short_lots": 22.0,
+        "long_notional": 6616878.125,
+        "short_notional": 6657325.5,
         "pnl_realized": 39979.375,
         "commission": 468.0
       },
@@ -34550,6 +34957,8 @@
         "product": "SCO",
         "long_lots": 500.0,
         "short_lots": 500.0,
+        "long_notional": 5333500.0,
+        "short_notional": 5296435.0,
         "pnl_realized": -39565.0,
         "commission": 2500.0
       },
@@ -34558,6 +34967,8 @@
         "product": "PVC",
         "long_lots": 4500.0,
         "short_lots": 4500.0,
+        "long_notional": 17791942.520497,
+        "short_notional": 17757438.045617,
         "pnl_realized": -39385.742936,
         "commission": 4881.268057
       },
@@ -34566,6 +34977,8 @@
         "product": "KSP",
         "long_lots": 1854.0,
         "short_lots": 1319.0,
+        "long_notional": 14333277.880768,
+        "short_notional": 10129371.094129,
         "pnl_realized": -39327.556099,
         "commission": 0.0
       },
@@ -34574,6 +34987,8 @@
         "product": "CQD",
         "long_lots": 5.0,
         "short_lots": 5.0,
+        "long_notional": 3225000.0,
+        "short_notional": 3190000.0,
         "pnl_realized": -37000.0,
         "commission": 2000.0
       },
@@ -34582,6 +34997,8 @@
         "product": "NI",
         "long_lots": 22.0,
         "short_lots": 21.0,
+        "long_notional": 2540400.11976,
+        "short_notional": 2387886.18,
         "pnl_realized": -36021.27312,
         "commission": 516.0
       },
@@ -34590,6 +35007,8 @@
         "product": "CJP",
         "long_lots": 5.0,
         "short_lots": 4.0,
+        "long_notional": 3443500.0,
+        "short_notional": 2739000.0,
         "pnl_realized": 35900.0,
         "commission": 1800.0
       },
@@ -34598,6 +35017,8 @@
         "product": "SI",
         "long_lots": 280.0,
         "short_lots": 400.0,
+        "long_notional": 1823110.58575,
+        "short_notional": 2675944.46,
         "pnl_realized": 35078.187097,
         "commission": 899.811009
       },
@@ -34606,6 +35027,8 @@
         "product": "ZSY",
         "long_lots": 2350.0,
         "short_lots": 2350.0,
+        "long_notional": 8653928.929905,
+        "short_notional": 8543401.429905,
         "pnl_realized": -35014.411698,
         "commission": 5159.199108
       },
@@ -34614,6 +35037,8 @@
         "product": "XUC",
         "long_lots": 2045.0,
         "short_lots": 1898.0,
+        "long_notional": 205606922.183334,
+        "short_notional": 191032416.760097,
         "pnl_realized": 34698.260163,
         "commission": 1452.699775
       },
@@ -34622,6 +35047,8 @@
         "product": "RBT",
         "long_lots": 1568.0,
         "short_lots": 1478.0,
+        "long_notional": 7205741.624629,
+        "short_notional": 6748315.4605,
         "pnl_realized": -34668.798144,
         "commission": 2790.811417
       },
@@ -34630,6 +35057,8 @@
         "product": "LC",
         "long_lots": 150.0,
         "short_lots": 150.0,
+        "long_notional": 3915346.7918,
+        "short_notional": 3953312.2512,
         "pnl_realized": 34660.622602,
         "commission": 3304.836798
       },
@@ -34638,6 +35067,8 @@
         "product": "LGE",
         "long_lots": 200.0,
         "short_lots": 200.0,
+        "long_notional": 1140791.17,
+        "short_notional": 1107485.55,
         "pnl_realized": -33707.291672,
         "commission": 401.671672
       },
@@ -34646,6 +35077,8 @@
         "product": "ANO",
         "long_lots": 1150.0,
         "short_lots": 1150.0,
+        "long_notional": 9811184.276453,
+        "short_notional": 9782267.335153,
         "pnl_realized": -32835.631622,
         "commission": 3918.690322
       },
@@ -34654,6 +35087,8 @@
         "product": "AH",
         "long_lots": 95.0,
         "short_lots": 95.0,
+        "long_notional": 8323049.999975,
+        "short_notional": 8357612.5,
         "pnl_realized": 32282.500025,
         "commission": 2280.0
       },
@@ -34662,6 +35097,8 @@
         "product": "HI",
         "long_lots": 4.0,
         "short_lots": 4.0,
+        "long_notional": 675862.376,
+        "short_notional": 646373.376,
         "pnl_realized": -29540.008,
         "commission": 51.008
       },
@@ -34670,6 +35107,8 @@
         "product": "KEE",
         "long_lots": 80.0,
         "short_lots": 80.0,
+        "long_notional": 1886630.74,
+        "short_notional": 1858201.5933,
         "pnl_realized": -29178.113167,
         "commission": 748.966467
       },
@@ -34678,6 +35117,8 @@
         "product": "XII",
         "long_lots": 189.0,
         "short_lots": 189.0,
+        "long_notional": 3776457.935182,
+        "short_notional": 3748682.645711,
         "pnl_realized": -28694.921109,
         "commission": 919.631638
       },
@@ -34686,6 +35127,8 @@
         "product": "IOE",
         "long_lots": 238.0,
         "short_lots": 238.0,
+        "long_notional": 2767124.63692,
+        "short_notional": 2740059.2522,
         "pnl_realized": -28166.821498,
         "commission": 1101.436778
       },
@@ -34694,6 +35137,8 @@
         "product": "LC",
         "long_lots": 391.0,
         "short_lots": 391.0,
+        "long_notional": 11292736.15048,
+        "short_notional": 11330073.813857,
         "pnl_realized": 27836.083192,
         "commission": 9501.580185
       },
@@ -34702,6 +35147,8 @@
         "product": "XUC",
         "long_lots": 374.0,
         "short_lots": 374.0,
+        "long_notional": 38617188.490653,
+        "short_notional": 38591790.269732,
         "pnl_realized": -27499.717121,
         "commission": 2101.4962
       },
@@ -34710,6 +35157,8 @@
         "product": "ZSY",
         "long_lots": 1788.0,
         "short_lots": 1788.0,
+        "long_notional": 6391696.271259,
+        "short_notional": 6368036.901991,
         "pnl_realized": -27487.28922,
         "commission": 3827.919952
       },
@@ -34718,6 +35167,8 @@
         "product": "LA",
         "long_lots": 13.0,
         "short_lots": 13.0,
+        "long_notional": 1037731.5,
+        "short_notional": 1065375.35,
         "pnl_realized": 27331.85,
         "commission": 312.0
       },
@@ -34726,6 +35177,8 @@
         "product": "CU",
         "long_lots": 54.0,
         "short_lots": 54.0,
+        "long_notional": 4056396.0925,
+        "short_notional": 4030989.5045,
         "pnl_realized": -26574.517724,
         "commission": 1167.929724
       },
@@ -34734,6 +35187,8 @@
         "product": "SM",
         "long_lots": 16.0,
         "short_lots": 16.0,
+        "long_notional": 485380.0,
+        "short_notional": 512160.0,
         "pnl_realized": 26460.0,
         "commission": 320.0
       },
@@ -34742,6 +35197,8 @@
         "product": "LN",
         "long_lots": 23.0,
         "short_lots": 23.0,
+        "long_notional": 2342156.1,
+        "short_notional": 2368943.75994,
         "pnl_realized": 26235.65994,
         "commission": 552.0
       },
@@ -34750,6 +35207,8 @@
         "product": "FFD",
         "long_lots": 40.0,
         "short_lots": 40.0,
+        "long_notional": 8699079.26658,
+        "short_notional": 8730493.54,
         "pnl_realized": 26185.401578,
         "commission": 5228.871842
       },
@@ -34758,6 +35217,8 @@
         "product": "LX",
         "long_lots": 48.0,
         "short_lots": 48.0,
+        "long_notional": 4030135.7501,
+        "short_notional": 4006990.0,
         "pnl_realized": -24297.7501,
         "commission": 1152.0
       },
@@ -34766,6 +35227,8 @@
         "product": "ANO",
         "long_lots": 1870.0,
         "short_lots": 1870.0,
+        "long_notional": 15351111.4218,
+        "short_notional": 15333144.0714,
         "pnl_realized": -24104.201499,
         "commission": 6136.851099
       },
@@ -34774,6 +35237,8 @@
         "product": "SRB",
         "long_lots": 50.0,
         "short_lots": 50.0,
+        "long_notional": 1099380.2,
+        "short_notional": 1123438.3525,
         "pnl_realized": 23791.414274,
         "commission": 266.738226
       },
@@ -34782,6 +35247,8 @@
         "product": "SCO",
         "long_lots": 200.0,
         "short_lots": 200.0,
+        "long_notional": 2072500.0,
+        "short_notional": 2050550.0,
         "pnl_realized": -23700.0,
         "commission": 1750.0
       },
@@ -34790,6 +35257,8 @@
         "product": "AZB",
         "long_lots": 10.0,
         "short_lots": 10.0,
+        "long_notional": 7330000.0,
+        "short_notional": 7355000.0,
         "pnl_realized": 22000.0,
         "commission": 3000.0
       },
@@ -34798,6 +35267,8 @@
         "product": "ZRR",
         "long_lots": 2028.0,
         "short_lots": 2028.0,
+        "long_notional": 6991189.974284,
+        "short_notional": 6971518.673008,
         "pnl_realized": -21964.171221,
         "commission": 2292.869945
       },
@@ -34806,6 +35277,8 @@
         "product": "KSP",
         "long_lots": 420.0,
         "short_lots": 416.0,
+        "long_notional": 3292157.378015,
+        "short_notional": 3283270.967009,
         "pnl_realized": 21044.242792,
         "commission": 986.314252
       },
@@ -34814,6 +35287,8 @@
         "product": "NG",
         "long_lots": 140.0,
         "short_lots": 140.0,
+        "long_notional": 4649618.50005,
+        "short_notional": 4671170.00005,
         "pnl_realized": 20151.5,
         "commission": 1400.0
       },
@@ -34822,6 +35297,8 @@
         "product": "AUA",
         "long_lots": 10.0,
         "short_lots": 10.0,
+        "long_notional": 1569814.714,
+        "short_notional": 1589435.5558,
         "pnl_realized": 19245.968773,
         "commission": 374.873027
       },
@@ -34830,6 +35307,8 @@
         "product": "ZRO",
         "long_lots": 664.0,
         "short_lots": 666.0,
+        "long_notional": 8989742.452362,
+        "short_notional": 9039876.223204,
         "pnl_realized": 18925.14297,
         "commission": 2194.966068
       },
@@ -34838,6 +35317,8 @@
         "product": "PT",
         "long_lots": 600.0,
         "short_lots": 600.0,
+        "long_notional": 2420933.9383,
+        "short_notional": 2440417.726,
         "pnl_realized": 18467.120534,
         "commission": 1016.667166
       },
@@ -34846,6 +35327,8 @@
         "product": "SHY",
         "long_lots": 307.0,
         "short_lots": 307.0,
+        "long_notional": 3329587.8843,
+        "short_notional": 3349217.5683,
         "pnl_realized": 18239.479716,
         "commission": 1390.204284
       },
@@ -34854,6 +35337,8 @@
         "product": "CA",
         "long_lots": 47.0,
         "short_lots": 47.0,
+        "long_notional": 14823088.0,
+        "short_notional": 14806300.5,
         "pnl_realized": -17915.5,
         "commission": 1128.0
       },
@@ -34862,6 +35347,8 @@
         "product": "SHY",
         "long_lots": 50.0,
         "short_lots": 50.0,
+        "long_notional": 490543.1505,
+        "short_notional": 473278.755,
         "pnl_realized": -17370.41591,
         "commission": 106.02041
       },
@@ -34870,6 +35357,8 @@
         "product": "CO",
         "long_lots": 55.0,
         "short_lots": 44.0,
+        "long_notional": 4071839.99999,
+        "short_notional": 3075040.0,
         "pnl_realized": -16830.0,
         "commission": 990.0
       },
@@ -34878,6 +35367,8 @@
         "product": "OPT",
         "long_lots": 930.0,
         "short_lots": 930.0,
+        "long_notional": 1592754.3282,
+        "short_notional": 1612786.405985,
         "pnl_realized": 16713.895454,
         "commission": 3318.182331
       },
@@ -34886,6 +35377,8 @@
         "product": "SAI",
         "long_lots": 94.0,
         "short_lots": 94.0,
+        "long_notional": 4144168.927694,
+        "short_notional": 4128781.289144,
         "pnl_realized": -16625.221489,
         "commission": 1237.582939
       },
@@ -34894,6 +35387,8 @@
         "product": "NG",
         "long_lots": 58.0,
         "short_lots": 58.0,
+        "long_notional": 2061970.0,
+        "short_notional": 2046689.9995,
         "pnl_realized": -16240.0005,
         "commission": 960.0
       },
@@ -34902,6 +35397,8 @@
         "product": "RBT",
         "long_lots": 300.0,
         "short_lots": 300.0,
+        "long_notional": 1352414.49,
+        "short_notional": 1336940.64,
         "pnl_realized": -16011.721026,
         "commission": 537.871026
       },
@@ -34910,6 +35407,8 @@
         "product": "CKC",
         "long_lots": 140.0,
         "short_lots": 140.0,
+        "long_notional": 1420543.641,
+        "short_notional": 1436349.0735,
         "pnl_realized": 15234.053957,
         "commission": 571.378543
       },
@@ -34918,6 +35417,8 @@
         "product": "SRB",
         "long_lots": 30.0,
         "short_lots": 30.0,
+        "long_notional": 549321.675,
+        "short_notional": 534289.935,
         "pnl_realized": -15161.773393,
         "commission": 130.033393
       },
@@ -34926,6 +35427,8 @@
         "product": "ZME",
         "long_lots": 800.0,
         "short_lots": 800.0,
+        "long_notional": 2637333.52,
+        "short_notional": 2623333.37,
         "pnl_realized": -15052.283378,
         "commission": 1052.133378
       },
@@ -34934,6 +35437,8 @@
         "product": "ZNA",
         "long_lots": 55.0,
         "short_lots": 55.0,
+        "long_notional": 924481.484,
+        "short_notional": 939516.878747,
         "pnl_realized": 14800.36281,
         "commission": 235.031936
       },
@@ -34942,6 +35447,8 @@
         "product": "HG",
         "long_lots": 77.0,
         "short_lots": 99.0,
+        "long_notional": 11115375.001,
+        "short_notional": 14667392.50135,
         "pnl_realized": -14477.4997,
         "commission": 880.0
       },
@@ -34950,6 +35457,8 @@
         "product": "LL",
         "long_lots": 48.0,
         "short_lots": 48.0,
+        "long_notional": 2393363.0004,
+        "short_notional": 2408436.0,
         "pnl_realized": 13920.9996,
         "commission": 1152.0
       },
@@ -34958,6 +35467,8 @@
         "product": "PBL",
         "long_lots": 336.0,
         "short_lots": 336.0,
+        "long_notional": 4249003.89268,
+        "short_notional": 4264046.272942,
         "pnl_realized": 13850.553238,
         "commission": 1191.827023
       },
@@ -34966,6 +35477,8 @@
         "product": "PVC",
         "long_lots": 3100.0,
         "short_lots": 3100.0,
+        "long_notional": 11834474.901871,
+        "short_notional": 11824367.530347,
         "pnl_realized": -13386.949767,
         "commission": 3279.578243
       },
@@ -34974,6 +35487,8 @@
         "product": "AA",
         "long_lots": 160.0,
         "short_lots": 160.0,
+        "long_notional": 2540106.1625,
+        "short_notional": 2554051.048676,
         "pnl_realized": 13293.995255,
         "commission": 650.890921
       },
@@ -34982,6 +35497,8 @@
         "product": "PGR",
         "long_lots": 1057.0,
         "short_lots": 1107.0,
+        "long_notional": 17895069.017374,
+        "short_notional": 18765652.38006,
         "pnl_realized": -13264.7655,
         "commission": 5595.44018
       },
@@ -34990,6 +35507,8 @@
         "product": "NG",
         "long_lots": 11.0,
         "short_lots": 11.0,
+        "long_notional": 406519.99999,
+        "short_notional": 393779.99999,
         "pnl_realized": -12968.0,
         "commission": 228.0
       },
@@ -34998,6 +35517,8 @@
         "product": "XII",
         "long_lots": 120.0,
         "short_lots": 120.0,
+        "long_notional": 2392526.911837,
+        "short_notional": 2380513.265226,
         "pnl_realized": -12597.057029,
         "commission": 583.410418
       },
@@ -35006,6 +35527,8 @@
         "product": "CU",
         "long_lots": 16.0,
         "short_lots": 16.0,
+        "long_notional": 1211300.3465,
+        "short_notional": 1199267.586,
         "pnl_realized": -12349.167574,
         "commission": 316.407074
       },
@@ -35014,6 +35537,8 @@
         "product": "HG",
         "long_lots": 5.0,
         "short_lots": 5.0,
+        "long_notional": 787437.5,
+        "short_notional": 775250.0,
         "pnl_realized": -12237.5,
         "commission": 50.0
       },
@@ -35022,6 +35547,8 @@
         "product": "CKC",
         "long_lots": 300.0,
         "short_lots": 300.0,
+        "long_notional": 2946663.15,
+        "short_notional": 2935610.4,
         "pnl_realized": -12229.20471,
         "commission": 1176.45471
       },
@@ -35030,6 +35557,8 @@
         "product": "APW",
         "long_lots": 40.0,
         "short_lots": 40.0,
+        "long_notional": 568195.3509,
+        "short_notional": 580204.5322,
         "pnl_realized": 11835.393312,
         "commission": 173.787988
       },
@@ -35038,6 +35567,8 @@
         "product": "FGL",
         "long_lots": 400.0,
         "short_lots": 400.0,
+        "long_notional": 1284476.92,
+        "short_notional": 1273866.28,
         "pnl_realized": -11573.85032,
         "commission": 963.21032
       },
@@ -35046,6 +35577,8 @@
         "product": "FGL",
         "long_lots": 6650.0,
         "short_lots": 6650.0,
+        "long_notional": 21919091.687,
+        "short_notional": 21811408.428,
         "pnl_realized": 11494.031486,
         "commission": 16133.176012
       },
@@ -35054,6 +35587,8 @@
         "product": "CKC",
         "long_lots": 524.0,
         "short_lots": 516.0,
+        "long_notional": 5253327.863929,
+        "short_notional": 5182175.741646,
         "pnl_realized": 11438.826814,
         "commission": 2087.100721
       },
@@ -35062,6 +35597,8 @@
         "product": "SHY",
         "long_lots": 50.0,
         "short_lots": 50.0,
+        "long_notional": 497108.484,
+        "short_notional": 508705.0293,
         "pnl_realized": 11395.382597,
         "commission": 201.162703
       },
@@ -35070,6 +35607,8 @@
         "product": "SLS",
         "long_lots": 2092.0,
         "short_lots": 2092.0,
+        "long_notional": 11546774.029997,
+        "short_notional": 11560996.708735,
         "pnl_realized": 10778.137818,
         "commission": 3444.54092
       },
@@ -35078,6 +35617,8 @@
         "product": "VV",
         "long_lots": 36.0,
         "short_lots": 36.0,
+        "long_notional": 408111.741,
+        "short_notional": 418954.48875,
         "pnl_realized": 10714.415375,
         "commission": 128.332375
       },
@@ -35086,6 +35627,8 @@
         "product": "BDR",
         "long_lots": 126.0,
         "short_lots": 126.0,
+        "long_notional": 1008202.381,
+        "short_notional": 1018912.49575,
         "pnl_realized": 10321.755821,
         "commission": 388.358929
       },
@@ -35094,6 +35637,8 @@
         "product": "VV",
         "long_lots": 142.0,
         "short_lots": 142.0,
+        "long_notional": 1514694.64975,
+        "short_notional": 1505498.76175,
         "pnl_realized": -9677.875585,
         "commission": 481.987585
       },
@@ -35102,6 +35647,8 @@
         "product": "SH",
         "long_lots": 396.0,
         "short_lots": 386.0,
+        "long_notional": 4793061.879994,
+        "short_notional": 4659702.345885,
         "pnl_realized": -8949.641728,
         "commission": 1233.384773
       },
@@ -35110,6 +35657,8 @@
         "product": "JCI",
         "long_lots": 66.0,
         "short_lots": 66.0,
+        "long_notional": 478178.75592,
+        "short_notional": 487230.958171,
         "pnl_realized": 8897.302759,
         "commission": 154.899491
       },
@@ -35118,6 +35667,8 @@
         "product": "ROC",
         "long_lots": 1086.0,
         "short_lots": 1182.0,
+        "long_notional": 5273241.972079,
+        "short_notional": 5753912.806273,
         "pnl_realized": -8273.205838,
         "commission": 2205.430956
       },
@@ -35126,6 +35677,8 @@
         "product": "LA",
         "long_lots": 10.0,
         "short_lots": 10.0,
+        "long_notional": 912542.5,
+        "short_notional": 904562.5,
         "pnl_realized": -8220.0,
         "commission": 240.0
       },
@@ -35134,6 +35687,8 @@
         "product": "RT",
         "long_lots": 30.0,
         "short_lots": 30.0,
+        "long_notional": 683059.95,
+        "short_notional": 675101.97,
         "pnl_realized": -8120.322792,
         "commission": 162.342792
       },
@@ -35142,6 +35697,8 @@
         "product": "AA",
         "long_lots": 400.0,
         "short_lots": 400.0,
+        "long_notional": 6958921.927426,
+        "short_notional": 6968755.19075,
         "pnl_realized": 8086.807612,
         "commission": 1746.455712
       },
@@ -35150,6 +35707,8 @@
         "product": "BDR",
         "long_lots": 26.0,
         "short_lots": 26.0,
+        "long_notional": 301828.497,
+        "short_notional": 294017.887,
         "pnl_realized": -7882.111566,
         "commission": 71.501566
       },
@@ -35158,6 +35717,8 @@
         "product": "RT",
         "long_lots": 324.0,
         "short_lots": 332.0,
+        "long_notional": 7869786.4235,
+        "short_notional": 8074058.927897,
         "pnl_realized": -7191.757983,
         "commission": 1884.408695
       },
@@ -35166,6 +35727,8 @@
         "product": "ROC",
         "long_lots": 1149.0,
         "short_lots": 1149.0,
+        "long_notional": 5594676.5739,
+        "short_notional": 5590124.3146,
         "pnl_realized": -6789.219478,
         "commission": 2236.960178
       },
@@ -35174,6 +35737,8 @@
         "product": "AUA",
         "long_lots": 10.0,
         "short_lots": 10.0,
+        "long_notional": 1398662.1434,
+        "short_notional": 1392596.3942,
         "pnl_realized": -6403.823054,
         "commission": 338.073854
       },
@@ -35182,6 +35747,8 @@
         "product": "IBC",
         "long_lots": 6.0,
         "short_lots": 6.0,
+        "long_notional": 336843.609,
+        "short_notional": 330786.702,
         "pnl_realized": -6130.346334,
         "commission": 73.439334
       },
@@ -35190,6 +35757,8 @@
         "product": "XUC",
         "long_lots": 35.0,
         "short_lots": 30.0,
+        "long_notional": 3498298.534,
+        "short_notional": 2995184.7225,
         "pnl_realized": -6014.1697,
         "commission": 23.947625
       },
@@ -35198,6 +35767,8 @@
         "product": "CKC",
         "long_lots": 110.0,
         "short_lots": 110.0,
+        "long_notional": 1071763.062,
+        "short_notional": 1066546.164,
         "pnl_realized": -5644.559845,
         "commission": 427.661845
       },
@@ -35206,6 +35777,8 @@
         "product": "LL",
         "long_lots": 60.0,
         "short_lots": 60.0,
+        "long_notional": 3017650.0,
+        "short_notional": 3013532.5,
         "pnl_realized": -5557.5,
         "commission": 1440.0
       },
@@ -35214,6 +35787,8 @@
         "product": "PT",
         "long_lots": 1576.0,
         "short_lots": 1576.0,
+        "long_notional": 7832848.133133,
+        "short_notional": 7841112.642647,
         "pnl_realized": 5303.582717,
         "commission": 2960.926798
       },
@@ -35222,6 +35797,8 @@
         "product": "GC",
         "long_lots": 1.0,
         "short_lots": 1.0,
+        "long_notional": 460700.0,
+        "short_notional": 465870.0,
         "pnl_realized": 5120.0,
         "commission": 50.0
       },
@@ -35230,6 +35807,8 @@
         "product": "NI",
         "long_lots": 56.0,
         "short_lots": 56.0,
+        "long_notional": 5335380.96,
+        "short_notional": 5331648.0,
         "pnl_realized": -5076.96,
         "commission": 1344.0
       },
@@ -35238,6 +35817,8 @@
         "product": "HG",
         "long_lots": 15.0,
         "short_lots": 4.0,
+        "long_notional": 2340987.5,
+        "short_notional": 606487.5,
         "pnl_realized": -5052.5,
         "commission": 95.0
       },
@@ -35246,6 +35827,8 @@
         "product": "XOO",
         "long_lots": 20.0,
         "short_lots": 20.0,
+        "long_notional": 1109679.8893,
+        "short_notional": 1114846.6815,
         "pnl_realized": 4926.655143,
         "commission": 240.137057
       },
@@ -35254,6 +35837,8 @@
         "product": "SLS",
         "long_lots": 450.0,
         "short_lots": 450.0,
+        "long_notional": 2173854.87,
+        "short_notional": 2169433.77,
         "pnl_realized": -4898.86175,
         "commission": 477.76175
       },
@@ -35262,6 +35847,8 @@
         "product": "KSP",
         "long_lots": 40.0,
         "short_lots": 40.0,
+        "long_notional": 306529.6,
+        "short_notional": 311304.388,
         "pnl_realized": 4682.112902,
         "commission": 92.675098
       },
@@ -35270,6 +35857,8 @@
         "product": "AA",
         "long_lots": 300.0,
         "short_lots": 300.0,
+        "long_notional": 5354792.109,
+        "short_notional": 5360675.85625,
         "pnl_realized": 4546.934453,
         "commission": 1336.812797
       },
@@ -35278,6 +35867,8 @@
         "product": "CFI",
         "long_lots": 174.0,
         "short_lots": 174.0,
+        "long_notional": 1860594.145257,
+        "short_notional": 1867622.220513,
         "pnl_realized": 4538.806291,
         "commission": 2489.268965
       },
@@ -35286,6 +35877,8 @@
         "product": "GC",
         "long_lots": 32.0,
         "short_lots": 32.0,
+        "long_notional": 14568590.0,
+        "short_notional": 14565699.96,
         "pnl_realized": -4490.04,
         "commission": 1600.0
       },
@@ -35294,6 +35887,8 @@
         "product": "BND",
         "long_lots": 2.0,
         "short_lots": 2.0,
+        "long_notional": 75255.9642,
+        "short_notional": 71055.9192,
         "pnl_realized": -4229.307377,
         "commission": 29.262377
       },
@@ -35302,6 +35897,8 @@
         "product": "AZE",
         "long_lots": 40.0,
         "short_lots": 40.0,
+        "long_notional": 1863000.0,
+        "short_notional": 1868000.0,
         "pnl_realized": 3800.0,
         "commission": 1200.0
       },
@@ -35310,6 +35907,8 @@
         "product": "GC",
         "long_lots": 4.0,
         "short_lots": 4.0,
+        "long_notional": 2130720.0,
+        "short_notional": 2127060.0,
         "pnl_realized": -3756.0,
         "commission": 96.0
       },
@@ -35318,6 +35917,8 @@
         "product": "CA",
         "long_lots": 2.0,
         "short_lots": 2.0,
+        "long_notional": 701350.0,
+        "short_notional": 697675.0,
         "pnl_realized": -3723.0,
         "commission": 48.0
       },
@@ -35326,6 +35927,8 @@
         "product": "SAI",
         "long_lots": 40.0,
         "short_lots": 40.0,
+        "long_notional": 1540065.86895,
+        "short_notional": 1537139.10075,
         "pnl_realized": -3696.362119,
         "commission": 769.593919
       },
@@ -35334,6 +35937,8 @@
         "product": "PS",
         "long_lots": 30.0,
         "short_lots": 30.0,
+        "long_notional": 699705.3915,
+        "short_notional": 696727.78065,
         "pnl_realized": -3256.897484,
         "commission": 279.286634
       },
@@ -35342,6 +35947,8 @@
         "product": "CL",
         "long_lots": 6.0,
         "short_lots": 6.0,
+        "long_notional": 480060.0,
+        "short_notional": 476970.0,
         "pnl_realized": -3210.0,
         "commission": 120.0
       },
@@ -35350,6 +35957,8 @@
         "product": "LHD",
         "long_lots": 530.0,
         "short_lots": 523.0,
+        "long_notional": 15121128.7472,
+        "short_notional": 13941036.9456,
         "pnl_realized": 3187.785228,
         "commission": 5812.433139
       },
@@ -35358,6 +35967,8 @@
         "product": "ANO",
         "long_lots": 200.0,
         "short_lots": 200.0,
+        "long_notional": 1607296.799829,
+        "short_notional": 1610930.944,
         "pnl_realized": 2990.498622,
         "commission": 643.645549
       },
@@ -35366,6 +35977,8 @@
         "product": "CKC",
         "long_lots": 419.0,
         "short_lots": 419.0,
+        "long_notional": 4603095.752207,
+        "short_notional": 4607918.0016,
         "pnl_realized": 2980.046642,
         "commission": 1842.202751
       },
@@ -35374,6 +35987,8 @@
         "product": "AH",
         "long_lots": 1.0,
         "short_lots": 1.0,
+        "long_notional": 84250.0,
+        "short_notional": 86887.5,
         "pnl_realized": 2613.5,
         "commission": 24.0
       },
@@ -35382,6 +35997,8 @@
         "product": "BO",
         "long_lots": 4.0,
         "short_lots": 4.0,
+        "long_notional": 180468.0,
+        "short_notional": 177954.0,
         "pnl_realized": -2593.9968,
         "commission": 79.9968
       },
@@ -35390,6 +36007,8 @@
         "product": "SI",
         "long_lots": 30.0,
         "short_lots": 30.0,
+        "long_notional": 197181.06,
+        "short_notional": 199833.72,
         "pnl_realized": 2573.257044,
         "commission": 79.402956
       },
@@ -35398,6 +36017,8 @@
         "product": "PAL",
         "long_lots": 318.0,
         "short_lots": 326.0,
+        "long_notional": 4322096.834006,
+        "short_notional": 4441933.696903,
         "pnl_realized": 2571.419632,
         "commission": 1133.979876
       },
@@ -35406,6 +36027,8 @@
         "product": "FFB",
         "long_lots": 2.0,
         "short_lots": 2.0,
+        "long_notional": 271835.7546,
+        "short_notional": 269598.678,
         "pnl_realized": -2399.50693,
         "commission": 162.43033
       },
@@ -35414,6 +36037,8 @@
         "product": "CL",
         "long_lots": 9.0,
         "short_lots": 2.0,
+        "long_notional": 703279.99999,
+        "short_notional": 180310.0,
         "pnl_realized": 2320.0,
         "commission": 110.0
       },
@@ -35422,6 +36047,8 @@
         "product": "HG",
         "long_lots": 8.0,
         "short_lots": 8.0,
+        "long_notional": 1092800.0,
+        "short_notional": 1090700.0,
         "pnl_realized": -2180.0,
         "commission": 80.0
       },
@@ -35430,6 +36057,8 @@
         "product": "TFT",
         "long_lots": 351.0,
         "short_lots": 351.0,
+        "long_notional": 56182574.09707,
+        "short_notional": 55978426.56243,
         "pnl_realized": -2041.475346,
         "commission": 0.0
       },
@@ -35438,6 +36067,8 @@
         "product": "OHO",
         "long_lots": 2.0,
         "short_lots": 2.0,
+        "long_notional": 108000.0,
+        "short_notional": 106000.0,
         "pnl_realized": 1999.2,
         "commission": 0.8
       },
@@ -35446,6 +36077,8 @@
         "product": "PBL",
         "long_lots": 26.0,
         "short_lots": 26.0,
+        "long_notional": 319291.842,
+        "short_notional": 318017.0915,
         "pnl_realized": -1363.973751,
         "commission": 89.223251
       },
@@ -35454,6 +36087,8 @@
         "product": "XII",
         "long_lots": 20.0,
         "short_lots": 20.0,
+        "long_notional": 431547.9921,
+        "short_notional": 430618.087371,
         "pnl_realized": -1033.805737,
         "commission": 103.901008
       },
@@ -35462,6 +36097,8 @@
         "product": "PXL",
         "long_lots": 170.0,
         "short_lots": 170.0,
+        "long_notional": 864325.05,
+        "short_notional": 865577.695,
         "pnl_realized": 906.664451,
         "commission": 345.980549
       },
@@ -35470,6 +36107,8 @@
         "product": "ZNA",
         "long_lots": 50.0,
         "short_lots": 50.0,
+        "long_notional": 953299.6875,
+        "short_notional": 954404.9625,
         "pnl_realized": 870.293535,
         "commission": 234.981465
       },
@@ -35478,6 +36117,8 @@
         "product": "PL",
         "long_lots": 5.0,
         "short_lots": 5.0,
+        "long_notional": 613950.0,
+        "short_notional": 614825.0,
         "pnl_realized": 755.0,
         "commission": 120.0
       },
@@ -35486,6 +36127,8 @@
         "product": "CKC",
         "long_lots": 404.0,
         "short_lots": 404.0,
+        "long_notional": 4252125.558,
+        "short_notional": 4254433.372359,
         "pnl_realized": 606.502573,
         "commission": 1701.311786
       },
@@ -35494,6 +36137,8 @@
         "product": "AE",
         "long_lots": 1450.0,
         "short_lots": 1450.0,
+        "long_notional": 6120140.5196,
+        "short_notional": 6121452.70208,
         "pnl_realized": -553.036342,
         "commission": 1865.218822
       },
@@ -35502,6 +36147,8 @@
         "product": "HG",
         "long_lots": 5.0,
         "short_lots": 5.0,
+        "long_notional": 715725.0,
+        "short_notional": 716137.5,
         "pnl_realized": 362.5,
         "commission": 50.0
       },
@@ -35510,6 +36157,8 @@
         "product": "SRB",
         "long_lots": 64.0,
         "short_lots": 44.0,
+        "long_notional": 1389669.625994,
+        "short_notional": 952017.5685,
         "pnl_realized": -324.286205,
         "commission": 281.002463
       },
@@ -35518,6 +36167,8 @@
         "product": "SHY",
         "long_lots": 40.0,
         "short_lots": 40.0,
+        "long_notional": 422126.628,
+        "short_notional": 422011.6794,
         "pnl_realized": -283.776261,
         "commission": 168.827661
       },
@@ -35526,6 +36177,8 @@
         "product": "PXL",
         "long_lots": 1143.0,
         "short_lots": 1316.0,
+        "long_notional": 7687606.155783,
+        "short_notional": 8894678.456983,
         "pnl_realized": 252.67372,
         "commission": 2986.322112
       },
@@ -35534,6 +36187,8 @@
         "product": "ZS",
         "long_lots": 68.0,
         "short_lots": 68.0,
+        "long_notional": 5620626.0,
+        "short_notional": 5622454.0,
         "pnl_realized": 196.0,
         "commission": 1632.0
       },
@@ -35542,6 +36197,8 @@
         "product": "AK",
         "long_lots": 4.0,
         "short_lots": 4.0,
+        "long_notional": 28218.4076,
+        "short_notional": 28247.8816,
         "pnl_realized": 21.469451,
         "commission": 8.004549
       },
@@ -35550,6 +36207,8 @@
         "product": "RBT",
         "long_lots": 1.0,
         "short_lots": 1.0,
+        "long_notional": 4584.6807,
+        "short_notional": 4584.6807,
         "pnl_realized": -1.833872,
         "commission": 1.833872
       },
@@ -35558,6 +36217,8 @@
         "product": "HKD12M",
         "long_lots": 20000000.0,
         "short_lots": 0.0,
+        "long_notional": 19762871.072,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 2550.4
       },
@@ -35566,6 +36227,8 @@
         "product": "KEE",
         "long_lots": 2.0,
         "short_lots": 0.0,
+        "long_notional": 55381.646,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 11.076329
       },
@@ -35574,6 +36237,8 @@
         "product": "OPT",
         "long_lots": 0.0,
         "short_lots": 60.0,
+        "long_notional": 0.0,
+        "short_notional": 8842.2,
         "pnl_realized": 0.0,
         "commission": 132.633
       },
@@ -35582,6 +36247,8 @@
         "product": "ZST",
         "long_lots": 168.0,
         "short_lots": 0.0,
+        "long_notional": 1839241.85332,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 233.440505
       },
@@ -35590,6 +36257,8 @@
         "product": "SHY",
         "long_lots": 0.0,
         "short_lots": 150.0,
+        "long_notional": 0.0,
+        "short_notional": 1359488.25,
         "pnl_realized": 0.0,
         "commission": 271.89765
       },
@@ -35598,6 +36267,8 @@
         "product": "URI",
         "long_lots": 100.0,
         "short_lots": 0.0,
+        "long_notional": 545092.156,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 109.018431
       },
@@ -35606,6 +36277,8 @@
         "product": "CT",
         "long_lots": 100.0,
         "short_lots": 0.0,
+        "long_notional": 3476500.0,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 1000.0
       },
@@ -35614,6 +36287,8 @@
         "product": "SB",
         "long_lots": 98.0,
         "short_lots": 0.0,
+        "long_notional": 1620012.8,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 784.01568
       },
@@ -35622,6 +36297,8 @@
         "product": "C",
         "long_lots": 100.0,
         "short_lots": 0.0,
+        "long_notional": 2473750.0,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 1000.0
       },
@@ -35630,6 +36307,8 @@
         "product": "CO",
         "long_lots": 40.0,
         "short_lots": 0.0,
+        "long_notional": 4100350.0,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 400.0
       },
@@ -35638,6 +36317,8 @@
         "product": "CT",
         "long_lots": 26.0,
         "short_lots": 0.0,
+        "long_notional": 981355.0,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 260.0
       },
@@ -35646,6 +36327,8 @@
         "product": "C",
         "long_lots": 61.0,
         "short_lots": 0.0,
+        "long_notional": 1509800.000025,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 610.0
       },
@@ -35654,6 +36337,8 @@
         "product": "AA",
         "long_lots": 10.0,
         "short_lots": 0.0,
+        "long_notional": 180896.675,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 22.510768
       },
@@ -35662,6 +36347,8 @@
         "product": "SHY",
         "long_lots": 0.0,
         "short_lots": 40.0,
+        "long_notional": 0.0,
+        "short_notional": 398827.431,
         "pnl_realized": 0.0,
         "commission": 79.765486
       },
@@ -35670,6 +36357,8 @@
         "product": "CC",
         "long_lots": 1.0,
         "short_lots": 0.0,
+        "long_notional": 45550.0,
+        "short_notional": 0.0,
         "pnl_realized": 0.0,
         "commission": 10.0
       }

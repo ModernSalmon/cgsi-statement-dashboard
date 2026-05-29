@@ -288,16 +288,12 @@
       <h2 class="section-title">累计现金流与 Commission</h2>
       <section class="activity-charts">
         <div class="mini-chart">
-          <h2>累计入金 / 出金 / PnL Settlement</h2>
+          <h2>累计入金 / 出金</h2>
           <div class="chart-wrap"><svg id="cashflowChart" height="360" role="img"></svg></div>
         </div>
         <div class="mini-chart">
-          <h2>客户累计 Commission</h2>
-          <div class="chart-wrap"><svg id="clientCommissionChart" height="360" role="img"></svg></div>
-        </div>
-        <div class="mini-chart">
-          <h2>品种累计 Commission</h2>
-          <div class="chart-wrap"><svg id="productCommissionChart" height="360" role="img"></svg></div>
+          <h2>累计通道费 / 反息</h2>
+          <div class="chart-wrap"><svg id="feeChart" height="360" role="img"></svg></div>
         </div>
       </section>
     </section>
@@ -309,7 +305,7 @@
           <div class="chart-wrap"><svg id="clientProductPnlFloatChart" height="420" role="img"></svg></div>
         </div>
         <div class="mini-chart">
-          <h2>客户 + 品种 + 总收益</h2>
+          <h2>客户 + 品种 + PnL Settlement</h2>
           <div class="chart-wrap"><svg id="clientProductRevenueChart" height="420" role="img"></svg></div>
         </div>
         <div class="mini-chart">
@@ -319,7 +315,7 @@
       </section>
     </section>
     <section class="section-block">
-      <h2 class="section-title">分客户总交易量与总 Commission</h2>
+      <h2 class="section-title">分客户总交易名义本金与总 Commission</h2>
       <section class="client-product-charts" id="clientProductCharts"></section>
     </section>
     <section class="section-block">
@@ -413,6 +409,7 @@
         <div class="metric"><span>品种数</span><b>${view.summary.product_count}</b></div>
         <div class="metric"><span>T-1 持仓行数</span><b>${fmt.format(view.summary.later_position_rows)}</b></div>
         <div class="metric"><span>T-1 总名义本金(USD)</span><b>${money.format(view.summary.later_gross_notional)}</b></div>
+        <div class="metric"><span>T-1 总名义本金(去除 XUC)</span><b>${money.format(view.summary.later_gross_notional_ex_xuc)}</b></div>
         <div class="metric"><span>多头 / 空头手数</span><b>${fmt.format(view.summary.later_long_lots)} / ${fmt.format(view.summary.later_short_lots)}</b></div>
       `;
       renderFilterSummary();
@@ -692,47 +689,29 @@
       (raw.latest_activity?.cashflow_by_client || []).forEach(row => {
         if (!accountAllowed(row.client)) return;
         const account = scopedAccount(row.client);
-        const current = cashflowMap.get(account) || { client: account, deposit: 0, withdrawal: 0, pnl_settlement: 0 };
+        const current = cashflowMap.get(account) || { client: account, deposit: 0, withdrawal: 0, pnl_settlement: 0, holding_fee: 0, holding_fee_discount: 0 };
         current.deposit += row.deposit || 0;
         current.withdrawal += row.withdrawal || 0;
         current.pnl_settlement += row.pnl_settlement || 0;
+        current.holding_fee += row.holding_fee || 0;
+        current.holding_fee_discount += row.holding_fee_discount || 0;
         cashflowMap.set(account, current);
       });
       const cashflowRows = Array.from(cashflowMap.values())
         .map(row => rowWithClientMeta(row))
-        .sort((a, b) => Math.abs((b.deposit || 0) + (b.withdrawal || 0) + (b.pnl_settlement || 0)) - Math.abs((a.deposit || 0) + (a.withdrawal || 0) + (a.pnl_settlement || 0)));
+        .sort((a, b) => Math.abs((b.deposit || 0) + (b.withdrawal || 0)) - Math.abs((a.deposit || 0) + (a.withdrawal || 0)));
       drawMiniGroupedBar("cashflowChart", cashflowRows, [
         { label: "累计入金", color: "#166534", value: row => row.deposit || 0 },
         { label: "累计出金", color: "#b42318", value: row => row.withdrawal || 0 },
-        { label: "累计 PnL Settlement", color: "#1d4ed8", value: row => row.pnl_settlement || 0 },
       ], { signed: true });
 
-      const commissionMap = new Map();
-      (raw.latest_activity?.commission_by_client || []).forEach(row => {
-        if (!accountAllowed(row.client)) return;
-        const account = scopedAccount(row.client);
-        const current = commissionMap.get(account) || { client: account, commission: 0 };
-        current.commission += row.commission || 0;
-        commissionMap.set(account, current);
-      });
-      const commissionRows = Array.from(commissionMap.values())
+      const feeRows = Array.from(cashflowMap.values())
         .map(row => rowWithClientMeta(row))
-        .sort((a, b) => (b.commission || 0) - (a.commission || 0));
-      drawMiniGroupedBar("clientCommissionChart", commissionRows, [
-        { label: "累计 Commission", color: "#7c3aed", value: row => row.commission || 0 },
-      ]);
-
-      const productMap = new Map();
-      (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
-        if (!accountAllowed(row.client)) return;
-        const current = productMap.get(row.product) || { account: row.product, product: row.product, commission: 0 };
-        current.commission += row.commission || 0;
-        productMap.set(row.product, current);
-      });
-      const productRows = Array.from(productMap.values()).sort((a, b) => (b.commission || 0) - (a.commission || 0)).slice(0, 30);
-      drawMiniGroupedBar("productCommissionChart", productRows, [
-        { label: "累计 Commission", color: "#0f766e", value: row => row.commission || 0 },
-      ]);
+        .sort((a, b) => Math.abs((b.holding_fee || 0) + (b.holding_fee_discount || 0)) - Math.abs((a.holding_fee || 0) + (a.holding_fee_discount || 0)));
+      drawMiniGroupedBar("feeChart", feeRows, [
+        { label: "累计通道费", color: "#7c3aed", value: row => row.holding_fee || 0 },
+        { label: "累计反息", color: "#0f766e", value: row => row.holding_fee_discount || 0 },
+      ], { signed: true });
     }
 
     function aggregateClientProductMetric(rows, valueKey) {
@@ -748,23 +727,56 @@
       return Array.from(map.values());
     }
 
+    function aggregateClientProfitTotals() {
+      const totals = new Map();
+      (raw.latest_activity?.trade_by_client_product || []).forEach(row => {
+        if (!accountAllowed(row.client)) return;
+        const client = scopedAccount(row.client);
+        const current = totals.get(client) || { commission: 0, holding_fee: 0, holding_fee_discount: 0 };
+        current.commission += row.commission || 0;
+        totals.set(client, current);
+      });
+      (raw.latest_activity?.cashflow_by_client || []).forEach(row => {
+        if (!accountAllowed(row.client)) return;
+        const client = scopedAccount(row.client);
+        const current = totals.get(client) || { commission: 0, holding_fee: 0, holding_fee_discount: 0 };
+        current.holding_fee += row.holding_fee || 0;
+        current.holding_fee_discount += row.holding_fee_discount || 0;
+        totals.set(client, current);
+      });
+      const commission = new Map();
+      const profit = new Map();
+      totals.forEach((value, client) => {
+        commission.set(client, value.commission || 0);
+        profit.set(client, (value.commission || 0) + (value.holding_fee || 0) - (value.holding_fee_discount || 0));
+      });
+      return { commission, profit };
+    }
+
     function drawBubbleMatrix(svgId, rows, options) {
       const svg = $(svgId);
       const ns = "http://www.w3.org/2000/svg";
       const info = accountInfoMap();
       const clientTotals = new Map();
       const productTotals = new Map();
+      const clientSignedTotals = new Map();
+      const productSignedTotals = new Map();
       rows.forEach(row => {
         clientTotals.set(row.client, (clientTotals.get(row.client) || 0) + Math.abs(row.value || 0));
         productTotals.set(row.product, (productTotals.get(row.product) || 0) + Math.abs(row.value || 0));
+        clientSignedTotals.set(row.client, (clientSignedTotals.get(row.client) || 0) + (row.value || 0));
+        productSignedTotals.set(row.product, (productSignedTotals.get(row.product) || 0) + (row.value || 0));
       });
       const clients = Array.from(clientTotals.entries()).sort((a, b) => b[1] - a[1]).slice(0, 12).map(item => item[0]);
       const products = Array.from(productTotals.entries()).sort((a, b) => b[1] - a[1]).slice(0, 18).map(item => item[0]);
       const filtered = rows.filter(row => clients.includes(row.client) && products.includes(row.product));
-      const cellW = 42, cellH = 30, left = 128, right = 28, top = 34, bottom = 92;
+      const extraSeries = options.extraClientTotals || [];
+      const cellW = 42, cellH = 30, left = 128, right = 128 + extraSeries.length * 38, top = 62, bottom = 92;
       const width = Math.max(760, left + right + products.length * cellW);
       const height = Math.max(300, top + bottom + clients.length * cellH);
       const maxValue = Math.max(1, ...filtered.map(row => Math.abs(row.value || 0)));
+      const maxClientTotal = Math.max(1, ...clients.map(client => Math.abs(clientSignedTotals.get(client) || 0)), ...extraSeries.flatMap(series => clients.map(client => Math.abs(series.values.get(client) || 0))));
+      const maxProductTotal = Math.max(1, ...products.map(product => Math.abs(productSignedTotals.get(product) || 0)));
       svg.setAttribute("width", width);
       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
       svg.innerHTML = "";
@@ -793,36 +805,65 @@
         el.addEventListener("pointerup", hide);
         el.addEventListener("pointercancel", hide);
       }
+      function circle(x, y, radius, fill, label, opacity = 0.78) {
+        const el = document.createElementNS(ns, "circle");
+        el.setAttribute("cx", x);
+        el.setAttribute("cy", y);
+        el.setAttribute("r", radius);
+        el.setAttribute("fill", fill);
+        el.setAttribute("opacity", opacity);
+        bind(el, label);
+        svg.appendChild(el);
+      }
+      function totalCircleRadius(value, maxTotal) {
+        return 4 + Math.sqrt(Math.abs(value || 0) / maxTotal) * 10;
+      }
+      function valueColor(value, positiveColor = "#166534", negativeColor = "#b42318") {
+        return value >= 0 ? positiveColor : negativeColor;
+      }
       products.forEach((product, i) => text(left + i * cellW + cellW / 2, height - 30, product, "label", "end", true));
       clients.forEach((client, i) => {
         const meta = info.get(client) || {};
         const label = `${client} ${meta.client_name || ""}`.trim();
-        text(left - 10, top + i * cellH + 18, label, "label", "end");
+        const y = top + i * cellH + 18;
+        text(left - 10, y, label, "label", "end");
+        const total = clientSignedTotals.get(client) || 0;
+        circle(left + products.length * cellW + 24, y - 4, totalCircleRadius(total, maxClientTotal), valueColor(total), `${label}\n${options.label} 客户合计: ${money.format(total)}`);
+        extraSeries.forEach((series, idx) => {
+          const value = series.values.get(client) || 0;
+          circle(left + products.length * cellW + 62 + idx * 38, y - 4, totalCircleRadius(value, maxClientTotal), series.color || valueColor(value), `${label}\n${series.label}: ${money.format(value)}`, 0.82);
+        });
+      });
+      products.forEach((product, i) => {
+        const total = productSignedTotals.get(product) || 0;
+        const x = left + i * cellW + cellW / 2;
+        circle(x, top - 24, totalCircleRadius(total, maxProductTotal), valueColor(total), `${product}\n${options.label} 品种合计: ${money.format(total)}`);
       });
       filtered.forEach(row => {
         const x = left + products.indexOf(row.product) * cellW + cellW / 2;
         const y = top + clients.indexOf(row.client) * cellH + cellH / 2;
         const radius = 4 + Math.sqrt(Math.abs(row.value || 0) / maxValue) * 11;
-        const el = document.createElementNS(ns, "circle");
-        el.setAttribute("cx", x);
-        el.setAttribute("cy", y);
-        el.setAttribute("r", radius);
-        el.setAttribute("fill", row.value >= 0 ? "#166534" : "#b42318");
-        el.setAttribute("opacity", 0.78);
-        bind(el, `${row.client} ${info.get(row.client)?.client_name || ""}\n品种: ${row.product}\n${options.label}: ${money.format(row.value || 0)}`);
-        svg.appendChild(el);
+        circle(x, y, radius, valueColor(row.value || 0), `${row.client} ${info.get(row.client)?.client_name || ""}\n品种: ${row.product}\n${options.label}: ${money.format(row.value || 0)}`);
       });
       text(left, 18, options.label, "small", "start");
-      text(width - 150, 18, "绿色为正，红色为负，圆点越大绝对值越高", "small", "start");
+      text(left + products.length * cellW + 12, 18, "客户合计", "small", "start");
+      extraSeries.forEach((series, idx) => text(left + products.length * cellW + 50 + idx * 38, 18, series.shortLabel || series.label, "small", "start"));
+      text(width - 260, 18, "顶部为品种合计，右侧为客户合计", "small", "start");
     }
 
     function drawRiskMatrixCharts() {
       const pnlRows = aggregateClientProductMetric(raw.latest_client_product_pnl_float || [], "pnl_float");
       const revenueRows = aggregateClientProductMetric(raw.latest_activity?.trade_by_client_product || [], "pnl_realized");
       const commissionRows = aggregateClientProductMetric(raw.latest_activity?.trade_by_client_product || [], "commission");
+      const totals = aggregateClientProfitTotals();
       drawBubbleMatrix("clientProductPnlFloatChart", pnlRows, { label: "PnL Float(USD)" });
-      drawBubbleMatrix("clientProductRevenueChart", revenueRows, { label: "总收益(USD)" });
-      drawBubbleMatrix("clientProductCommissionChart", commissionRows, { label: "Commission(USD)" });
+      drawBubbleMatrix("clientProductRevenueChart", revenueRows, { label: "PnL Settlement(USD)" });
+      drawBubbleMatrix("clientProductCommissionChart", commissionRows, {
+        label: "Commission(USD)",
+        extraClientTotals: [
+          { label: "利润(Commission + 通道费 - 反息)", shortLabel: "利润", color: "#1d4ed8", values: totals.profit },
+        ],
+      });
     }
 
     function drawDualAxisClientChart(svgId, rows) {
@@ -832,9 +873,9 @@
       const width = Math.max(780, left + right + rows.length * (groupW + groupGap));
       const height = Number(svg.getAttribute("height")) || 380;
       const zero = Math.round((height - bottom + top) / 2);
-      const maxLots = Math.max(1, ...rows.flatMap(row => [Math.abs(row.long_lots || 0), Math.abs(row.short_lots || 0)]));
+      const maxNotional = Math.max(1, ...rows.flatMap(row => [Math.abs(row.long_notional || 0), Math.abs(row.short_notional || 0)]));
       const maxMoney = Math.max(1, ...rows.map(row => Math.abs(row.commission || 0)));
-      const lotScale = (zero - top - 12) / maxLots;
+      const notionalScale = (zero - top - 12) / maxNotional;
       const moneyScale = (zero - top - 12) / maxMoney;
       svg.setAttribute("width", width);
       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -891,22 +932,22 @@
 
       line(left, zero, width - right, zero, "axis");
       [0.5, 1].forEach(r => {
-        line(left, zero - maxLots * r * lotScale, width - right, zero - maxLots * r * lotScale, "grid");
-        line(left, zero + maxLots * r * lotScale, width - right, zero + maxLots * r * lotScale, "grid");
-        text(104, zero - maxLots * r * lotScale + 4, fmt.format(maxLots * r), "small", "end");
-        text(104, zero + maxLots * r * lotScale + 4, fmt.format(maxLots * r), "small", "end");
+        line(left, zero - maxNotional * r * notionalScale, width - right, zero - maxNotional * r * notionalScale, "grid");
+        line(left, zero + maxNotional * r * notionalScale, width - right, zero + maxNotional * r * notionalScale, "grid");
+        text(104, zero - maxNotional * r * notionalScale + 4, money.format(maxNotional * r), "small", "end");
+        text(104, zero + maxNotional * r * notionalScale + 4, money.format(maxNotional * r), "small", "end");
         text(width - 102, zero - maxMoney * r * moneyScale + 4, money.format(maxMoney * r), "small", "start");
       });
-      text(70, top + 8, "手数", "small", "start");
+      text(70, top + 8, "名义本金 USD", "small", "start");
       text(width - 104, top + 8, "Commission USD", "small", "start");
 
       const commissionPoints = [];
       rows.forEach((row, i) => {
         const x = left + i * (groupW + groupGap);
-        const longH = Math.abs(row.long_lots || 0) * lotScale;
-        const shortH = Math.abs(row.short_lots || 0) * lotScale;
-        rect(x, zero - longH, 12, longH, "#166534", `${row.product}\n多头总交易量: ${fmt.format(row.long_lots || 0)}\n总 Commission(USD): ${money.format(row.commission || 0)}`);
-        rect(x + 14, zero, 12, shortH, "#b42318", `${row.product}\n空头总交易量: ${fmt.format(row.short_lots || 0)}\n总 Commission(USD): ${money.format(row.commission || 0)}`);
+        const longH = Math.abs(row.long_notional || 0) * notionalScale;
+        const shortH = Math.abs(row.short_notional || 0) * notionalScale;
+        rect(x, zero - longH, 12, longH, "#166534", `${row.product}\n多头总交易名义本金(USD): ${money.format(row.long_notional || 0)}\n多头手数: ${fmt.format(row.long_lots || 0)}\n总 Commission(USD): ${money.format(row.commission || 0)}`);
+        rect(x + 14, zero, 12, shortH, "#b42318", `${row.product}\n空头总交易名义本金(USD): ${money.format(row.short_notional || 0)}\n空头手数: ${fmt.format(row.short_lots || 0)}\n总 Commission(USD): ${money.format(row.commission || 0)}`);
         const cx = x + 13;
         commissionPoints.push([cx, zero - (row.commission || 0) * moneyScale]);
         text(x + 13, height - 30, row.product, "label", "end", true);
@@ -929,6 +970,8 @@
         if (existing) {
           existing.long_lots += row.long_lots || 0;
           existing.short_lots += row.short_lots || 0;
+          existing.long_notional += row.long_notional || 0;
+          existing.short_notional += row.short_notional || 0;
           existing.pnl_realized += row.pnl_realized || 0;
           existing.commission += row.commission || 0;
         } else {
@@ -941,17 +984,17 @@
         const aProducts = new Set(byClient.get(a).map(row => row.product)).size;
         const bProducts = new Set(byClient.get(b).map(row => row.product)).size;
         if (bProducts !== aProducts) return bProducts - aProducts;
-        const aLots = byClient.get(a).reduce((s, row) => s + Math.abs(row.long_lots || 0) + Math.abs(row.short_lots || 0), 0);
-        const bLots = byClient.get(b).reduce((s, row) => s + Math.abs(row.long_lots || 0) + Math.abs(row.short_lots || 0), 0);
-        return bLots - aLots;
+        const aNotional = byClient.get(a).reduce((s, row) => s + Math.abs(row.long_notional || 0) + Math.abs(row.short_notional || 0), 0);
+        const bNotional = byClient.get(b).reduce((s, row) => s + Math.abs(row.long_notional || 0) + Math.abs(row.short_notional || 0), 0);
+        return bNotional - aNotional;
       });
       container.innerHTML = clients.map(client => `
         <div class="mini-chart">
-          <h2>${escapeHtml(client)} ${escapeHtml(info.get(client)?.client_name || "")} 总交易量与总 Commission</h2>
-          <div class="subhead">按品种拆分；多头/空头总交易量使用左轴，总 Commission 使用右轴</div>
+          <h2>${escapeHtml(client)} ${escapeHtml(info.get(client)?.client_name || "")} 总交易名义本金与总 Commission</h2>
+          <div class="subhead">按品种拆分；多头/空头总交易名义本金使用左轴，总 Commission 使用右轴</div>
           <div class="legend">
-            <span><i class="swatch" style="background:#166534"></i>多头总交易量</span>
-            <span><i class="swatch" style="background:#b42318"></i>空头总交易量</span>
+            <span><i class="swatch" style="background:#166534"></i>多头总名义本金</span>
+            <span><i class="swatch" style="background:#b42318"></i>空头总名义本金</span>
             <span><i class="swatch" style="background:#7c3aed"></i>总 Commission</span>
           </div>
           <div class="chart-wrap"><svg id="clientProduct_${escapeHtml(client)}" height="300" role="img"></svg></div>
@@ -959,7 +1002,7 @@
       `).join("");
       clients.forEach(client => {
         const rows = byClient.get(client)
-          .sort((a, b) => Math.abs(b.long_lots || 0) + Math.abs(b.short_lots || 0) - Math.abs(a.long_lots || 0) - Math.abs(a.short_lots || 0))
+          .sort((a, b) => Math.abs(b.long_notional || 0) + Math.abs(b.short_notional || 0) - Math.abs(a.long_notional || 0) - Math.abs(a.short_notional || 0))
           .slice(0, 16);
         drawDualAxisClientChart(`clientProduct_${client}`, rows);
       });
