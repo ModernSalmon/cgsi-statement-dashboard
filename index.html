@@ -1271,7 +1271,7 @@
         text(34, y2 + 4, money.format(maxNotional * r), "small");
       });
       line(left, mid, width - right, mid, "axis");
-      const maxLotDelta = Math.max(1, ...data.map(p => Math.abs((p.delta_long_lots || 0) + (p.delta_short_lots || 0))));
+      const maxLotDelta = Math.max(1, ...data.flatMap(p => [Math.abs(p.delta_long_lots || 0), Math.abs(p.delta_short_lots || 0)]));
       const lotScale = (mid - top - 20) / maxLotDelta;
       const rightAxisX = width - right + 24;
       line(rightAxisX, top, rightAxisX, height - bottom, "axis");
@@ -1280,7 +1280,8 @@
         text(rightAxisX + 35, y + 4, fmt.format(maxLotDelta * r), "small");
       });
 
-      const lotDeltaPoints = [];
+      const longDeltaPoints = [];
+      const shortDeltaPoints = [];
       data.forEach((p, i) => {
         const x = left + i * (groupW + barGap);
         const prevLongH = Math.abs(p.prev_long_notional) * scale;
@@ -1292,14 +1293,22 @@
         bindTooltip(rect(x, mid, 13, currShortH, "#b42318", 0.95), chartTooltip(p, "curr", "short", "空头"));
         bindTooltip(rect(x + 15, mid, 13, prevShortH, "#efaaa4", 0.95), chartTooltip(p, "prev", "short", "空头"));
         text(x + 14, height - 34, p.product, "label", true);
-        const lotDelta = (p.delta_long_lots || 0) + (p.delta_short_lots || 0);
         const lx = x + 14;
-        const ly = mid - lotDelta * lotScale;
-        lotDeltaPoints.push([lx, ly]);
-        circle(lx, ly, 3.5, "#1d4ed8", `${p.product}\n净手数变动: ${signed(lotDelta)}\n多头变动: ${signed(p.delta_long_lots || 0)}\n空头变动: ${signed(p.delta_short_lots || 0)}`);
-        if (lotDelta !== 0 && data.length <= 40) text(lx + 7, ly - 6 - (i % 2) * 10, signed(lotDelta), "line-label");
+        const longDelta = p.delta_long_lots || 0;
+        const shortDelta = p.delta_short_lots || 0;
+        const longY = mid - longDelta * lotScale;
+        const shortY = mid - shortDelta * lotScale;
+        longDeltaPoints.push([lx, longY]);
+        shortDeltaPoints.push([lx, shortY]);
+        circle(lx, longY, 3.5, "#1d4ed8", `${p.product}\n多头手数变动: ${signed(longDelta)}`);
+        circle(lx, shortY, 3.5, "#b42318", `${p.product}\n空头手数变动: ${signed(shortDelta)}`);
+        if (data.length <= 40) {
+          if (longDelta !== 0) text(lx + 7, longY - 6 - (i % 2) * 10, "多" + signed(longDelta), "line-label");
+          if (shortDelta !== 0) text(lx + 7, shortY + 13 + (i % 2) * 10, "空" + signed(shortDelta), "line-label");
+        }
       });
-      polyline(lotDeltaPoints, "#1d4ed8");
+      polyline(longDeltaPoints, "#1d4ed8");
+      polyline(shortDeltaPoints, "#b42318");
     }
 
     function signed(n) {
